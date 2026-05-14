@@ -1,0 +1,4 @@
+-- Deprecated helper.
+-- Use supabase-schema.sql instead. It creates the full KASAI schema:
+-- profiles, training_sessions, nutrition_logs, habits, user_settings,
+-- user_app_state, updated_at triggers, unique indexes, and RLS policies.
