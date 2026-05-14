@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v42';
+const KASAI_APP_VERSION = 'kasai-v43';
 </script>
 <style>
 :root {
@@ -2827,7 +2827,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v42 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4339,7 +4339,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v42';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -4774,6 +4774,8 @@ let _deviceLockActive = false;
 let _realtimeStatus = 'disconnected';
 let _activeSessionPromise = null;
 let _manualLogoutInProgress = false;
+let _appHydrated = false;
+let _activeHydratedUserId = null;
 
 function withTimeout(promise, ms, label='Operation'){
   return Promise.race([
@@ -5037,6 +5039,8 @@ function clearAllUserData(){
   _stateSyncRetryTimer = null;
   _stateSyncPending = 0;
   _stateSyncRevision = 0;
+  _appHydrated = false;
+  _activeHydratedUserId = null;
 }
 
 function subscribeToUserRealtime(userId){
@@ -5385,7 +5389,72 @@ function stateTime(state, fallback=null){
   return Date.parse(state?._sync?.updatedAt || state?.updatedAt || fallback || 0) || 0;
 }
 
+function sessionUserId(session=authSession){
+  return session?.user?.id || null;
+}
+
+function beginHydration(session=authSession){
+  const userId = sessionUserId(session);
+  if(!userId) return;
+  if(_activeHydratedUserId !== userId){
+    _activeHydratedUserId = userId;
+    _appHydrated = false;
+  }
+}
+
+function markHydrated(session=authSession){
+  const userId = sessionUserId(session);
+  if(!userId) return;
+  _activeHydratedUserId = userId;
+  _appHydrated = true;
+  renderSyncDebug();
+}
+
+function isHydratedForSession(session=authSession){
+  const userId = sessionUserId(session);
+  return !!(userId && _appHydrated && _activeHydratedUserId === userId);
+}
+
+function hasOwnKeys(value){
+  return !!(value && typeof value === 'object' && Object.keys(value).length);
+}
+
+function hasMeaningfulUserState(state){
+  if(!state || typeof state !== 'object') return false;
+  const p = state.profile || {};
+  if(String(p.name || p.username || p.avatarUrl || '').trim()) return true;
+  if([p.weightKg,p.stepGoal,p.kcalGoal,p.waterGoal,p.proteinMin,p.proteinMax].some(v=>v != null && String(v) !== '')) return true;
+  if(Object.values(state.hydration || {}).some(v=>Number(v) > 0)) return true;
+  if(Object.values(state.steps || {}).some(v=>Number(v) > 0)) return true;
+  if(Object.values(state.habits || {}).some(day=>hasOwnKeys(day) && Object.values(day).some(Boolean))) return true;
+  if(Object.values(state.sessions || {}).some(day=>hasOwnKeys(day))) return true;
+  if(Object.values(state.meals || {}).some(day=>Array.isArray(day) && day.length > 0)) return true;
+  if(Array.isArray(state.userHabits) && state.userHabits.length > 0) return true;
+  if(Array.isArray(state.runs) && state.runs.length > 0) return true;
+  if(hasOwnKeys(state.readiness)) return true;
+  if(hasOwnKeys(state.muscles) || hasOwnKeys(state.exercises)) return true;
+  const settings = state.settings || {};
+  if(settings.theme && settings.theme !== 'dark') return true;
+  if(settings.notificationsEnabled === false) return true;
+  if(settings.notifications){
+    try{
+      if(JSON.stringify(settings.notifications) !== JSON.stringify(defaultNotificationSettings())) return true;
+    }catch(_){}
+  }
+  const plan = state.trainingPlan;
+  if(String(plan?.name || '').trim() || plan?.endDate || plan?.weekMode === 'AB') return true;
+  if(plan?.weeks && Object.values(plan.weeks).some(week=>Object.values(week?.days || {}).some(day=>
+    (day?.label && day.label !== 'Trainingstag') ||
+    day?.isRest ||
+    (Array.isArray(day?.exercises) && day.exercises.length > 0) ||
+    (Array.isArray(day?.muscleGroups) && day.muscleGroups.length > 0) ||
+    (Array.isArray(day?.muscles) && day.muscles.length > 0)
+  ))) return true;
+  return false;
+}
+
 function renderLocalUserState(session=authSession){
+  beginHydration(session);
   const localBackup = loadLocalUserState(session);
   if(!localBackup) return false;
   S = localBackup;
@@ -5393,11 +5462,13 @@ function renderLocalUserState(session=authSession){
   updateAuthUI();
   renderAll();
   setSyncStatus('ok','// lokal geladen');
+  markHydrated(session);
   return true;
 }
 
 async function loadUserData(userId, session=authSession){
   if(!forgeSupabase || !userId) return;
+  beginHydration(session);
   const localRecord = loadLocalUserStateRecord(session);
   const localBackup = localRecord?.state || null;
   if(localBackup){
@@ -5419,11 +5490,13 @@ async function loadUserData(userId, session=authSession){
   }catch(error){
     console.warn('App state load timed out or failed; keeping local state.', error);
     if(localBackup) setSyncStatus('offline','// offline gespeichert');
+    if(localBackup) markHydrated(session);
     return;
   }
 
   if(appState.error){
     if(localBackup) setSyncStatus('offline','// offline gespeichert');
+    if(localBackup) markHydrated(session);
     return;
   }
 
@@ -5431,14 +5504,23 @@ async function loadUserData(userId, session=authSession){
   const cloudTime = stateTime(cloudState, appState.data?.updated_at);
   const localTime = Math.max(stateTime(localBackup), Date.parse(localRecord?.savedAt || 0) || 0);
   const pendingTime = stateTime(pendingLocalWrite?.state, pendingLocalWrite?.savedAt);
-  const shouldKeepLocal = !!(localBackup && (!cloudState || pendingLocalWrite?.state || localTime > cloudTime || pendingTime > cloudTime));
+  const cloudHasUserData = hasMeaningfulUserState(cloudState);
+  const localHasUserData = hasMeaningfulUserState(localBackup);
+  const shouldKeepLocal = !!(localBackup && (
+    !cloudState ||
+    (localHasUserData && !cloudHasUserData) ||
+    pendingLocalWrite?.state ||
+    localTime > cloudTime ||
+    pendingTime > cloudTime
+  ));
 
   if(shouldKeepLocal){
     S = localBackup;
     normalizeState();
     saveLocalUserState(S, session);
     renderAll();
-    queueImmediateCloudSync(S);
+    markHydrated(session);
+    if(hasMeaningfulUserState(S)) queueImmediateCloudSync(S);
     _pendingSignupProfile = null;
     return;
   }
@@ -5452,7 +5534,8 @@ async function loadUserData(userId, session=authSession){
   normalizeState();
   saveLocalUserState(S, session);
   renderAll();
-  if(_pendingSignupProfile || !cloudState) queueImmediateCloudSync(S);
+  markHydrated(session);
+  if((_pendingSignupProfile || !cloudState) && hasMeaningfulUserState(S)) queueImmediateCloudSync(S);
   _pendingSignupProfile = null;
 }
 
@@ -5662,6 +5745,11 @@ async function loadRemoteAppState(session){
 async function syncAppState(state=S, area=guessSyncArea()){
   const session = authSession?.user ? authSession : await ensureActiveSession('sync-app-state');
   if(!forgeSupabase || !session?.user) throw new Error('Keine aktive Supabase-Session');
+  if(!isHydratedForSession(session)) throw new Error('App-Daten werden noch geladen');
+  if(!hasMeaningfulUserState(state)){
+    console.warn('Skipped empty app state cloud write.');
+    return;
+  }
   const userId = session.user.id;
   const payload = JSON.parse(JSON.stringify(state));
   const now = new Date().toISOString();
@@ -5983,6 +6071,15 @@ async function flushPendingState({keepalive=false}={}){
   if(!session?.user) return;
   const pending = readPendingState();
   if(!pending?.state) return;
+  if(!hasMeaningfulUserState(pending.state)){
+    clearPendingState(pending.revision ?? null);
+    return;
+  }
+  if(!isHydratedForSession(session)){
+    setSyncStatus('waiting','// daten werden geladen');
+    schedulePendingSyncRetry(1500);
+    return;
+  }
   const area = pending.area || 'app';
   const payload = JSON.parse(JSON.stringify(pending.state));
   payload.updatedAt = new Date().toISOString();
@@ -6039,6 +6136,10 @@ function queueImmediateCloudSync(snapshot, area=guessSyncArea()){
     setSyncStatus('waiting','// wartet auf login');
     return;
   }
+  if(!hasMeaningfulUserState(snapshot)){
+    setSyncStatus('ok','// lokal bereit');
+    return;
+  }
   if(!authSession?.user){
     authSession = session;
     authLoading = false;
@@ -6047,6 +6148,11 @@ function queueImmediateCloudSync(snapshot, area=guessSyncArea()){
   const revision = ++_stateSyncRevision;
   _lastSyncArea = area || 'app';
   markPendingState(snapshot, revision, _lastSyncArea);
+  if(!isHydratedForSession(session)){
+    setSyncStatus('waiting','// lokal gespeichert');
+    schedulePendingSyncRetry(1500);
+    return;
+  }
   if(!forgeSupabase){
     setSyncStatus('waiting','// speichert sobald online');
     schedulePendingSyncRetry();
@@ -6085,9 +6191,9 @@ function saveState(s, area=guessSyncArea()){
     snapshot = JSON.parse(JSON.stringify(s));
     snapshot.updatedAt = new Date().toISOString();
     const session = authSession?.user ? authSession : readPersistedSupabaseSession();
-    if(session?.user) saveLocalUserState(snapshot, session);
+    if(session?.user && (isHydratedForSession(session) || hasMeaningfulUserState(snapshot))) saveLocalUserState(snapshot, session);
   }catch(_){}
-  if(snapshot) queueImmediateCloudSync(snapshot, area);
+  if(snapshot && hasMeaningfulUserState(snapshot)) queueImmediateCloudSync(snapshot, area);
 }
 
 async function flushStateSync(){
@@ -6188,8 +6294,6 @@ if(!S.trainingPlan)               S.trainingPlan = initEmptyTrainingPlan(S.planC
 syncTrainingPlanFromPlanConfig();
 ensureTrainingPlanWeeks();
 syncPlanConfigFromTrainingPlan();
-
-saveState(S);
 
 // ---------------------------------------------------
 // HELPERS
@@ -9008,18 +9112,12 @@ document.getElementById('auth-gate')?.addEventListener('touchend', e=>{
 document.getElementById('gate-signup-password')?.addEventListener('input',updatePasswordStrength);
 document.getElementById('notify-permission')?.addEventListener('click',requestNotificationPermission);
 
-// -- HELPER: Logout -- lokalen State komplett wegwerfen + Cloud-Sync vorher
+// -- HELPER: Logout -- schnell abmelden, letzter Sync nur best-effort
 async function performLogout(btn){
   setButtonLoading(btn, true);
-  setSyncStatus('syncing','// finaler sync...');
-  try{
-    await flushStateSync();
-    await syncAppState(S, 'settings');
-  }catch(error){
-    console.warn('Final sync before logout failed', error);
-    logUserSyncEvent({status:'error', area:'settings', error, metadata:{phase:'logout_final_sync'}});
-  }
-  try{ await flushStateSync(); }catch(error){ console.warn('Pending sync before logout failed', error); }
+  setSyncStatus('syncing','// abmelden...');
+  try{ saveState(S, 'settings'); }catch(error){ console.warn('Best-effort save before logout failed', error); }
+  try{ void flushPendingState({keepalive:true}).catch(error=>console.warn('Best-effort pending save before logout failed', error)); }catch(_){}
   _manualLogoutInProgress = true;
   await releaseDeviceLock();
   clearSupabaseSessionBackup();
@@ -9027,7 +9125,7 @@ async function performLogout(btn){
     try{
       await Promise.race([
         forgeSupabase.auth.signOut({scope:'local'}),
-        new Promise(resolve=>setTimeout(resolve, 1800))
+        new Promise(resolve=>setTimeout(resolve, 700))
       ]);
     }catch(error){
       console.warn('Supabase logout failed locally, clearing client cache anyway', error);
