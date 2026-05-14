@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v45';
+const KASAI_APP_VERSION = 'kasai-v43';
 </script>
 <style>
 :root {
@@ -54,11 +54,9 @@ const KASAI_APP_VERSION = 'kasai-v45';
   --nav-side: 0px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
-  --nav-gap: 10px;
-  --nav-safe-pad: calc(var(--safe-bottom) + var(--nav-gap));
   --nav-bottom-gap: 0px;
-  --nav-total-h: calc(var(--nav-h) + var(--nav-safe-pad));
-  --scroll-bottom: calc(var(--nav-total-h) + 34px);
+  --nav-total-h: var(--nav-h);
+  --scroll-bottom: calc(var(--nav-h) + 34px);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -93,9 +91,7 @@ body{
   background:var(--bg-base);
 }
 #app::before{
-  content:'';position:fixed;
-  top:calc(0px - var(--safe-top));right:0;bottom:calc(0px - var(--safe-bottom));left:0;
-  pointer-events:none;z-index:0;
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(700px 500px at 10% -10%,rgba(110,99,242,0.18),transparent 60%),
     radial-gradient(600px 400px at 110% 10%,rgba(240,98,146,0.10),transparent 60%);
@@ -599,17 +595,17 @@ body{
   bottom:var(--nav-bottom-gap);
   transform:translateX(-50%);
   width:min(390px, calc(100vw - 24px));
-  height:var(--nav-total-h);
-  max-height:var(--nav-total-h);
-  min-height:var(--nav-total-h);
+  height:var(--nav-h);
+  max-height:var(--nav-h);
+  min-height:var(--nav-h);
   background:
     linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.05)),
     rgba(17,17,31,0.72);
   backdrop-filter:blur(26px) saturate(1.45);-webkit-backdrop-filter:blur(26px) saturate(1.45);
   border:1px solid rgba(255,255,255,0.14);
   border-radius:28px;
-  padding:8px 8px var(--nav-safe-pad);
-  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:8px;
+  display:flex;align-items:center;justify-content:space-around;
   overflow:hidden;
   z-index:28000;
   box-shadow:
@@ -654,17 +650,14 @@ body{
 @media(max-width:480px){
   :root{
     --nav-h:60px;
-    --nav-gap:8px;
-    --nav-safe-pad:calc(var(--safe-bottom) + var(--nav-gap));
     --nav-bottom-gap:0px;
-    --nav-total-h:calc(var(--nav-h) + var(--nav-safe-pad));
-    --scroll-bottom:calc(var(--nav-total-h) + 24px);
+    --scroll-bottom:calc(var(--nav-h) + 24px);
   }
   .bottom-nav{
     width:min(306px, calc(100vw - 48px));
-    height:var(--nav-total-h);
-    max-height:var(--nav-total-h);
-    min-height:var(--nav-total-h);
+    height:var(--nav-h);
+    max-height:var(--nav-h);
+    min-height:var(--nav-h);
     bottom:var(--nav-bottom-gap);
     background:
       linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.035)),
@@ -2401,11 +2394,11 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .bottom-nav{
   width:min(368px, calc(100vw - 28px));
-  height:var(--nav-total-h);
-  min-height:var(--nav-total-h);
-  max-height:var(--nav-total-h);
+  height:64px;
+  min-height:64px;
+  max-height:64px;
   border-radius:30px;
-  padding:7px 7px var(--nav-safe-pad);
+  padding:7px;
   background:
     linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.035)),
     rgba(17,17,31,.68);
@@ -2436,23 +2429,18 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   background:linear-gradient(155deg,#0d0b1e,#070510);
   border:1px solid rgba(255,70,0,0.1);
   border-radius:24px;
-  bottom:var(--nav-bottom-gap);
-  height:var(--nav-total-h);
-  min-height:var(--nav-total-h);
-  max-height:var(--nav-total-h);
-  padding:6px 8px var(--nav-safe-pad);
-  align-items:flex-start;
+  padding:6px 8px 0;
   overflow:hidden;
   box-shadow:0 18px 42px rgba(0,0,0,.46),0 0 34px rgba(255,70,0,.05);
 }
 .bottom-nav::after{
   content:'';
-  position:absolute;bottom:var(--nav-safe-pad);left:0;right:0;height:2px;
+  position:absolute;bottom:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent 5%,rgba(255,80,0,0.12) 30%,rgba(255,45,85,0.18) 50%,rgba(255,80,0,0.12) 70%,transparent 95%);
   pointer-events:none;
 }
 .kasai-nav-slider{
-  position:absolute;bottom:var(--nav-safe-pad);height:2px;left:0;width:0;
+  position:absolute;bottom:0;height:2px;left:0;width:0;
   background:linear-gradient(90deg,transparent,#ff9500,#ff2d55,#ff9500,transparent);
   box-shadow:0 0 10px rgba(255,100,0,0.8),0 0 20px rgba(255,45,85,0.4);
   transition:left .42s cubic-bezier(.34,1.3,.64,1),width .42s cubic-bezier(.34,1.3,.64,1);
@@ -2518,17 +2506,10 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 .bottom-nav .nav-item.active .nav-label{color:rgba(255,190,70,.9);}
 .bottom-nav .nav-item.morphing .nav-icon{animation:none;}
 @media(max-width:480px){
-  :root{
-    --nav-h:64px;
-    --nav-gap:8px;
-    --nav-safe-pad:calc(var(--safe-bottom) + var(--nav-gap));
-    --nav-bottom-gap:0px;
-    --nav-total-h:calc(var(--nav-h) + var(--nav-safe-pad));
-    --scroll-bottom:calc(var(--nav-total-h) + 24px);
-  }
+  :root{--nav-h:64px;--scroll-bottom:88px;}
   .bottom-nav{
     width:min(344px, calc(100vw - 28px));
-    height:var(--nav-total-h);min-height:var(--nav-total-h);max-height:var(--nav-total-h);
+    height:64px;min-height:64px;max-height:64px;
     border-radius:24px;
   }
   .bottom-nav .nav-item{height:58px;min-height:58px;padding:12px 4px 14px;}
@@ -2539,13 +2520,10 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 
 
 #splash {
-  position: fixed;
-  top:calc(0px - var(--safe-top));right:0;bottom:calc(0px - var(--safe-bottom));left:0;
+  position: fixed; inset: 0;
   background: #04020a;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  min-height: 100vh; min-height: 100dvh;
-  padding: calc(var(--safe-top) + 24px) 20px calc(var(--safe-bottom) + 24px);
   z-index: 200000; overflow: hidden;
 }
 
@@ -2608,7 +2586,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 
 .loader-wrap {
-  position: absolute; bottom: calc(var(--safe-bottom) + 48px);
+  position: absolute; bottom: max(60px, env(safe-area-inset-bottom, 60px));
   left: 50%; transform: translateX(-50%);
   width: 150px; display: flex; flex-direction: column;
   align-items: center; gap: 10px; opacity: 0;
@@ -2634,7 +2612,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   color: rgba(255,107,0,0.3); text-transform: uppercase;
 }
 .version-tag {
-  position: absolute; bottom: calc(var(--safe-bottom) + 18px);
+  position: absolute; bottom: max(24px, env(safe-area-inset-bottom, 24px));
   left: 50%; transform: translateX(-50%);
   font-family: 'JetBrains Mono', monospace;
   font-size: 8.5px; letter-spacing: 2px; font-weight: 700;
@@ -2648,7 +2626,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   pointer-events: none; z-index: 999;
 }
 .variant-badge {
-  position: absolute; top: calc(var(--safe-top) + 28px); right: 20px;
+  position: absolute; top: max(52px, env(safe-area-inset-top, 52px)); right: 20px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 7px; letter-spacing: 1.5px;
   color: rgba(255,107,0,0.2); text-transform: uppercase;
@@ -2726,7 +2704,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 #splash{transition:opacity .35s ease;}
 body.splash-done #splash{display:none;}
 
-.flame-svg{width:118px;height:170px}.loader-wrap{bottom:calc(var(--safe-bottom) + 48px)}.version-tag{bottom:calc(var(--safe-bottom) + 18px)}}
+.flame-svg{width:118px;height:170px}.loader-wrap{bottom:calc(env(safe-area-inset-bottom,0px) + 48px)}.version{bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}}
 
 /* KASAI Run Tracker */
 .run-section{margin:24px 0 8px;padding:18px 0 4px;border-top:1px solid rgba(255,107,0,.12);}
@@ -2849,7 +2827,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v45 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4361,7 +4339,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v45';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
