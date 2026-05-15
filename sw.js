@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-splash-b5b';
+const CACHE = 'kasai-v43-faststart';
 const ASSETS = [
   './',
   './index.html',
@@ -60,15 +60,26 @@ self.addEventListener('fetch', e => {
   }
   if (e.request.mode === 'navigate' || e.request.destination === 'document') {
     e.respondWith(
-      fetch(e.request).then(res => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          const url = new URL(e.request.url);
-          const isAppShell = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
-          caches.open(CACHE).then(c => c.put(isAppShell ? './index.html' : e.request, clone));
+      (async () => {
+        const url = new URL(e.request.url);
+        const isAppShell = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+        const cacheKey = isAppShell ? './index.html' : e.request;
+        const cache = await caches.open(CACHE);
+        const cached = await cache.match(cacheKey);
+        const network = fetch(e.request).then(res => {
+          if (res && res.status === 200) cache.put(cacheKey, res.clone());
+          return res;
+        });
+        if (cached) {
+          e.waitUntil(network.catch(() => {}));
+          return cached;
         }
-        return res;
-      }).catch(() => caches.match(e.request).then(cached => cached || caches.match('./index.html')))
+        try {
+          return await network;
+        } catch (_) {
+          return (await cache.match(cacheKey)) || cache.match('./index.html');
+        }
+      })()
     );
     return;
   }
