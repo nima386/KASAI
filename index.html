@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-fix1';
+const KASAI_APP_VERSION = 'kasai-v43-notif1';
 </script>
 <style>
 :root {
@@ -522,6 +522,197 @@ body{
   letter-spacing:.15em;text-transform:uppercase;
 }
 .hint-text{font-size:.8rem;font-weight:600;margin-top:2px;}
+
+/* -- KASAI NOTIFICATIONS -- */
+.kasai-notification-layer{
+  position:fixed;
+  top:max(14px,calc(env(safe-area-inset-top,0px) + 12px));
+  left:50%;
+  width:min(420px,calc(100vw - 24px));
+  transform:translateX(-50%);
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  pointer-events:none;
+}
+.kasai-toast{
+  width:100%;
+  border-radius:var(--r-lg);
+  overflow:hidden;
+  position:relative;
+  pointer-events:auto;
+  animation:kasai-toast-in .4s var(--ease) both;
+  filter:drop-shadow(0 18px 45px rgba(0,0,0,.34));
+}
+.kasai-toast.is-leaving{animation:kasai-toast-out .22s var(--ease) both;}
+@keyframes kasai-toast-in{
+  from{opacity:0;transform:translateY(-20px) scale(.96);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+@keyframes kasai-toast-out{
+  to{opacity:0;transform:translateY(-12px) scale(.97);}
+}
+.kasai-toast-glass{
+  background:linear-gradient(165deg,rgba(22,22,40,.95) 0%,rgba(15,15,26,.98) 100%);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r-lg);
+  position:relative;
+  overflow:hidden;
+}
+.kasai-toast-glass::before{
+  content:'';
+  position:absolute;
+  top:-40px;
+  right:-40px;
+  width:160px;
+  height:110px;
+  background:radial-gradient(ellipse,rgba(255,107,0,.13),transparent 70%);
+  filter:blur(20px);
+  pointer-events:none;
+}
+.kasai-toast-accent{height:2px;width:100%;}
+.kasai-toast--training .kasai-toast-accent{background:linear-gradient(90deg,transparent,var(--fire1),var(--fire5),transparent);}
+.kasai-toast--water .kasai-toast-accent{background:linear-gradient(90deg,transparent,var(--teal),#007AFF,transparent);}
+.kasai-toast--habits .kasai-toast-accent{background:linear-gradient(90deg,transparent,var(--purple-500),var(--purple-400),transparent);}
+.kasai-toast--plan .kasai-toast-accent{background:linear-gradient(90deg,transparent,var(--amber),var(--fire2),transparent);}
+.kasai-toast--success .kasai-toast-accent{background:linear-gradient(90deg,transparent,var(--green),#1de9b6,transparent);}
+.kasai-toast-body{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:16px 18px;
+  position:relative;
+  z-index:1;
+}
+.kasai-toast-icon{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  position:relative;
+}
+.kasai-toast-icon::after{
+  content:'';
+  position:absolute;
+  inset:-3px;
+  border-radius:17px;
+  opacity:.4;
+}
+.kasai-toast--training .kasai-toast-icon{background:linear-gradient(145deg,rgba(255,107,0,.18),rgba(255,45,85,.1));border:1px solid rgba(255,107,0,.25);}
+.kasai-toast--water .kasai-toast-icon{background:linear-gradient(145deg,rgba(38,198,218,.15),rgba(0,122,255,.08));border:1px solid rgba(38,198,218,.25);}
+.kasai-toast--habits .kasai-toast-icon{background:linear-gradient(145deg,rgba(110,99,242,.18),rgba(138,128,248,.1));border:1px solid rgba(110,99,242,.25);}
+.kasai-toast--plan .kasai-toast-icon{background:linear-gradient(145deg,rgba(255,202,40,.15),rgba(255,149,0,.08));border:1px solid rgba(255,202,40,.25);}
+.kasai-toast--success .kasai-toast-icon{background:linear-gradient(145deg,rgba(38,212,124,.15),rgba(29,233,182,.08));border:1px solid rgba(38,212,124,.25);}
+.kasai-toast--training .kasai-toast-icon::after{border:1px solid rgba(255,107,0,.12);}
+.kasai-toast--water .kasai-toast-icon::after{border:1px solid rgba(38,198,218,.12);}
+.kasai-toast--habits .kasai-toast-icon::after{border:1px solid rgba(110,99,242,.12);}
+.kasai-toast--plan .kasai-toast-icon::after{border:1px solid rgba(255,202,40,.12);}
+.kasai-toast--success .kasai-toast-icon::after{border:1px solid rgba(38,212,124,.12);}
+.kasai-toast-icon svg{width:22px;height:22px;display:block;}
+.kasai-toast-content{flex:1;min-width:0;padding-right:20px;}
+.kasai-toast-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:10px;}
+.kasai-toast-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:2px 7px;
+  border-radius:var(--r-full);
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.kasai-toast--training .kasai-toast-tag{color:rgba(255,149,0,.82);background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.15);}
+.kasai-toast--water .kasai-toast-tag{color:rgba(38,198,218,.82);background:rgba(38,198,218,.08);border:1px solid rgba(38,198,218,.15);}
+.kasai-toast--habits .kasai-toast-tag{color:rgba(138,128,248,.82);background:rgba(110,99,242,.08);border:1px solid rgba(110,99,242,.15);}
+.kasai-toast--plan .kasai-toast-tag{color:rgba(255,202,40,.82);background:rgba(255,202,40,.08);border:1px solid rgba(255,202,40,.15);}
+.kasai-toast--success .kasai-toast-tag{color:rgba(38,212,124,.82);background:rgba(38,212,124,.08);border:1px solid rgba(38,212,124,.15);}
+.kasai-toast-tag-dot{
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  animation:kasai-toast-pulse 2s ease-in-out infinite;
+}
+@keyframes kasai-toast-pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.kasai-toast--training .kasai-toast-tag-dot{background:var(--fire1);box-shadow:0 0 6px var(--fire1);}
+.kasai-toast--water .kasai-toast-tag-dot{background:var(--teal);box-shadow:0 0 6px var(--teal);}
+.kasai-toast--habits .kasai-toast-tag-dot{background:var(--purple-400);box-shadow:0 0 6px var(--purple-400);}
+.kasai-toast--plan .kasai-toast-tag-dot{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.kasai-toast--success .kasai-toast-tag-dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+.kasai-toast-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--text-muted);
+  letter-spacing:.5px;
+  flex-shrink:0;
+}
+.kasai-toast-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--text-primary);
+  margin-bottom:3px;
+  line-height:1.3;
+}
+.kasai-toast-desc{
+  font-size:12px;
+  font-weight:300;
+  color:var(--text-secondary);
+  line-height:1.5;
+}
+.kasai-toast-desc strong{font-weight:600;color:var(--text-primary);}
+.kasai-toast-actions{
+  display:flex;
+  gap:8px;
+  padding:0 18px 14px 76px;
+  position:relative;
+  z-index:1;
+}
+.kasai-toast-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:1px;
+  padding:6px 14px;
+  border-radius:var(--r-full);
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  transition:all .2s var(--ease);
+}
+.kasai-toast-btn--primary{color:#fff;position:relative;overflow:hidden;}
+.kasai-toast--training .kasai-toast-btn--primary{background:linear-gradient(135deg,var(--fire1),var(--fire5));}
+.kasai-toast--water .kasai-toast-btn--primary{background:linear-gradient(135deg,var(--teal),#007AFF);}
+.kasai-toast--habits .kasai-toast-btn--primary{background:linear-gradient(135deg,var(--purple-500),var(--purple-400));}
+.kasai-toast--plan .kasai-toast-btn--primary{background:linear-gradient(135deg,var(--amber),var(--fire2));color:#0f0f1a;}
+.kasai-toast--success .kasai-toast-btn--primary{background:linear-gradient(135deg,var(--green),#1de9b6);color:#0f0f1a;}
+.kasai-toast-btn--ghost{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-secondary);}
+.kasai-toast-dismiss{
+  position:absolute;
+  top:12px;
+  right:14px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color:var(--text-muted);
+  font-size:14px;
+  line-height:1;
+  z-index:2;
+}
+.kasai-toast-progress-wrap{padding:0 18px 14px 76px;position:relative;z-index:1;}
+.kasai-toast-progress{height:3px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden;}
+.kasai-toast-progress-fill{height:100%;border-radius:2px;transition:width .3s var(--ease);}
+.kasai-toast--water .kasai-toast-progress-fill{background:linear-gradient(90deg,var(--teal),#007AFF);box-shadow:0 0 8px rgba(38,198,218,.4);}
 
 /* -- NUTRITION -- */
 .macro-ring-card{
@@ -2884,7 +3075,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-fix1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-notif1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4449,7 +4640,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-fix1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-notif1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -9056,20 +9247,202 @@ async function requestNotificationPermission(){
   return result;
 }
 
-async function showKasaiNotification(title, body, tag){
-  if(notificationPermission() !== 'granted') return;
-  const options = {
+let kasaiNotificationSeq = 0;
+
+function ensureKasaiNotificationLayer(){
+  let layer = document.getElementById('kasai-notification-layer');
+  if(!layer){
+    layer = document.createElement('div');
+    layer.id = 'kasai-notification-layer';
+    layer.className = 'kasai-notification-layer';
+    layer.setAttribute('aria-live', 'polite');
+    document.body.appendChild(layer);
+  }
+  return layer;
+}
+
+function canShowKasaiInAppNotification(){
+  return typeof document !== 'undefined' && document.visibilityState === 'visible';
+}
+
+function kasaiNotificationType(tag='', title=''){
+  const key = `${tag} ${title}`.toLowerCase();
+  if(key.includes('water') || key.includes('wasser')) return 'water';
+  if(key.includes('habit')) return 'habits';
+  if(key.includes('plan')) return 'plan';
+  if(key.includes('success') || key.includes('erfolg') || key.includes('pr')) return 'success';
+  return 'training';
+}
+
+function kasaiNotificationIcon(type, uid){
+  if(type === 'water') return `
+    <svg viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path d="M11,3 C11,3 6,9 6,13 C6,15.8 8.2,18 11,18 C13.8,18 16,15.8 16,13 C16,9 11,3 11,3Z" fill="none" stroke="url(#${uid}-drop)" stroke-width="1.8"/>
+      <path d="M9,14 C9,14 9.5,12 11,12 C12.5,12 13,14 13,14" stroke="rgba(38,198,218,.4)" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+      <defs><linearGradient id="${uid}-drop" x1=".5" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#26c6da"/><stop offset="100%" stop-color="#007AFF"/></linearGradient></defs>
+    </svg>`;
+  if(type === 'habits') return `
+    <svg viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path d="M3,11 L8,16 L19,5" stroke="url(#${uid}-check)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs><linearGradient id="${uid}-check" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6e63f2"/><stop offset="100%" stop-color="#8a80f8"/></linearGradient></defs>
+    </svg>`;
+  if(type === 'plan') return `
+    <svg viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <rect x="3" y="5" width="16" height="14" rx="3" stroke="url(#${uid}-cal)" stroke-width="1.8" fill="none"/>
+      <line x1="7" y1="3" x2="7" y2="7" stroke="url(#${uid}-cal)" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="15" y1="3" x2="15" y2="7" stroke="url(#${uid}-cal)" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="11" cy="13" r="2" fill="url(#${uid}-cal)"/>
+      <defs><linearGradient id="${uid}-cal" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffca28"/><stop offset="100%" stop-color="#ff9500"/></linearGradient></defs>
+    </svg>`;
+  if(type === 'success') return `
+    <svg viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path d="M11,2.5 L12.8,8 L18.5,8 L14,11.3 L15.6,17 L11,13.6 L6.4,17 L8,11.3 L3.5,8 L9.2,8 Z" fill="none" stroke="url(#${uid}-star)" stroke-width="1.6" stroke-linejoin="round"/>
+      <defs><linearGradient id="${uid}-star" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#26d47c"/><stop offset="100%" stop-color="#1de9b6"/></linearGradient></defs>
+    </svg>`;
+  return `
+    <svg viewBox="0 0 22 22" fill="none" aria-hidden="true">
+      <path d="M11,2 C12,3.6 14.2,4.5 13.8,6.8 C13.7,7.9 12.9,8.5 13.3,9.8 C14.2,8 14.9,7.3 14.7,5.6 C16,7.1 16.3,9 15.4,10.8 C13.2,10.2 9.2,10.2 7.8,10.8 C6.9,9 7.2,7.1 8.5,5.6 C8.3,7.3 9,8 9.9,9.8 C10.3,8.5 9.5,7.9 9.4,6.8 C9,4.5 10.3,3.6 11,2Z" fill="url(#${uid}-flame)"/>
+      <path d="M11,10 C11.7,11 12.4,11.4 12.2,12.8 C11.6,12.1 11.3,12 11,12.6 C10.7,12 10.4,12.1 9.8,12.8 C9.6,11.4 10.3,11 11,10Z" fill="rgba(255,255,230,.55)"/>
+      <defs><linearGradient id="${uid}-flame" x1=".5" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#ffca28"/><stop offset="50%" stop-color="#ff6b00"/><stop offset="100%" stop-color="#ff2d55"/></linearGradient></defs>
+    </svg>`;
+}
+
+function kasaiNotificationPayload(title, body, tag){
+  const type = kasaiNotificationType(tag, title);
+  const current = S?.hydration?.[todayStr] || 0;
+  const waterGoal = parseIntegerInput(S?.profile?.waterGoal) || 3000;
+  const base = {
+    title,
     body,
     tag,
+    type,
+    time: new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}),
+    label: 'Training',
+    headline: title.replace(/^KASAI\s*/i, '') || 'KASAI',
+    description: body || '',
+    actionLabel: 'Öffnen',
+    ghostLabel: 'Später',
+    progress: null
+  };
+  if(type === 'training') return Object.assign(base, {
+    label: 'Training',
+    headline: 'Training steht an',
+    actionLabel: 'Training starten'
+  });
+  if(type === 'water') return Object.assign(base, {
+    label: 'Wasser',
+    headline: 'Zeit für ein Glas Wasser',
+    description: body || `Du hast heute ${Math.round(current/100)/10}L / ${Math.round(waterGoal/100)/10}L getrunken.`,
+    actionLabel: '+250ml',
+    ghostLabel: 'Erledigt',
+    progress: Math.min(100, Math.round((current / Math.max(1, waterGoal)) * 100))
+  });
+  if(type === 'habits') return Object.assign(base, {
+    label: tag?.startsWith('kasai-habit-') ? 'Habit' : 'Habits',
+    headline: tag?.startsWith('kasai-habit-') ? 'Habit offen' : 'Habits offen',
+    actionLabel: 'Habits checken',
+    ghostLabel: 'Ignorieren'
+  });
+  if(type === 'plan') return Object.assign(base, {
+    label: 'Neuer Zyklus',
+    headline: 'Trainingsplan Erinnerung',
+    actionLabel: 'Plan öffnen'
+  });
+  return Object.assign(base, {
+    label: 'Erfolg',
+    headline: title.replace(/^KASAI\s*/i, '') || 'Stark gemacht',
+    actionLabel: 'Stats'
+  });
+}
+
+function closeKasaiToast(toast){
+  if(!toast || toast.classList.contains('is-leaving')) return;
+  toast.classList.add('is-leaving');
+  setTimeout(()=>toast.remove(), 230);
+}
+
+function handleKasaiNotificationAction(payload){
+  if(payload.type === 'water'){
+    ensureDailyState(todayStr);
+    S.hydration[todayStr] = (S.hydration[todayStr] || 0) + 250;
+    saveState(S);
+    if(currentScreen === 'nutrition') renderHydration();
+    return;
+  }
+  if(payload.type === 'habits'){
+    navigate('habits');
+    return;
+  }
+  if(payload.type === 'plan'){
+    if(typeof openTrainingPlanScreen === 'function') openTrainingPlanScreen();
+    else navigate('profile');
+    return;
+  }
+  navigate('training');
+}
+
+function showKasaiInAppNotification(payload){
+  const layer = ensureKasaiNotificationLayer();
+  const uid = `kasai-notif-${++kasaiNotificationSeq}`;
+  const toast = document.createElement('div');
+  toast.className = `kasai-toast kasai-toast--${payload.type}`;
+  toast.dataset.tag = payload.tag || '';
+  toast.innerHTML = `
+    <div class="kasai-toast-glass">
+      <button class="kasai-toast-dismiss" type="button" aria-label="Schließen">×</button>
+      <div class="kasai-toast-accent"></div>
+      <div class="kasai-toast-body">
+        <div class="kasai-toast-icon">${kasaiNotificationIcon(payload.type, uid)}</div>
+        <div class="kasai-toast-content">
+          <div class="kasai-toast-header">
+            <div class="kasai-toast-tag"><span class="kasai-toast-tag-dot"></span>${escapeHtml(payload.label)}</div>
+            <div class="kasai-toast-time">${escapeHtml(payload.time)}</div>
+          </div>
+          <div class="kasai-toast-title">${escapeHtml(payload.headline)}</div>
+          <div class="kasai-toast-desc">${escapeHtml(payload.description)}</div>
+        </div>
+      </div>
+      ${payload.progress !== null ? `<div class="kasai-toast-progress-wrap"><div class="kasai-toast-progress"><div class="kasai-toast-progress-fill" style="width:${payload.progress}%"></div></div></div>` : ''}
+      <div class="kasai-toast-actions">
+        <button class="kasai-toast-btn kasai-toast-btn--primary" type="button" data-kasai-action="primary">${escapeHtml(payload.actionLabel)}</button>
+        <button class="kasai-toast-btn kasai-toast-btn--ghost" type="button" data-kasai-action="dismiss">${escapeHtml(payload.ghostLabel)}</button>
+      </div>
+    </div>
+  `;
+  toast.querySelector('.kasai-toast-dismiss')?.addEventListener('click',()=>closeKasaiToast(toast));
+  toast.querySelector('[data-kasai-action="dismiss"]')?.addEventListener('click',()=>closeKasaiToast(toast));
+  toast.querySelector('[data-kasai-action="primary"]')?.addEventListener('click',()=>{
+    handleKasaiNotificationAction(payload);
+    closeKasaiToast(toast);
+  });
+  layer.prepend(toast);
+  Array.from(layer.children).slice(3).forEach(closeKasaiToast);
+  setTimeout(()=>closeKasaiToast(toast), payload.type === 'water' ? 9000 : 7200);
+}
+
+async function showKasaiNativeNotification(payload){
+  if(notificationPermission() !== 'granted') return;
+  const options = {
+    body: payload.body,
+    tag: payload.tag,
     badge: './icons/icon-192.png',
     icon: './icons/icon-192.png',
-    data: {url: location.href}
+    data: {url: location.href, type: payload.type}
   };
   try{
     const reg = await navigator.serviceWorker?.ready;
-    if(reg?.showNotification) return reg.showNotification(title, options);
+    if(reg?.showNotification) return reg.showNotification(payload.title, options);
   }catch(_){}
-  try{ new Notification(title, options); }catch(_){}
+  try{ new Notification(payload.title, options); }catch(_){}
+}
+
+async function showKasaiNotification(title, body, tag){
+  const payload = kasaiNotificationPayload(title, body, tag);
+  if(canShowKasaiInAppNotification()){
+    showKasaiInAppNotification(payload);
+    return;
+  }
+  return showKasaiNativeNotification(payload);
 }
 
 function minutesFromTime(time){
@@ -9104,7 +9477,8 @@ function openHabitCount(){
 function scheduleNotifications(){
   clearNotificationTimers();
   const n = normalizeNotificationSettings();
-  if(!authSession?.user || !S.settings.notificationsEnabled || notificationPermission() !== 'granted') return;
+  if(!authSession?.user || !S.settings.notificationsEnabled) return;
+  if(notificationPermission() !== 'granted' && !canShowKasaiInAppNotification()) return;
   if(n.training.enabled){
     scheduleAt(nextDateForTime(n.training.time), ()=>{
       showKasaiNotification('KASAI Training', planReminderText(), 'kasai-training');
