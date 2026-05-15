@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-notif1';
+const CACHE = 'kasai-v43-notif2';
 const ASSETS = [
   './',
   './index.html',
