@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KASAI — FIRE VORTEX 3D</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(ellipse 70% 80% at 50% 60%, #100308 0%, #050105 50%, #000 100%);
+  }
+
+  /* ── 3D VORTEX / TORNADO ── */
+  .scene {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 800px;
+    z-index: 5;
+  }
+
+  .vortex-wrap {
+    transform-style: preserve-3d;
+    width: 300px;
+    height: 400px;
+    position: relative;
+    animation: vortex-tilt 8s ease-in-out infinite;
+  }
+  @keyframes vortex-tilt {
+    0%, 100% { transform: rotateX(15deg) rotateZ(0deg); }
+    50% { transform: rotateX(20deg) rotateZ(3deg); }
+  }
+
+  /* Spiral rings at different heights, rotating */
+  .v-ring {
+    position: absolute;
+    left: 50%;
+    border-radius: 50%;
+    border: 2px solid;
+    transform-style: preserve-3d;
+    animation: v-spin linear infinite;
+  }
+
+  /* Bottom rings — wide, red */
+  .vr1  { width:240px; height:240px; bottom:10%;  margin-left:-120px; border-color: rgba(255,45,85,0.25);  animation-duration:3s;  box-shadow: 0 0 15px rgba(255,45,85,0.15); }
+  .vr2  { width:220px; height:220px; bottom:15%;  margin-left:-110px; border-color: rgba(255,60,30,0.2);   animation-duration:3.2s; animation-direction:reverse; }
+  .vr3  { width:200px; height:200px; bottom:20%;  margin-left:-100px; border-color: rgba(255,80,20,0.25);  animation-duration:2.8s; box-shadow: 0 0 12px rgba(255,80,20,0.12); }
+  .vr4  { width:180px; height:180px; bottom:26%;  margin-left:-90px;  border-color: rgba(255,107,0,0.3);   animation-duration:2.6s; animation-direction:reverse; }
+  .vr5  { width:160px; height:160px; bottom:32%;  margin-left:-80px;  border-color: rgba(255,107,0,0.35);  animation-duration:2.4s; box-shadow: 0 0 15px rgba(255,107,0,0.15); }
+  .vr6  { width:140px; height:140px; bottom:38%;  margin-left:-70px;  border-color: rgba(255,130,0,0.3);   animation-duration:2.2s; animation-direction:reverse; }
+  .vr7  { width:120px; height:120px; bottom:44%;  margin-left:-60px;  border-color: rgba(255,149,0,0.35);  animation-duration:2s;   box-shadow: 0 0 18px rgba(255,149,0,0.15); }
+  .vr8  { width:100px; height:100px; bottom:50%;  margin-left:-50px;  border-color: rgba(255,180,20,0.35); animation-duration:1.8s; animation-direction:reverse; }
+  .vr9  { width:80px;  height:80px;  bottom:56%;  margin-left:-40px;  border-color: rgba(255,202,40,0.4);  animation-duration:1.6s; box-shadow: 0 0 20px rgba(255,202,40,0.15); }
+  .vr10 { width:60px;  height:60px;  bottom:62%;  margin-left:-30px;  border-color: rgba(255,220,60,0.45); animation-duration:1.4s; animation-direction:reverse; }
+  .vr11 { width:40px;  height:40px;  bottom:68%;  margin-left:-20px;  border-color: rgba(255,230,100,0.5); animation-duration:1.2s; box-shadow: 0 0 25px rgba(255,230,100,0.2); }
+  .vr12 { width:24px;  height:24px;  bottom:73%;  margin-left:-12px;  border-color: rgba(255,240,150,0.6); animation-duration:1s;   box-shadow: 0 0 30px rgba(255,240,150,0.25); }
+
+  @keyframes v-spin {
+    from { transform: rotateX(75deg) rotateZ(0deg); }
+    to   { transform: rotateX(75deg) rotateZ(360deg); }
+  }
+
+  /* Glowing particles inside vortex */
+  .v-particle {
+    position: absolute;
+    border-radius: 50%;
+    left: 50%;
+    pointer-events: none;
+    animation: v-particle-rise linear infinite;
+  }
+  @keyframes v-particle-rise {
+    0% { opacity: 0; transform: translateX(var(--ox)) rotate(0deg) translateY(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { opacity: 0; transform: translateX(calc(var(--ox) * 0.1)) rotate(1080deg) translateY(-350px); }
+  }
+  .vp1  { width:4px; height:4px; bottom:12%; --ox:-80px;  background:#ff2d55; animation-duration:3s;   animation-delay:0s;   box-shadow:0 0 8px #ff2d55; }
+  .vp2  { width:3px; height:3px; bottom:15%; --ox:60px;   background:#ff6b00; animation-duration:2.5s; animation-delay:0.4s; box-shadow:0 0 6px #ff6b00; }
+  .vp3  { width:5px; height:5px; bottom:10%; --ox:-40px;  background:#ffca28; animation-duration:2.8s; animation-delay:0.8s; box-shadow:0 0 10px #ffca28; }
+  .vp4  { width:3px; height:3px; bottom:18%; --ox:90px;   background:#ff9500; animation-duration:3.2s; animation-delay:1.2s; box-shadow:0 0 6px #ff9500; }
+  .vp5  { width:4px; height:4px; bottom:8%;  --ox:-100px; background:#ff6b00; animation-duration:2.6s; animation-delay:0.2s; box-shadow:0 0 8px #ff6b00; }
+  .vp6  { width:3px; height:3px; bottom:20%; --ox:50px;   background:#ffca28; animation-duration:3.4s; animation-delay:1.6s; box-shadow:0 0 6px #ffca28; }
+  .vp7  { width:4px; height:4px; bottom:14%; --ox:-70px;  background:#ff2d55; animation-duration:2.4s; animation-delay:0.6s; box-shadow:0 0 8px #ff2d55; }
+  .vp8  { width:2px; height:2px; bottom:16%; --ox:30px;   background:#ff6b00; animation-duration:3s;   animation-delay:2s;   box-shadow:0 0 4px #ff6b00; }
+
+  /* Top flame tip */
+  .vortex-tip {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    width: 12px;
+    height: 30px;
+    margin-left: -6px;
+    border-radius: 50% 50% 30% 30%;
+    background: linear-gradient(180deg, rgba(255,255,200,0.8), rgba(255,202,40,0.6), transparent);
+    filter: blur(3px);
+    animation: tip-flicker 0.5s ease-in-out infinite alternate;
+    z-index: 6;
+  }
+  @keyframes tip-flicker {
+    0% { height: 25px; opacity: 0.6; }
+    100% { height: 35px; opacity: 1; transform: translateX(2px); }
+  }
+
+  /* Base fire glow */
+  .base-glow {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    height: 100px;
+    background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(255,45,85,0.2) 0%, rgba(255,107,0,0.1) 40%, transparent 70%);
+    filter: blur(25px);
+    z-index: 1;
+    animation: base-pulse 3s ease-in-out infinite;
+  }
+  @keyframes base-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ── TEXT ── */
+  .logo-top {
+    position: fixed;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    animation: fade-in 1s ease 0.3s forwards;
+  }
+  .logo-name {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    background: linear-gradient(135deg, #ffca28, #ff6b00, #ff2d55);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .quote {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+  }
+  .q1 {
+    font-size: clamp(40px, 9vw, 68px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    opacity: 0;
+    animation: vortex-text 1s cubic-bezier(0.16,1,0.3,1) 1.5s forwards;
+  }
+  .q1 span {
+    background: linear-gradient(135deg, #ffca28, #ff6b00, #ff2d55);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .q2 {
+    font-size: clamp(38px, 9vw, 68px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #fff;
+    display: block;
+    opacity: 0;
+    animation: vortex-text 1s cubic-bezier(0.16,1,0.3,1) 2s forwards;
+  }
+  .q-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(255,149,0,0.35);
+    margin-top: 14px;
+    opacity: 0;
+    animation: vortex-text 1s ease 2.8s forwards;
+    display: block;
+  }
+  @keyframes vortex-text {
+    from { opacity: 0; transform: translateY(40px) scale(0.85); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+
+  .bottom-tag {
+    position: fixed;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    animation: fade-in 1s ease 3.5s forwards;
+  }
+  .tag-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,149,0,0.2);
+  }
+  @keyframes fade-in { to { opacity: 1; } }
+
+  .overlay-v {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    background: radial-gradient(ellipse 60% 55% at 50% 50%, transparent 20%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="base-glow"></div>
+<div class="overlay-v"></div>
+
+<div class="scene">
+  <div class="vortex-wrap">
+    <div class="v-ring vr1"></div>
+    <div class="v-ring vr2"></div>
+    <div class="v-ring vr3"></div>
+    <div class="v-ring vr4"></div>
+    <div class="v-ring vr5"></div>
+    <div class="v-ring vr6"></div>
+    <div class="v-ring vr7"></div>
+    <div class="v-ring vr8"></div>
+    <div class="v-ring vr9"></div>
+    <div class="v-ring vr10"></div>
+    <div class="v-ring vr11"></div>
+    <div class="v-ring vr12"></div>
+    <div class="vortex-tip"></div>
+    <!-- Particles -->
+    <div class="v-particle vp1"></div>
+    <div class="v-particle vp2"></div>
+    <div class="v-particle vp3"></div>
+    <div class="v-particle vp4"></div>
+    <div class="v-particle vp5"></div>
+    <div class="v-particle vp6"></div>
+    <div class="v-particle vp7"></div>
+    <div class="v-particle vp8"></div>
+  </div>
+</div>
+
+<div class="logo-top"><div class="logo-name">KASAI</div></div>
+
+<div class="quote">
+  <span class="q1"><span>RISE</span></span>
+  <span class="q2">ABOVE</span>
+  <span class="q-sub">Unleash the storm</span>
+</div>
+
+<div class="bottom-tag">
+  <div class="tag-text">火 · Train like fire</div>
+</div>
+
+</body>
+</html>

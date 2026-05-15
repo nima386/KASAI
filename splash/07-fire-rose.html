@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KASAI — FIRE ROSE 3D</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── SCENE ── */
+  .scene {
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+
+  /* ── BG ── */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(ellipse 70% 70% at 50% 55%, #1a0800 0%, #0a0205 40%, #000 100%);
+  }
+
+  /* Ambient light from below */
+  .ground-glow {
+    position: fixed;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 200px;
+    background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(255,80,0,0.2) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: 1;
+    animation: ground-pulse 3s ease-in-out infinite;
+  }
+  @keyframes ground-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Floating embers */
+  .ember {
+    position: fixed;
+    border-radius: 50%;
+    z-index: 6;
+    pointer-events: none;
+    animation: ember-rise linear infinite;
+  }
+  @keyframes ember-rise {
+    0% { opacity: 0; transform: translateY(0) translateX(0) scale(1); }
+    10% { opacity: 0.9; }
+    50% { opacity: 0.6; transform: translateY(-40vh) translateX(var(--drift)) scale(0.7); }
+    100% { opacity: 0; transform: translateY(-90vh) translateX(calc(var(--drift) * 2)) scale(0.1); }
+  }
+  .em1  { width:3px; height:3px; left:20%; bottom:10%; background:#ff6b00; --drift:30px;  animation-duration:4s; animation-delay:0s; box-shadow:0 0 6px #ff6b00; }
+  .em2  { width:2px; height:2px; left:35%; bottom:5%;  background:#ffca28; --drift:-20px; animation-duration:5s; animation-delay:0.5s; box-shadow:0 0 4px #ffca28; }
+  .em3  { width:4px; height:4px; left:50%; bottom:8%;  background:#ff2d55; --drift:15px;  animation-duration:3.5s; animation-delay:1s; box-shadow:0 0 8px #ff2d55; }
+  .em4  { width:2px; height:2px; left:65%; bottom:12%; background:#ff9500; --drift:-25px; animation-duration:4.5s; animation-delay:0.3s; box-shadow:0 0 4px #ff9500; }
+  .em5  { width:3px; height:3px; left:78%; bottom:6%;  background:#ffca28; --drift:20px;  animation-duration:5.5s; animation-delay:1.5s; box-shadow:0 0 6px #ffca28; }
+  .em6  { width:2px; height:2px; left:42%; bottom:15%; background:#ff6b00; --drift:-10px; animation-duration:4.2s; animation-delay:2s; box-shadow:0 0 4px #ff6b00; }
+  .em7  { width:3px; height:3px; left:58%; bottom:3%;  background:#ff2d55; --drift:35px;  animation-duration:3.8s; animation-delay:0.8s; box-shadow:0 0 6px #ff2d55; }
+
+  /* ── 3D ROSE ── */
+  .rose-group {
+    transform-style: preserve-3d;
+    animation: rose-float 4s ease-in-out infinite, rose-rotate 12s linear infinite;
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+  @keyframes rose-float {
+    0%, 100% { transform: translateY(0) rotateX(5deg); }
+    50% { transform: translateY(-20px) rotateX(-5deg); }
+  }
+  @keyframes rose-rotate {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+  }
+  /* Combined animation */
+  .rose-group {
+    animation: rose-spin 12s linear infinite;
+  }
+  @keyframes rose-spin {
+    0%   { transform: rotateY(0deg) translateY(0px) rotateX(5deg); }
+    25%  { transform: rotateY(90deg) translateY(-15px) rotateX(0deg); }
+    50%  { transform: rotateY(180deg) translateY(0px) rotateX(-5deg); }
+    75%  { transform: rotateY(270deg) translateY(-15px) rotateX(0deg); }
+    100% { transform: rotateY(360deg) translateY(0px) rotateX(5deg); }
+  }
+
+  /* Petals */
+  .petal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 120px;
+    transform-style: preserve-3d;
+    transform-origin: bottom center;
+    border-radius: 50% 50% 10% 10%;
+    opacity: 0;
+    animation: petal-bloom 1.5s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+
+  /* Layer 1 — outer petals */
+  .petal-outer {
+    width: 90px;
+    height: 130px;
+    background: linear-gradient(180deg, rgba(255,45,85,0.7) 0%, rgba(180,20,40,0.9) 60%, rgba(100,10,20,0.8) 100%);
+    box-shadow: 0 0 20px rgba(255,45,85,0.3), inset 0 -20px 30px rgba(0,0,0,0.4);
+  }
+  .petal-outer:nth-child(1) { transform: translate(-50%,-60%) rotateY(0deg) translateZ(45px) rotateX(-30deg); animation-delay: 1.5s; }
+  .petal-outer:nth-child(2) { transform: translate(-50%,-60%) rotateY(60deg) translateZ(45px) rotateX(-30deg); animation-delay: 1.7s; }
+  .petal-outer:nth-child(3) { transform: translate(-50%,-60%) rotateY(120deg) translateZ(45px) rotateX(-30deg); animation-delay: 1.9s; }
+  .petal-outer:nth-child(4) { transform: translate(-50%,-60%) rotateY(180deg) translateZ(45px) rotateX(-30deg); animation-delay: 2.1s; }
+  .petal-outer:nth-child(5) { transform: translate(-50%,-60%) rotateY(240deg) translateZ(45px) rotateX(-30deg); animation-delay: 2.3s; }
+  .petal-outer:nth-child(6) { transform: translate(-50%,-60%) rotateY(300deg) translateZ(45px) rotateX(-30deg); animation-delay: 2.5s; }
+
+  /* Layer 2 — mid petals */
+  .petal-mid {
+    width: 70px;
+    height: 100px;
+    background: linear-gradient(180deg, rgba(255,107,0,0.8) 0%, rgba(255,60,30,0.9) 50%, rgba(200,30,50,0.8) 100%);
+    box-shadow: 0 0 25px rgba(255,107,0,0.4), inset 0 -15px 25px rgba(0,0,0,0.3);
+  }
+  .petal-mid:nth-child(7)  { transform: translate(-50%,-55%) rotateY(30deg) translateZ(30px) rotateX(-20deg); animation-delay: 2.0s; }
+  .petal-mid:nth-child(8)  { transform: translate(-50%,-55%) rotateY(90deg) translateZ(30px) rotateX(-20deg); animation-delay: 2.2s; }
+  .petal-mid:nth-child(9)  { transform: translate(-50%,-55%) rotateY(150deg) translateZ(30px) rotateX(-20deg); animation-delay: 2.4s; }
+  .petal-mid:nth-child(10) { transform: translate(-50%,-55%) rotateY(210deg) translateZ(30px) rotateX(-20deg); animation-delay: 2.6s; }
+  .petal-mid:nth-child(11) { transform: translate(-50%,-55%) rotateY(270deg) translateZ(30px) rotateX(-20deg); animation-delay: 2.8s; }
+  .petal-mid:nth-child(12) { transform: translate(-50%,-55%) rotateY(330deg) translateZ(30px) rotateX(-20deg); animation-delay: 3.0s; }
+
+  /* Layer 3 — inner petals (hottest) */
+  .petal-inner {
+    width: 50px;
+    height: 70px;
+    background: linear-gradient(180deg, rgba(255,202,40,0.9) 0%, rgba(255,140,0,0.95) 50%, rgba(255,80,20,0.9) 100%);
+    box-shadow: 0 0 30px rgba(255,202,40,0.5), inset 0 -10px 20px rgba(0,0,0,0.2);
+  }
+  .petal-inner:nth-child(13) { transform: translate(-50%,-50%) rotateY(0deg) translateZ(15px) rotateX(-10deg); animation-delay: 2.5s; }
+  .petal-inner:nth-child(14) { transform: translate(-50%,-50%) rotateY(72deg) translateZ(15px) rotateX(-10deg); animation-delay: 2.7s; }
+  .petal-inner:nth-child(15) { transform: translate(-50%,-50%) rotateY(144deg) translateZ(15px) rotateX(-10deg); animation-delay: 2.9s; }
+  .petal-inner:nth-child(16) { transform: translate(-50%,-50%) rotateY(216deg) translateZ(15px) rotateX(-10deg); animation-delay: 3.1s; }
+  .petal-inner:nth-child(17) { transform: translate(-50%,-50%) rotateY(288deg) translateZ(15px) rotateX(-10deg); animation-delay: 3.3s; }
+
+  @keyframes petal-bloom {
+    from { opacity: 0; transform: translate(-50%,-50%) scale(0.2); filter: blur(8px) brightness(2); }
+    to   { opacity: 1; filter: blur(0) brightness(1); }
+  }
+
+  /* Center glow (core of rose) */
+  .rose-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%,-50%) translateZ(5px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,230,150,1), rgba(255,180,50,0.8), rgba(255,100,0,0.4));
+    box-shadow: 0 0 40px rgba(255,180,50,0.6), 0 0 80px rgba(255,100,0,0.3);
+    animation: core-pulse 2s ease-in-out infinite;
+  }
+  @keyframes core-pulse {
+    0%, 100% { box-shadow: 0 0 40px rgba(255,180,50,0.6), 0 0 80px rgba(255,100,0,0.3); transform: translate(-50%,-50%) translateZ(5px) scale(1); }
+    50% { box-shadow: 0 0 60px rgba(255,180,50,0.8), 0 0 120px rgba(255,100,0,0.5); transform: translate(-50%,-50%) translateZ(5px) scale(1.15); }
+  }
+
+  /* Stem */
+  .stem {
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100px;
+    background: linear-gradient(180deg, rgba(100,40,10,0.8), rgba(40,80,20,0.6), rgba(20,60,10,0.4));
+    border-radius: 2px;
+    opacity: 0;
+    animation: stem-grow 1s ease 0.8s forwards;
+    transform-origin: top center;
+  }
+  @keyframes stem-grow {
+    from { opacity: 0; height: 0; }
+    to   { opacity: 0.6; height: 100px; }
+  }
+
+  /* Flame wisps off petals */
+  .flame-wisp {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 20px;
+    height: 40px;
+    transform-style: preserve-3d;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    pointer-events: none;
+    animation: wisp-dance ease-in-out infinite;
+    filter: blur(3px);
+  }
+  .fw1 { background: rgba(255,202,40,0.4); width:15px; height:30px; transform: translateZ(50px) translateX(-10px); animation-duration: 1.5s; }
+  .fw2 { background: rgba(255,107,0,0.3); width:20px; height:45px; transform: rotateY(120deg) translateZ(50px); animation-duration: 2s; animation-delay: 0.3s; }
+  .fw3 { background: rgba(255,45,85,0.3); width:12px; height:35px; transform: rotateY(240deg) translateZ(50px) translateX(10px); animation-duration: 1.8s; animation-delay: 0.6s; }
+  @keyframes wisp-dance {
+    0%, 100% { opacity: 0.3; transform: translateY(0) scale(1); }
+    50% { opacity: 0.7; transform: translateY(-20px) scale(1.2); }
+  }
+
+  /* ── TEXT ── */
+  .text-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .logo-small {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    animation: fade-down 1s ease 0.5s forwards;
+    z-index: 10;
+    text-align: center;
+  }
+  @keyframes fade-down {
+    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  .logo-small-text {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    background: linear-gradient(135deg, #ffca28, #ff6b00, #ff2d55);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .quote-main {
+    position: fixed;
+    bottom: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+  }
+  .quote-word {
+    font-size: clamp(36px, 9vw, 64px);
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    display: block;
+    line-height: 1.1;
+  }
+  .qw1 { animation: text-rise-3d 1s cubic-bezier(0.16,1,0.3,1) 3.5s forwards; }
+  .qw2 {
+    font-size: clamp(28px, 7vw, 48px);
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: rgba(255,107,0,0.7);
+    animation: text-rise-3d 1s cubic-bezier(0.16,1,0.3,1) 4.0s forwards;
+  }
+  .qw3 { animation: text-rise-3d 1s cubic-bezier(0.16,1,0.3,1) 4.5s forwards; }
+
+  @keyframes text-rise-3d {
+    from { opacity: 0; transform: translateY(40px) rotateX(-20deg) scale(0.8); filter: blur(6px); }
+    to   { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); filter: blur(0); }
+  }
+
+  .bottom-tag {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    animation: fade-in 1s ease 5.5s forwards;
+  }
+  .tag-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,149,0,0.25);
+  }
+  @keyframes fade-in { to { opacity: 1; } }
+
+  /* Vignette */
+  .overlay-v {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    background: radial-gradient(ellipse 60% 55% at 50% 50%, transparent 20%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="ground-glow"></div>
+<div class="overlay-v"></div>
+
+<!-- Embers -->
+<div class="ember em1"></div>
+<div class="ember em2"></div>
+<div class="ember em3"></div>
+<div class="ember em4"></div>
+<div class="ember em5"></div>
+<div class="ember em6"></div>
+<div class="ember em7"></div>
+
+<!-- 3D Rose -->
+<div class="scene">
+  <div class="rose-group">
+    <!-- Outer petals (6) -->
+    <div class="petal petal-outer"></div>
+    <div class="petal petal-outer"></div>
+    <div class="petal petal-outer"></div>
+    <div class="petal petal-outer"></div>
+    <div class="petal petal-outer"></div>
+    <div class="petal petal-outer"></div>
+    <!-- Mid petals (6) -->
+    <div class="petal petal-mid"></div>
+    <div class="petal petal-mid"></div>
+    <div class="petal petal-mid"></div>
+    <div class="petal petal-mid"></div>
+    <div class="petal petal-mid"></div>
+    <div class="petal petal-mid"></div>
+    <!-- Inner petals (5) -->
+    <div class="petal petal-inner"></div>
+    <div class="petal petal-inner"></div>
+    <div class="petal petal-inner"></div>
+    <div class="petal petal-inner"></div>
+    <div class="petal petal-inner"></div>
+    <!-- Core -->
+    <div class="rose-core"></div>
+    <!-- Flame wisps -->
+    <div class="flame-wisp fw1"></div>
+    <div class="flame-wisp fw2"></div>
+    <div class="flame-wisp fw3"></div>
+    <!-- Stem -->
+    <div class="stem"></div>
+  </div>
+</div>
+
+<!-- Text -->
+<div class="logo-small">
+  <div class="logo-small-text">KASAI</div>
+</div>
+
+<div class="quote-main">
+  <span class="quote-word qw1">BEAUTY</span>
+  <span class="quote-word qw2">in the</span>
+  <span class="quote-word qw3">BURN</span>
+</div>
+
+<div class="bottom-tag">
+  <div class="tag-text">火 · Train like fire</div>
+</div>
+
+</body>
+</html>
