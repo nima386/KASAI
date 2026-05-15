@@ -366,6 +366,21 @@ body{
   font-size:.55rem;color:var(--text-muted);letter-spacing:.06em;margin-top:2px;
 }
 .cat-prog{position:absolute;bottom:0;left:0;height:2px;border-radius:2px;transition:width .4s var(--ease);}
+.cat-done-check{
+  position:absolute;top:10px;right:10px;
+  width:26px;height:26px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06);
+  color:var(--text-muted);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:900;cursor:pointer;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:all .18s var(--ease);
+}
+.cat-done-check.done{
+  background:var(--green);border-color:var(--green);
+  color:#fff;box-shadow:0 0 12px rgba(38,212,124,.24);
+}
 
 /* -- EXERCISE LIST -- */
 .ex-list{display:flex;flex-direction:column;gap:7px;}
@@ -392,9 +407,15 @@ body{
 .ex-arrow{color:var(--text-muted);font-size:.9rem;}
 .ex-done-check{
   width:22px;height:22px;border-radius:50%;
-  background:var(--green);border:none;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
   display:flex;align-items:center;justify-content:center;
-  font-size:.7rem;color:#fff;flex-shrink:0;
+  font-size:.7rem;color:var(--text-muted);flex-shrink:0;
+  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:all .18s var(--ease);
+}
+.ex-done-check.done{
+  background:var(--green);border-color:var(--green);
+  color:#fff;box-shadow:0 0 12px rgba(38,212,124,.24);
 }
 
 /* -- EXERCISE DETAIL -- */
@@ -2246,6 +2267,10 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .tp-day-row:active{background:#1a1330;}
 .tp-day-row.is-rest{opacity:.5;}
+.tp-day-row.rolling-add{
+  border-style:dashed;justify-content:center;color:#ff9500;
+  background:rgba(255,107,0,.04);
+}
 .tp-day-abbr{
   font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.12em;
   color:var(--text-muted);text-transform:uppercase;font-weight:700;width:28px;flex-shrink:0;
@@ -2259,6 +2284,23 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;
 }
 .tp-chevron{font-size:.9rem;color:var(--text-muted);}
+.tp-rolling-meta{
+  display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px;
+}
+.tp-rolling-date{
+  display:flex;flex-direction:column;gap:5px;
+}
+.tp-rolling-date span{
+  font-family:'JetBrains Mono',monospace;font-size:.42rem;letter-spacing:.14em;
+  color:var(--text-muted);text-transform:uppercase;font-weight:700;
+}
+.tp-day-del{
+  width:28px;height:28px;border-radius:50%;border:none;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,45,85,.08);color:rgba(255,85,119,.8);
+  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  flex-shrink:0;
+}
 
 /* Day Detail: chips */
 .dd-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;}
@@ -6795,8 +6837,47 @@ function getWeekForDate(date=today){
   return weekIds[diffWeeks % weekIds.length] || 'A';
 }
 
+function rollingInfoForDate(date=today){
+  const tp = S.trainingPlan;
+  if(tp?.weekMode !== 'rolling') return null;
+  const rolling = ensureRollingPlan(true);
+  const days = rolling?.days || [];
+  if(!days.length) return null;
+  const startKey = rolling.startDate || tp.startDate || S.planConfig?.startDate || todayStr;
+  const endKey = rolling.endDate || tp.endDate || null;
+  const start = parseDateKey(startKey);
+  const current = new Date(date.toDateString());
+  const diffDays = Math.floor((current - start) / 86400000);
+  if(diffDays < 0) return null;
+  if(endKey && current > parseDateKey(endKey)) return null;
+  const index = diffDays % days.length;
+  return {
+    day: days[index],
+    index,
+    dayNumber: diffDays + 1,
+    sequenceLength: days.length,
+    startDate: startKey,
+    endDate: endKey
+  };
+}
+
 function getPlanForDate(date=today){
   const dow = date.getDay();
+  const rolling = rollingInfoForDate(date);
+  if(rolling){
+    const editorPlan = planFromTrainingPlanDay(rolling.day, dow);
+    if(editorPlan) return {
+      plan: editorPlan,
+      week: `Tag ${rolling.index + 1}`,
+      dow,
+      date,
+      dateStr: dateKey(date),
+      isRolling: true,
+      rollingIndex: rolling.index,
+      rollingDayNumber: rolling.dayNumber,
+      sequenceLength: rolling.sequenceLength
+    };
+  }
   const week = getWeekForDate(date);
   const tpIndex = dow === 0 ? 6 : dow - 1;
   const editorPlan = planFromTrainingPlanDay(tpDay(week, tpIndex), dow);
@@ -6827,6 +6908,8 @@ function addPlanWeek(){
 }
 
 function getSelectedTrainingPlanDay(){
+  const rolling = rollingInfoForDate(selectedDate);
+  if(rolling) return rolling.day;
   const {week, dow} = getPlanForDate(selectedDate);
   const tpIndex = dow === 0 ? 6 : dow - 1;
   return tpDay(week, tpIndex);
@@ -6910,7 +6993,62 @@ function getMusclesForType(type){
 function isDone(exerciseId){
   const sess = S.sessions[selectedDateStr]?.[exerciseId];
   if(!sess) return false;
-  return sess.sets && sess.sets.every(set => set.done);
+  return Array.isArray(sess.sets) && sess.sets.length > 0 && sess.sets.every(set => set.done);
+}
+
+function ensureExerciseSession(ex, dateStr=selectedDateStr){
+  ensureDailyState(dateStr);
+  const setCount = Math.max(1, parseInt(ex?.sets) || 1);
+  if(!S.sessions[dateStr][ex.id]){
+    S.sessions[dateStr][ex.id] = {
+      startedAt: new Date().toISOString(),
+      incompleteFrom: null,
+      exerciseSnapshot: {id:ex.id,name:ex.name,muscle:ex.muscle,type:ex.type,eq:ex.eq},
+      sets: Array.from({length:setCount},()=>({
+        weight: null,
+        reps: null,
+        done: false
+      }))
+    };
+  }
+  const sess = S.sessions[dateStr][ex.id];
+  if(!Array.isArray(sess.sets)) sess.sets = [];
+  while(sess.sets.length < setCount){
+    sess.sets.push({weight:null,reps:null,done:false});
+  }
+  ensureSessionSnapshot(ex, dateStr);
+  return sess;
+}
+
+function setExerciseDone(ex, done, dateStr=selectedDateStr){
+  if(!ex?.id) return;
+  const sess = ensureExerciseSession(ex, dateStr);
+  const setCount = Math.max(1, parseInt(ex.sets) || sess.sets.length || 1);
+  while(sess.sets.length < setCount){
+    sess.sets.push({weight:null,reps:null,done:false});
+  }
+  sess.sets.forEach(set=>{ set.done = !!done; });
+}
+
+function toggleExerciseDone(ex){
+  const done = isDone(ex.id);
+  setExerciseDone(ex, !done);
+  saveState(S);
+  if(currentScreen === 'training') renderTraining();
+}
+
+function areAllExercisesDone(exs){
+  const active = (exs || []).filter(ex=>!ex.archived);
+  return active.length > 0 && active.every(ex=>isDone(ex.id));
+}
+
+function toggleMuscleExercisesDone(exs){
+  const active = (exs || []).filter(ex=>!ex.archived);
+  if(!active.length) return;
+  const markDone = !areAllExercisesDone(active);
+  active.forEach(ex=>setExerciseDone(ex, markDone));
+  saveState(S);
+  if(currentScreen === 'training') renderTraining();
 }
 
 function findExerciseById(exerciseId){
@@ -7102,7 +7240,8 @@ KDOM.setClick('profile-back-btn', ()=>{
 // ---------------------------------------------------
 function renderTraining(){
   ensureDailyState(selectedDateStr);
-  const {plan, week, dow} = getTodayPlan();
+  const planInfo = getTodayPlan();
+  const {plan, week, dow} = planInfo;
   const dateStr = getActiveDateLabel(selectedDate);
   document.getElementById('train-kicker').textContent = `// ${dateStr}`;
   document.getElementById('train-title').textContent = isSelectedToday() ? trainingHeaderLine : plan.label;
@@ -7111,7 +7250,7 @@ function renderTraining(){
 
   renderCalendar(dow);
   renderDailyQuote(selectedDate);
-  renderTodayCard(plan, week);
+  renderTodayCard(plan, week, planInfo);
   renderDailyExerciseTrackers();
   renderMuscles(plan);
   renderExerciseList(plan);
@@ -7171,17 +7310,20 @@ function renderCalendar(todayDow){
   });
 }
 
-function renderTodayCard(plan, week){
+function renderTodayCard(plan, week, planInfo=null){
   const exs = getExercisesForType(plan.type);
   const muscles = getMusclesForType(plan.type);
 
   document.getElementById('today-day-label').textContent = plan.label;
-  document.getElementById('week-label').textContent = `Woche ${week}`;
+  document.getElementById('week-label').textContent = planInfo?.isRolling
+    ? `Tag ${planInfo.rollingIndex + 1} / ${planInfo.sequenceLength}`
+    : `Woche ${week}`;
   document.getElementById('stat-exercises').textContent = exs.length || '0';
   document.getElementById('stat-duration').textContent = plan.duration ? `~${plan.duration}'` : '-';
   const countdown = document.getElementById('plan-countdown');
   const countdownText = document.getElementById('plan-countdown-text');
-  const daysLeft = S.trainingPlan?.endDate ? inclusiveDaysUntil(S.trainingPlan.endDate) : null;
+  const planEndDate = planInfo?.isRolling ? (S.trainingPlan?.rolling?.endDate || S.trainingPlan?.endDate) : S.trainingPlan?.endDate;
+  const daysLeft = planEndDate ? inclusiveDaysUntil(planEndDate) : null;
   if(countdown && countdownText && daysLeft && daysLeft > 0){
     countdownText.textContent = `${daysLeft} Tage bis Plan-Ende`;
     countdown.classList.add('show');
@@ -7280,6 +7422,7 @@ function renderMuscles(plan){
     const mSets = mExs.reduce((a,e)=>a+e.sets,0);
     const doneSets = mExs.filter(e=>isDone(e.id)).reduce((a,e)=>a+e.sets,0);
     const pct = mSets ? Math.round(doneSets/mSets*100) : 0;
+    const allDone = areAllExercisesDone(mExs);
 
     const isLastOdd = (i === muscles.length-1) && (muscles.length % 2 === 1) && muscles.length>1;
     const isSingle  = muscles.length === 1;
@@ -7291,10 +7434,16 @@ function renderMuscles(plan){
     el.className = 'cat-card';
     if(fullWidth) el.setAttribute('style','grid-column:span 2');
     el.innerHTML = `
+      ${mExs.length ? `<button class="cat-done-check${allDone?' done':''}" type="button" aria-label="${allDone?'Muskelgruppe offen setzen':'Muskelgruppe erledigt markieren'}">${allDone?'✓':''}</button>` : ''}
       <div class="cat-icon-wrap" style="background:${color}22">${icon}</div>
       <div class="cat-name">${m}</div>
       <div class="cat-meta">${mExs.length} ${exLabel} · ${mSets} SÄTZE${suffix}</div>
       <div class="cat-prog" style="width:${pct}%;background:${color}"></div>`;
+    el.querySelector('.cat-done-check')?.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMuscleExercisesDone(mExs);
+    });
     el.onclick = ()=>{ if(mExs.length) navigate('exercise', mExs[0]); };
     let pT;
     el.addEventListener('touchstart',()=>{ pT = setTimeout(()=>{
@@ -7352,7 +7501,13 @@ function renderExerciseList(plan){
         <div class="ex-name">${ex.name}</div>
         <div class="ex-sub">${ex.sets} × ${ex.rMin}-${ex.rMax} · LETZTE: ${lastW ? lastW+' KG' : '-'}</div>
       </div>
-      ${done ? '<div class="ex-done-check">✓</div>' : (i === 0 && ex.pr ? '<div class="ex-pr">★ PR</div>' : '<span class="ex-arrow">›</span>')}`;
+      ${!done && i === 0 && ex.pr ? '<div class="ex-pr">★ PR</div>' : ''}
+      <button class="ex-done-check${done?' done':''}" type="button" aria-label="${done?'Übung offen setzen':'Übung erledigt markieren'}">${done?'✓':''}</button>`;
+    el.querySelector('.ex-done-check')?.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      toggleExerciseDone(ex);
+    });
     el.onclick = ()=> navigate('exercise', ex);
     let pT;
     el.addEventListener('touchstart',()=>{ pT = setTimeout(()=>openExerciseEdit(ex.id, plan.type), 550); }, {passive:true});
@@ -7629,20 +7784,28 @@ function initEmptyTrainingPlan(startDate){
     weekMode:'single',
     startDate: startDate,
     endDate: null,
+    rolling:{
+      startDate: startDate,
+      endDate: null,
+      days:[]
+    },
     weeks:{
       'A':{ label:'A', sortOrder:0, days: buildEmptyWeekDays() }
     }
   };
 }
+function buildEmptyTrainingDay(label='Trainingstag'){
+  return {
+    label,
+    isRest: false,
+    muscleGroups:[],
+    dailyExercises:[]
+  };
+}
 function buildEmptyWeekDays(){
   const days={};
   for(let d=0;d<7;d++){
-    days[String(d)]={
-      label: 'Trainingstag',
-      isRest: false,
-      muscleGroups:[],
-      dailyExercises:[]
-    };
+    days[String(d)] = buildEmptyTrainingDay();
   }
   return days;
 }
@@ -7667,6 +7830,75 @@ function ensureDailyExercisesForDay(day){
   return day.dailyExercises;
 }
 
+function normalizeTrainingPlanDay(day){
+  const safeDay = day && typeof day === 'object' ? day : buildEmptyTrainingDay();
+  safeDay.label = String(safeDay.label || (safeDay.isRest ? 'Ruhetag' : 'Trainingstag')).trim() || 'Trainingstag';
+  safeDay.isRest = !!safeDay.isRest;
+  if(!Array.isArray(safeDay.muscleGroups)) safeDay.muscleGroups = [];
+  safeDay.muscleGroups = safeDay.muscleGroups.map((mg,index)=>mg && typeof mg === 'object' ? mg : {
+    id: genId(),
+    name: 'Muskelgruppe',
+    icon: '💪',
+    color: '#FF6B00',
+    sortOrder: index,
+    exercises: [],
+    isArchived: false
+  });
+  safeDay.muscleGroups.forEach((mg,index)=>{
+    mg.id = mg.id || genId();
+    mg.name = String(mg.name || 'Muskelgruppe').trim() || 'Muskelgruppe';
+    mg.icon = cleanUiIcon(mg.icon, '💪');
+    mg.color = mg.color || '#FF6B00';
+    mg.sortOrder = mg.sortOrder ?? index;
+    mg.isArchived = !!mg.isArchived;
+    if(!Array.isArray(mg.exercises)) mg.exercises = [];
+    mg.exercises = mg.exercises.map((ex, exIndex)=>ex && typeof ex === 'object' ? ex : {
+      id: genId(),
+      name: 'Übung',
+      targetSets: 3,
+      repsMin: 8,
+      repsMax: 12,
+      restSeconds: 90,
+      sortOrder: exIndex,
+      isArchived: false
+    });
+    mg.exercises.forEach((ex, exIndex)=>{
+      ex.id = ex.id || genId();
+      ex.name = String(ex.name || 'Übung').trim() || 'Übung';
+      ex.targetSets = Math.max(1, parseInt(ex.targetSets ?? ex.sets ?? 3) || 3);
+      ex.repsMin = Math.max(1, parseInt(ex.repsMin ?? ex.rMin ?? 8) || 8);
+      ex.repsMax = Math.max(ex.repsMin, parseInt(ex.repsMax ?? ex.rMax ?? 12) || 12);
+      ex.restSeconds = Math.max(15, parseInt(ex.restSeconds ?? ex.rest ?? 90) || 90);
+      ex.sortOrder = ex.sortOrder ?? exIndex;
+      ex.isArchived = !!ex.isArchived;
+    });
+  });
+  ensureDailyExercisesForDay(safeDay);
+  return safeDay;
+}
+
+function cloneTrainingPlanDay(day){
+  return normalizeTrainingPlanDay(JSON.parse(JSON.stringify(day || buildEmptyTrainingDay())));
+}
+
+function ensureRollingPlan(seedDays=false){
+  const tp = S.trainingPlan;
+  if(!tp) return null;
+  if(!tp.rolling || typeof tp.rolling !== 'object') tp.rolling = {};
+  tp.rolling.startDate = tp.rolling.startDate || tp.startDate || S.planConfig?.startDate || todayStr;
+  tp.rolling.endDate = tp.rolling.endDate ?? tp.endDate ?? null;
+  if(!Array.isArray(tp.rolling.days)) tp.rolling.days = [];
+  if(!tp.rolling.days.length){
+    if(seedDays){
+      const sourceDays = tp.weeks?.A?.days || buildEmptyWeekDays();
+      tp.rolling.days = Array.from({length:7},(_,index)=>cloneTrainingPlanDay(sourceDays[String(index)] || buildEmptyTrainingDay()));
+    }
+  } else {
+    tp.rolling.days = tp.rolling.days.map(day=>normalizeTrainingPlanDay(day));
+  }
+  return tp.rolling;
+}
+
 function ensureTrainingPlanWeeks(){
   const tp = S.trainingPlan;
   if(!tp) return;
@@ -7674,11 +7906,10 @@ function ensureTrainingPlanWeeks(){
     if(!tp.weeks[wk].days) tp.weeks[wk].days = buildEmptyWeekDays();
     for(let d=0;d<7;d++){
       const dk=String(d);
-      if(!tp.weeks[wk].days[dk]) tp.weeks[wk].days[dk]={label:'Trainingstag',isRest:false,muscleGroups:[],dailyExercises:[]};
-      if(!tp.weeks[wk].days[dk].muscleGroups) tp.weeks[wk].days[dk].muscleGroups=[];
-      ensureDailyExercisesForDay(tp.weeks[wk].days[dk]);
+      tp.weeks[wk].days[dk] = normalizeTrainingPlanDay(tp.weeks[wk].days[dk]);
     }
   });
+  ensureRollingPlan();
 }
 function tpWeekList(){
   const tp = S.trainingPlan;
@@ -7766,6 +7997,8 @@ function restDefault(avg){
 let tpActiveWeek = 'A';
 let ddActiveWeek = 'A';
 let ddActiveDay  = 0;
+let ddActiveMode = 'week';
+let ddActiveRollingIndex = 0;
 let _tpPrev = 'profile';
 let profileActiveWeek = 'A';
 
@@ -7788,8 +8021,18 @@ function closeTrainingPlanScreen(){
   else if(target==='training') renderTraining();
 }
 function openDayDetailScreen(weekLabel, dayIdx){
+  ddActiveMode = 'week';
   ddActiveWeek = weekLabel;
   ddActiveDay  = dayIdx;
+  const toEl = activateScreen('day-detail');
+  if(!toEl) return;
+  prevScreen = currentScreen;
+  currentScreen = 'day-detail';
+  renderDayDetailScreen();
+}
+function openRollingDayDetailScreen(dayIdx){
+  ddActiveMode = 'rolling';
+  ddActiveRollingIndex = dayIdx;
   const toEl = activateScreen('day-detail');
   if(!toEl) return;
   prevScreen = currentScreen;
@@ -7802,14 +8045,147 @@ function closeDayDetailScreen(){
   updateBottomNav('training-plan');
   renderTrainingPlanScreen();
 }
+function getDayDetailDay(){
+  if(ddActiveMode === 'rolling'){
+    const rolling = ensureRollingPlan(true);
+    if(!rolling?.days?.length) return null;
+    ddActiveRollingIndex = Math.max(0, Math.min(ddActiveRollingIndex, rolling.days.length - 1));
+    return rolling.days[ddActiveRollingIndex];
+  }
+  return tpDay(ddActiveWeek, ddActiveDay);
+}
+function getDayDetailMuscle(mgId){
+  return getDayDetailDay()?.muscleGroups?.find(m=>m.id===mgId);
+}
+function getDayDetailExercise(mgId, exId){
+  return getDayDetailMuscle(mgId)?.exercises?.find(e=>e.id===exId);
+}
+function getRollingDisplayDate(index){
+  const rolling = ensureRollingPlan(true);
+  const start = parseDateKey(rolling?.startDate || S.trainingPlan?.startDate || todayStr);
+  const d = new Date(start);
+  d.setDate(start.getDate() + index);
+  return d;
+}
 
 function openSelectedPlanDayEditor(){
+  const rolling = rollingInfoForDate(selectedDate);
+  if(rolling){
+    _tpPrev = 'training';
+    openTrainingPlanScreen();
+    requestAnimationFrame(()=>openRollingDayDetailScreen(rolling.index));
+    return;
+  }
   const {week, dow} = getPlanForDate(selectedDate);
   const tpIndex = dow === 0 ? 6 : dow - 1;
   tpActiveWeek = week;
   _tpPrev = 'training';
   openTrainingPlanScreen();
   requestAnimationFrame(()=>openDayDetailScreen(week, tpIndex));
+}
+
+function renderRollingPlanEditor(body){
+  const rolling = ensureRollingPlan(true);
+  const meta = document.createElement('div');
+  meta.className = 'tp-section';
+  meta.innerHTML = `
+    <div class="tp-kicker">// Fortlaufend</div>
+    <div class="tp-rolling-meta">
+      <label class="tp-rolling-date">
+        <span>Startdatum</span>
+        <input class="tp-input" id="tp-rolling-start" type="date" value="${escapeHtml(rolling.startDate || todayStr)}">
+      </label>
+      <div class="tp-day-muscles" style="max-width:none;">Tag 1 startet am Startdatum. Danach wiederholt sich die Sequenz automatisch bis zum Plan-Ende.</div>
+    </div>
+  `;
+  body.appendChild(meta);
+  meta.querySelector('#tp-rolling-start')?.addEventListener('change',e=>{
+    const key = e.target.value || todayStr;
+    rolling.startDate = key;
+    S.trainingPlan.startDate = key;
+    if(!S.planConfig) S.planConfig = {};
+    S.planConfig.startDate = key;
+    syncPlanConfigFromTrainingPlan();
+    saveState(S);
+    renderTrainingPlanScreen();
+    if(currentScreen === 'training') renderTraining();
+  });
+
+  const rows = document.createElement('div');
+  rows.className = 'tp-day-rows';
+  rows.style.marginBottom = '12px';
+  rolling.days.forEach((day,index)=>{
+    const displayDate = getRollingDisplayDate(index);
+    const tpDow = (displayDate.getDay() + 6) % 7;
+    const mgs = (day.muscleGroups||[]).filter(m=>!m.isArchived);
+    const mgPreview = mgs.slice(0,3).map(m=>m.name).join(' · ')
+      + (mgs.length>3?` +${mgs.length-3} mehr`:'');
+    const row = document.createElement('div');
+    row.className = 'tp-day-row'+(day.isRest?' is-rest':'');
+    row.innerHTML = `
+      <div class="tp-day-abbr">${TP_DAY_ABBR[tpDow]}</div>
+      <div class="tp-day-info">
+        <div class="tp-day-label-text${day.isRest?' rest-lbl':''}">Tag ${index + 1} · ${day.isRest?'☾ ':''}${escapeHtml(day.label||'Trainingstag')}</div>
+        ${!day.isRest && mgPreview?`<div class="tp-day-muscles">${escapeHtml(mgPreview.toUpperCase())}</div>`:`<div class="tp-day-muscles">${TP_DAY_NAMES[tpDow].toUpperCase()}</div>`}
+      </div>
+      ${rolling.days.length > 1 ? `<button class="tp-day-del" type="button" data-rolling-del="${index}" aria-label="Tag löschen">×</button>` : '<div class="tp-chevron">›</div>'}
+    `;
+    row.addEventListener('click',e=>{
+      if(e.target.closest('[data-rolling-del]')) return;
+      openRollingDayDetailScreen(index);
+    });
+    row.querySelector('[data-rolling-del]')?.addEventListener('click',e=>{
+      e.stopPropagation();
+      showConfirm(
+        `Tag ${index + 1} entfernen?`,
+        'Der Sequenz-Tag wird aus dem Fortlaufend-Muster entfernt. Bisherige Logs bleiben erhalten.',
+        [
+          {label:'Entfernen', cls:'danger', cb:()=>{
+            rolling.days.splice(index, 1);
+            if(!rolling.days.length) rolling.days.push(buildEmptyTrainingDay());
+            saveState(S);
+            renderTrainingPlanScreen();
+            if(currentScreen === 'training') renderTraining();
+          }},
+          {label:'Abbrechen', cls:'ghost', cb:()=>{}},
+        ]
+      );
+    });
+    rows.appendChild(row);
+  });
+  const addRow = document.createElement('div');
+  addRow.className = 'tp-day-row rolling-add';
+  addRow.innerHTML = '<div>＋ Tag hinzufügen</div>';
+  addRow.addEventListener('click',()=>{
+    rolling.days.push(buildEmptyTrainingDay());
+    saveState(S);
+    renderTrainingPlanScreen();
+  });
+  rows.appendChild(addRow);
+  body.appendChild(rows);
+}
+
+function activePlanStartDate(){
+  const tp = S.trainingPlan;
+  return tp?.weekMode === 'rolling'
+    ? (tp.rolling?.startDate || tp.startDate || S.planConfig?.startDate || todayStr)
+    : (tp?.startDate || S.planConfig?.startDate || todayStr);
+}
+
+function activePlanEndDate(){
+  const tp = S.trainingPlan;
+  return tp?.weekMode === 'rolling'
+    ? (tp.rolling?.endDate || tp.endDate || null)
+    : (tp?.endDate || null);
+}
+
+function setTrainingPlanEndDate(key){
+  if(!S.trainingPlan) return;
+  S.trainingPlan.endDate = key || null;
+  if(S.trainingPlan.weekMode === 'rolling'){
+    const rolling = ensureRollingPlan(true);
+    rolling.endDate = key || null;
+  }
 }
 
 // ---------------------------------------------------------------
@@ -7851,6 +8227,7 @@ function renderTrainingPlanScreen(){
       <div class="wm-pill${tp.weekMode==='ab'?' active':''}" data-mode="ab">A + B</div>
       <div class="wm-pill${tp.weekMode==='abc'?' active':''}" data-mode="abc">A + B + C</div>
       <div class="wm-pill${tp.weekMode==='custom'?' active':''}" data-mode="custom">Eigene-</div>
+      <div class="wm-pill${tp.weekMode==='rolling'?' active':''}" data-mode="rolling">Fortlaufend</div>
     </div>
   `;
   body.appendChild(sec2);
@@ -7858,62 +8235,67 @@ function renderTrainingPlanScreen(){
     pill.addEventListener('click',()=>handleWeekModeChange(pill.dataset.mode));
   });
 
-  // -- Wochen-Tabs --
-  const tabRow = document.createElement('div');
-  tabRow.className = 'tp-week-tabs';
-  weekLabels.forEach(wk=>{
-    const t = document.createElement('div');
-    t.className = 'tp-wtab'+(wk===tpActiveWeek?' active':'');
-    t.innerHTML = `Woche ${wk}${wk!=='A' && weekLabels.length>1?'<span class="wtab-del">×</span>':''}`;
-    t.addEventListener('click',e=>{
-      if(e.target.classList.contains('wtab-del')){
-        handleDeleteWeek(wk); return;
-      }
-      tpActiveWeek=wk; renderTrainingPlanScreen();
+  if(tp.weekMode === 'rolling'){
+    renderRollingPlanEditor(body);
+  } else {
+    // -- Wochen-Tabs --
+    const tabRow = document.createElement('div');
+    tabRow.className = 'tp-week-tabs';
+    weekLabels.forEach(wk=>{
+      const t = document.createElement('div');
+      t.className = 'tp-wtab'+(wk===tpActiveWeek?' active':'');
+      t.innerHTML = `Woche ${wk}${wk!=='A' && weekLabels.length>1?'<span class="wtab-del">×</span>':''}`;
+      t.addEventListener('click',e=>{
+        if(e.target.classList.contains('wtab-del')){
+          handleDeleteWeek(wk); return;
+        }
+        tpActiveWeek=wk; renderTrainingPlanScreen();
+      });
+      tabRow.appendChild(t);
     });
-    tabRow.appendChild(t);
-  });
-  if(tp.weekMode==='custom'){
-    const addT = document.createElement('div');
-    addT.className = 'tp-wtab add-tab';
-    const nextLabel = String.fromCharCode(65+weekLabels.length);
-    addT.textContent = `+ Woche ${nextLabel}`;
-    addT.addEventListener('click',()=>handleAddWeek(nextLabel));
-    tabRow.appendChild(addT);
-  }
-  body.appendChild(tabRow);
+    if(tp.weekMode==='custom'){
+      const addT = document.createElement('div');
+      addT.className = 'tp-wtab add-tab';
+      const nextLabel = String.fromCharCode(65+weekLabels.length);
+      addT.textContent = `+ Woche ${nextLabel}`;
+      addT.addEventListener('click',()=>handleAddWeek(nextLabel));
+      tabRow.appendChild(addT);
+    }
+    body.appendChild(tabRow);
 
-  // -- Tages-Liste --
-  const dayRows = document.createElement('div');
-  dayRows.className = 'tp-day-rows';
-  dayRows.style.marginBottom='12px';
-  for(let d=0;d<7;d++){
-    const day = tpDay(tpActiveWeek, d);
-    if(!day) continue;
-    const mgs = (day.muscleGroups||[]).filter(m=>!m.isArchived);
-    const mgPreview = mgs.slice(0,3).map(m=>m.name).join(' · ')
-      + (mgs.length>3?` +${mgs.length-3} mehr`:'');
+    // -- Tages-Liste --
+    const dayRows = document.createElement('div');
+    dayRows.className = 'tp-day-rows';
+    dayRows.style.marginBottom='12px';
+    for(let d=0;d<7;d++){
+      const day = tpDay(tpActiveWeek, d);
+      if(!day) continue;
+      const mgs = (day.muscleGroups||[]).filter(m=>!m.isArchived);
+      const mgPreview = mgs.slice(0,3).map(m=>m.name).join(' · ')
+        + (mgs.length>3?` +${mgs.length-3} mehr`:'');
 
-    const row = document.createElement('div');
-    row.className = 'tp-day-row'+(day.isRest?' is-rest':'');
-    row.innerHTML = `
-      <div class="tp-day-abbr">${TP_DAY_ABBR[d]}</div>
-      <div class="tp-day-info">
-        <div class="tp-day-label-text${day.isRest?' rest-lbl':''}">${day.isRest?'☾ ':''} ${day.label||'Trainingstag'}</div>
-        ${!day.isRest && mgPreview?`<div class="tp-day-muscles">${mgPreview.toUpperCase()}</div>`:''}
-      </div>
-      <div class="tp-chevron">›</div>
-    `;
-    row.addEventListener('click',()=>openDayDetailScreen(tpActiveWeek, d));
-    dayRows.appendChild(row);
+      const row = document.createElement('div');
+      row.className = 'tp-day-row'+(day.isRest?' is-rest':'');
+      row.innerHTML = `
+        <div class="tp-day-abbr">${TP_DAY_ABBR[d]}</div>
+        <div class="tp-day-info">
+          <div class="tp-day-label-text${day.isRest?' rest-lbl':''}">${day.isRest?'☾ ':''} ${day.label||'Trainingstag'}</div>
+          ${!day.isRest && mgPreview?`<div class="tp-day-muscles">${mgPreview.toUpperCase()}</div>`:''}
+        </div>
+        <div class="tp-chevron">›</div>
+      `;
+      row.addEventListener('click',()=>openDayDetailScreen(tpActiveWeek, d));
+      dayRows.appendChild(row);
+    }
+    body.appendChild(dayRows);
   }
-  body.appendChild(dayRows);
 
   // -- Plan-Laufzeit --
   const durSec = document.createElement('div');
   durSec.className = 'tp-section';
-  const start = tp.startDate ? new Date(tp.startDate) : new Date();
-  const end   = tp.endDate   ? new Date(tp.endDate)   : null;
+  const start = parseDateKey(activePlanStartDate());
+  const endKey = activePlanEndDate();
+  const end   = endKey ? parseDateKey(endKey) : null;
   const today = new Date();
   let progHtml = '';
   if(end){
@@ -7951,11 +8333,11 @@ function renderTrainingPlanScreen(){
   durSec.querySelectorAll('.tp-dur-chip').forEach(chip=>{
     chip.addEventListener('click',()=>{
       const w = parseInt(chip.dataset.weeks);
-      if(w===0){ tp.endDate=null; }
+      if(w===0){ setTrainingPlanEndDate(null); }
       else{
-        const d = new Date(tp.startDate||todayStr);
+        const d = parseDateKey(activePlanStartDate());
         d.setDate(d.getDate()+w*7);
-        tp.endDate = d.toISOString().slice(0,10);
+        setTrainingPlanEndDate(dateKey(d));
       }
       saveState(S); renderTrainingPlanScreen();
     });
@@ -7969,7 +8351,7 @@ function renderTrainingPlanScreen(){
 let planCalMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
 function openPlanEndCalendar(){
-  const end = S.trainingPlan?.endDate ? parseDateKey(S.trainingPlan.endDate) : today;
+  const end = activePlanEndDate() ? parseDateKey(activePlanEndDate()) : today;
   planCalMonth = new Date(end.getFullYear(), end.getMonth(), 1);
   renderPlanEndCalendar();
   document.getElementById('plan-calendar-overlay')?.classList.add('open');
@@ -7992,7 +8374,7 @@ function renderPlanEndCalendar(){
   const first = new Date(year, month, 1);
   const offset = (first.getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const selected = S.trainingPlan?.endDate || '';
+  const selected = activePlanEndDate() || '';
   const todayKey = todayStr;
 
   for(let i=0;i<offset;i++){
@@ -8012,7 +8394,7 @@ function renderPlanEndCalendar(){
       (d < new Date(today.toDateString()) ? ' disabled' : '');
     el.textContent = day;
     el.addEventListener('click',()=>{
-      S.trainingPlan.endDate = key;
+      setTrainingPlanEndDate(key);
       saveState(S);
       closePlanEndCalendar();
       renderTrainingPlanScreen();
@@ -8037,7 +8419,7 @@ document.getElementById('plan-cal-next')?.addEventListener('click',()=>{
 });
 document.getElementById('plan-cal-close')?.addEventListener('click',closePlanEndCalendar);
 document.getElementById('plan-cal-clear')?.addEventListener('click',()=>{
-  if(S.trainingPlan) S.trainingPlan.endDate = null;
+  setTrainingPlanEndDate(null);
   saveState(S);
   closePlanEndCalendar();
   renderTrainingPlanScreen();
@@ -8054,6 +8436,19 @@ function handleWeekModeChange(newMode){
   const tp = S.trainingPlan;
   const oldMode = tp.weekMode;
   if(newMode===oldMode) return;
+
+  if(newMode === 'rolling'){
+    const rolling = ensureRollingPlan(true);
+    rolling.startDate = rolling.startDate || tp.startDate || S.planConfig?.startDate || todayStr;
+    rolling.endDate = rolling.endDate ?? tp.endDate ?? null;
+    tp.weekMode = newMode;
+    syncPlanConfigFromTrainingPlan();
+    saveState(S);
+    renderTrainingPlanScreen();
+    renderProfile();
+    if(currentScreen === 'training') renderTraining();
+    return;
+  }
 
   const oldWeeks = tpWeekList();
   const newWeeks = weekModeToWeeks(newMode);
@@ -8191,12 +8586,19 @@ function renderDayDetailDailyExercises(body, day){
 }
 
 function renderDayDetailScreen(){
-  const day = tpDay(ddActiveWeek, ddActiveDay);
+  const day = getDayDetailDay();
   if(!day) return;
 
   // Header
-  document.getElementById('dd-header-title').textContent =
-    `${TP_DAY_NAMES[ddActiveDay]} · Woche ${ddActiveWeek}`;
+  if(ddActiveMode === 'rolling'){
+    const displayDate = getRollingDisplayDate(ddActiveRollingIndex);
+    const tpDow = (displayDate.getDay() + 6) % 7;
+    document.getElementById('dd-header-title').textContent =
+      `Tag ${ddActiveRollingIndex + 1} · ${TP_DAY_NAMES[tpDow]}`;
+  } else {
+    document.getElementById('dd-header-title').textContent =
+      `${TP_DAY_NAMES[ddActiveDay]} · Woche ${ddActiveWeek}`;
+  }
   const toggle = document.getElementById('dd-rest-toggle');
   toggle.checked = !!day.isRest;
   toggle.onchange = ()=>{
@@ -8335,7 +8737,7 @@ let _tpMgEditId = null;
 function openTpMgModal(mgId=null){
   _tpMgEditId = mgId;
   const isEdit = !!mgId;
-  const mg = isEdit ? tpMg(ddActiveWeek, ddActiveDay, mgId) : null;
+  const mg = isEdit ? getDayDetailMuscle(mgId) : null;
 
   document.getElementById('tp-mg-title').textContent = isEdit ? 'Muskelgruppe bearbeiten' : 'Muskelgruppe hinzufügen';
   document.getElementById('tp-mg-save').textContent  = isEdit ? 'Änderungen speichern' : 'Muskelgruppe anlegen';
@@ -8363,10 +8765,10 @@ function saveTpMgModal(){
   if(!name){ document.getElementById('tp-mg-name').focus(); return; }
   const icon  = document.querySelector('#tp-mg-emojis .tp-emoji-pick.active')?.dataset.icon||'💪';
   const color = document.querySelector('.tp-color-dot.active')?.dataset.color||'#FF6B00';
-  const day   = tpDay(ddActiveWeek, ddActiveDay);
+  const day   = getDayDetailDay();
   if(!day) return;
   if(_tpMgEditId){
-    const mg = tpMg(ddActiveWeek, ddActiveDay, _tpMgEditId);
+    const mg = getDayDetailMuscle(_tpMgEditId);
     if(mg){ mg.name=name; mg.icon=icon; mg.color=color; }
   } else {
     if(!day.muscleGroups) day.muscleGroups=[];
@@ -8384,7 +8786,7 @@ let _tpDailyEditId = null;
 
 function openTpDailyModal(exId=null){
   _tpDailyEditId = exId;
-  const day = tpDay(ddActiveWeek, ddActiveDay);
+  const day = getDayDetailDay();
   if(!day) return;
   const ex = exId ? ensureDailyExercisesForDay(day).find(item=>item.id===exId) : null;
   const isEdit = !!ex;
@@ -8407,7 +8809,7 @@ function closeTpDailyModal(){
 }
 
 function saveTpDailyModal(){
-  const day = tpDay(ddActiveWeek, ddActiveDay);
+  const day = getDayDetailDay();
   if(!day) return;
   const name = document.getElementById('tp-daily-name').value.trim();
   if(!name){ document.getElementById('tp-daily-name').focus(); return; }
@@ -8447,7 +8849,7 @@ function openTpExModal(mgId, exId=null){
   _tpExMgId   = mgId;
   _tpExEditId = exId;
   const isEdit = !!exId;
-  const ex = isEdit ? tpEx(ddActiveWeek, ddActiveDay, mgId, exId) : null;
+  const ex = isEdit ? getDayDetailExercise(mgId, exId) : null;
 
   document.getElementById('tp-ex-title').textContent = isEdit ? 'Übung bearbeiten' : 'Übung hinzufügen';
   document.getElementById('tp-ex-save').textContent  = isEdit ? 'Änderungen speichern' : 'Übung hinzufügen';
@@ -8489,10 +8891,10 @@ function saveTpExModal(){
   const eq    = document.querySelector('.tp-eq-pill.active')?.dataset.val||'';
   const type  = document.querySelector('.tp-type-pill.active')?.dataset.val||'';
   const notes = document.getElementById('tp-ex-notes').value.trim();
-  const mg = tpMg(ddActiveWeek, ddActiveDay, _tpExMgId);
+  const mg = getDayDetailMuscle(_tpExMgId);
   if(!mg) return;
   if(_tpExEditId){
-    const ex = tpEx(ddActiveWeek, ddActiveDay, _tpExMgId, _tpExEditId);
+    const ex = getDayDetailExercise(_tpExMgId, _tpExEditId);
     if(ex){
       if(ex.name!==name){
         if(!S.exerciseRenameHistory) S.exerciseRenameHistory={};
@@ -8647,36 +9049,45 @@ function renderProfile(){
   document.getElementById('profile-screen-steps').textContent = stepGoal != null ? `${Math.round(stepGoal / 1000)}k` : '-';
   document.getElementById('profile-screen-kcal').textContent = kcalGoal != null ? kcalGoal : '-';
 
+  const isRollingMode = S.trainingPlan?.weekMode === 'rolling';
+  const rolling = isRollingMode ? ensureRollingPlan(true) : null;
   const weekLabels = tpWeekList();
   if(!weekLabels.includes(profileActiveWeek)) profileActiveWeek = weekLabels[0] || 'A';
   const tabs = document.querySelector('#screen-profile .week-tabs');
   if(tabs){
     tabs.innerHTML = '';
-    weekLabels.forEach(wk=>{
+    if(isRollingMode){
       const tab = document.createElement('div');
-      tab.className = 'wtab' + (wk === profileActiveWeek ? ' active' : '');
-      tab.textContent = `Woche ${wk}`;
-      tab.addEventListener('click',()=>{
-        profileActiveWeek = wk;
-        tpActiveWeek = wk;
-        renderProfile();
-      });
+      tab.className = 'wtab active';
+      tab.textContent = 'Fortlaufend';
       tabs.appendChild(tab);
-    });
-    const addTab = document.createElement('div');
-    addTab.className = 'wtab add';
-    addTab.textContent = '+ Woche';
-    addTab.addEventListener('click',()=>{
-      const nextLabel = String.fromCharCode(65 + weekLabels.length);
-      handleAddWeek(nextLabel);
-    });
-    tabs.appendChild(addTab);
+    } else {
+      weekLabels.forEach(wk=>{
+        const tab = document.createElement('div');
+        tab.className = 'wtab' + (wk === profileActiveWeek ? ' active' : '');
+        tab.textContent = `Woche ${wk}`;
+        tab.addEventListener('click',()=>{
+          profileActiveWeek = wk;
+          tpActiveWeek = wk;
+          renderProfile();
+        });
+        tabs.appendChild(tab);
+      });
+      const addTab = document.createElement('div');
+      addTab.className = 'wtab add';
+      addTab.textContent = '+ Woche';
+      addTab.addEventListener('click',()=>{
+        const nextLabel = String.fromCharCode(65 + weekLabels.length);
+        handleAddWeek(nextLabel);
+      });
+      tabs.appendChild(addTab);
+    }
   }
 
   const startInput = document.getElementById('profile-plan-start');
-  if(startInput) startInput.value = S.trainingPlan?.startDate || S.planConfig?.startDate || todayStr;
+  if(startInput) startInput.value = activePlanStartDate();
   const rotation = document.getElementById('profile-week-rotation');
-  if(rotation) rotation.textContent = weekLabels.join('/') || 'A';
+  if(rotation) rotation.textContent = isRollingMode ? `${rolling?.days?.length || 0} Tage` : (weekLabels.join('/') || 'A');
   document.querySelectorAll('#profile-plan-status .plan-status-pill').forEach(pill=>{
     const active = S.planConfig?.expired ? 'expired' : 'active';
     pill.classList.toggle('active', pill.dataset.val === active);
@@ -8684,25 +9095,30 @@ function renderProfile(){
 
   const rows = document.getElementById('profile-plan-rows');
   rows.innerHTML = '';
-  for(let d=0; d<7; d++){
-    const day = tpDay(profileActiveWeek, d);
-    if(!day) continue;
+  const profileDays = isRollingMode
+    ? (rolling?.days || []).map((day,index)=>({day,index,abbr:TP_DAY_ABBR[(getRollingDisplayDate(index).getDay()+6)%7]}))
+    : Array.from({length:7},(_,d)=>({day:tpDay(profileActiveWeek, d),index:d,abbr:TP_DAY_ABBR[d]}));
+  profileDays.forEach(({day,index,abbr})=>{
+    if(!day) return;
     const mgs = (day.muscleGroups || []).filter(m=>!m.isArchived);
     const exCount = mgs.reduce((sum, mg)=>sum + (mg.exercises || []).filter(ex=>!ex.isArchived).length, 0);
     const row = document.createElement('div');
     row.className = 'day-row' + (day.isRest ? ' is-rest' : '');
     row.innerHTML = `
-      <div class="day-name">${TP_DAY_ABBR[d]}</div>
-      <div class="day-type">${escapeHtml(day.label || (day.isRest ? 'Ruhetag' : 'Trainingstag'))}</div>
+      <div class="day-name">${abbr}</div>
+      <div class="day-type">${isRollingMode ? `Tag ${index + 1} · ` : ''}${escapeHtml(day.label || (day.isRest ? 'Ruhetag' : 'Trainingstag'))}</div>
       <span class="concept-pill">${day.isRest ? 'Rest' : `${mgs.length} MG · ${exCount} EX`}</span>
       <div class="day-edit">›</div>`;
     row.addEventListener('click',()=>{
-      tpActiveWeek = profileActiveWeek;
       openTrainingPlanScreen();
-      requestAnimationFrame(()=>openDayDetailScreen(profileActiveWeek, d));
+      if(isRollingMode) requestAnimationFrame(()=>openRollingDayDetailScreen(index));
+      else {
+        tpActiveWeek = profileActiveWeek;
+        requestAnimationFrame(()=>openDayDetailScreen(profileActiveWeek, index));
+      }
     });
     rows.appendChild(row);
-  }
+  });
 }
 
 // ---------------------------------------------------
@@ -9478,8 +9894,10 @@ function scheduleAt(date, fn){
 }
 
 function planReminderText(){
-  const {plan, week} = getPlanForDate(new Date());
-  return `Heute ist ${plan?.label || 'Trainingstag'} · Woche ${week || 'A'}`;
+  const info = getPlanForDate(new Date());
+  const plan = info.plan;
+  const suffix = info.isRolling ? `Tag ${info.rollingIndex + 1}/${info.sequenceLength}` : `Woche ${info.week || 'A'}`;
+  return `Heute ist ${plan?.label || 'Trainingstag'} · ${suffix}`;
 }
 
 function openHabitCount(){
@@ -10735,6 +11153,7 @@ document.getElementById('profile-plan-start')?.addEventListener('change',e=>{
   if(!S.planConfig) S.planConfig = {};
   S.planConfig.startDate = value;
   if(S.trainingPlan) S.trainingPlan.startDate = value;
+  if(S.trainingPlan?.weekMode === 'rolling') ensureRollingPlan(true).startDate = value;
   syncPlanConfigFromTrainingPlan();
   saveState(S);
   renderAll();
