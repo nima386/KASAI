@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-notif2';
+const KASAI_APP_VERSION = 'kasai-v43-b4logo1';
 </script>
 <style>
 :root {
@@ -3087,7 +3087,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-notif2 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-b4logo1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -3097,35 +3097,35 @@ body.splash-done #splash{display:none;}
     <div class="logo-block">
       <div class="logo-mark" aria-label="KASAI">
         <span class="logo-ring" aria-hidden="true"></span>
-        <svg class="logo-flame-svg" viewBox="0 0 400 400" aria-hidden="true">
+        <svg class="logo-flame-svg" viewBox="0 0 120 120" aria-hidden="true">
           <defs>
-            <linearGradient id="kasai-flame-auth" x1="0.3" y1="0" x2="0.7" y2="1">
+            <linearGradient id="kasai-b4-fire-auth" x1="0.5" y1="0" x2="0.5" y2="1">
               <stop offset="0%" stop-color="#ffca28"/>
-              <stop offset="25%" stop-color="#ff9500"/>
-              <stop offset="55%" stop-color="#ff6b00"/>
-              <stop offset="80%" stop-color="#ff3d00"/>
+              <stop offset="45%" stop-color="#ff6b00"/>
               <stop offset="100%" stop-color="#ff2d55"/>
             </linearGradient>
-            <linearGradient id="kasai-inner-auth" x1="0.3" y1="0" x2="0.7" y2="1">
-              <stop offset="0%" stop-color="#fff8e7"/>
-              <stop offset="40%" stop-color="#ffca28"/>
-              <stop offset="100%" stop-color="#ff9500"/>
-            </linearGradient>
-            <linearGradient id="kasai-glow-auth" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ff6b00" stop-opacity="0.4"/>
-              <stop offset="100%" stop-color="#ff6b00" stop-opacity="0"/>
-            </linearGradient>
-            <filter id="kasai-blur-auth"><feGaussianBlur stdDeviation="12"/></filter>
+            <filter id="kasai-b4-glow-auth">
+              <feGaussianBlur stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
           </defs>
-          <rect width="400" height="400" rx="88" fill="transparent"/>
-          <rect x="1" y="1" width="398" height="398" rx="87" fill="none" stroke="rgba(255,107,0,0.25)" stroke-width="1.5"/>
-          <rect x="10" y="10" width="380" height="380" rx="80" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-          <ellipse cx="200" cy="310" rx="90" ry="30" fill="url(#kasai-glow-auth)" filter="url(#kasai-blur-auth)"/>
-          <path class="logo-flame-outer" d="M200,60 C220,90 260,110 255,160 C252,185 238,195 245,220 C260,190 280,175 275,145 C295,175 300,215 285,250 C270,285 240,305 240,340 C225,310 235,285 220,270 C210,290 215,315 200,340 C185,315 190,290 180,270 C165,285 175,310 160,340 C160,305 130,285 115,250 C100,215 105,175 125,145 C120,175 140,190 155,220 C162,195 148,185 145,160 C140,110 180,90 200,60Z" fill="url(#kasai-flame-auth)"/>
-          <path class="logo-flame-inner" d="M200,120 C210,140 230,155 226,185 C224,200 215,208 220,225 C235,205 245,188 240,165 C255,188 258,215 245,245 C238,262 222,274 220,300 C210,278 218,260 205,248 C200,265 204,282 200,300 C196,282 200,265 195,248 C182,260 190,278 180,300 C178,274 162,262 155,245 C142,215 145,188 160,165 C155,188 165,205 180,225 C185,208 176,200 174,185 C170,155 190,140 200,120Z" fill="url(#kasai-inner-auth)" opacity="0.85"/>
-          <ellipse cx="200" cy="148" rx="12" ry="20" fill="rgba(255,255,255,0.7)" opacity="0.5"/>
-          <rect x="80" y="362" width="240" height="2" rx="1" fill="rgba(255,107,0,0.5)"/>
-          <rect x="120" y="368" width="160" height="1.5" rx="0.75" fill="rgba(255,61,0,0.3)"/>
+          <circle cx="60" cy="60" r="56" fill="#0f0f1a" stroke="rgba(255,107,0,0.25)" stroke-width="1.5"/>
+          <g filter="url(#kasai-b4-glow-auth)" stroke="#ff8a3d" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <circle cx="60" cy="24" r="7" stroke-width="3"/>
+            <path d="M60,33 L60,54" stroke-width="3"/>
+            <path d="M60,38 L48,26" stroke-width="3"/>
+            <path d="M60,38 L72,26" stroke-width="3"/>
+            <path d="M60,54 L48,66 L42,62" stroke-width="3"/>
+            <path d="M60,54 L72,66 L78,62" stroke-width="3"/>
+          </g>
+          <path d="M60,80 C63,74 68,72 67,68 C66.5,66 65,65 65.5,62 C67,66 68.5,67 68,64 C70,67 70.5,70 69,74 C67,78 53,78 51,74 C49.5,70 50,67 52,64 C51.5,67 53,66 54.5,62 C55,65 53.5,66 53,68 C52,72 57,74 60,80Z" fill="url(#kasai-b4-fire-auth)"/>
+          <path d="M60,70 C60.8,68 62,67.5 61.8,66 C61,67 60.5,67.2 60,66.5 C59.5,67.2 59,67 58.2,66 C58,67.5 59.2,68 60,70Z" fill="rgba(255,255,200,0.5)"/>
+          <ellipse cx="60" cy="82" rx="20" ry="5" fill="none" stroke="rgba(255,107,0,0.2)" stroke-width="1"/>
+          <ellipse cx="60" cy="86" rx="28" ry="6" fill="none" stroke="rgba(255,107,0,0.1)" stroke-width="1"/>
+          <circle cx="40" cy="76" r="1.5" fill="#ffca28" opacity="0.5"/>
+          <circle cx="80" cy="76" r="1.5" fill="#ff6b00" opacity="0.5"/>
+          <circle cx="36" cy="82" r="1" fill="#ff2d55" opacity="0.3"/>
+          <circle cx="84" cy="82" r="1" fill="#ff9500" opacity="0.3"/>
         </svg>
       </div>
       <div class="logo-name">KASAI</div>
@@ -4433,11 +4433,11 @@ const taglines = [
   "Run your limits · Into dust",
   "Strike first · Strike fast",
   "Heart of a champion · Every rep",
-  "Reach the summit · Or die trying",
+  "Launch higher · Burn brighter",
   "Iron sharpens iron · Be iron"
 ];
 
-const vnames = ['Runner','Lightning','Heartbeat','Summit','Iron'];
+const vnames = ['Runner','Lightning','Heartbeat','B4 Fire Launch','Iron'];
 
 // -- ICONS (inline SVG per variant) --
 const icons = [
@@ -4549,52 +4549,36 @@ const icons = [
     <circle id="ecgDot2" cx="117" cy="30" r="8" fill="none" stroke="rgba(255,107,0,0.6)" stroke-width="1.5" opacity="0"/>
   </svg>`,
 
-  // V4: Mountain summit
-  `<svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" id="iconSvg">
+  // V4: B4 Fire Launch logo
+  `<svg width="180" height="180" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" id="iconSvg">
     <defs>
-      <linearGradient id="mt-g" x1="0.5" y1="0" x2="0.5" y2="1">
-        <stop offset="0%" stop-color="#ffffff"/>
-        <stop offset="18%" stop-color="#ffca28"/>
-        <stop offset="55%" stop-color="#ff6b00"/>
+      <linearGradient id="b4-fire-splash" x1="0.5" y1="0" x2="0.5" y2="1">
+        <stop offset="0%" stop-color="#ffca28"/>
+        <stop offset="45%" stop-color="#ff6b00"/>
         <stop offset="100%" stop-color="#ff2d55"/>
       </linearGradient>
-      <linearGradient id="mt-g2" x1="0.5" y1="0" x2="0.5" y2="1">
-        <stop offset="0%" stop-color="#ff9500"/>
-        <stop offset="100%" stop-color="#ff2d55"/>
-      </linearGradient>
-      <filter id="mt-glow">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
+      <filter id="b4-glow-splash">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-    <!-- back peak -->
-    <path d="M140,165 L100,55 L60,165 Z" fill="rgba(255,107,0,0.18)" stroke="rgba(255,107,0,0.2)" stroke-width="1"/>
-    <!-- far left peak -->
-    <path d="M0,165 L38,90 L76,165 Z" fill="rgba(255,45,85,0.1)"/>
-    <!-- main peak -->
-    <path id="mainPeak" d="M20,165 L90,18 L160,165 Z" fill="url(#mt-g)" filter="url(#mt-glow)"/>
-    <!-- snow cap -->
-    <path d="M90,18 L70,62 L90,54 L110,62 Z" fill="rgba(255,255,255,0.85)"/>
-    <!-- ridge line -->
-    <path d="M20,165 L90,18 L160,165" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
-    <!-- climber figure on peak -->
-    <g id="climberFig" opacity="0" style="transform-origin:90px 45px;">
-      <circle cx="90" cy="27" r="4" fill="#ffffff"/>
-      <line x1="90" y1="31" x2="90" y2="44" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="90" y1="36" x2="84" y2="41" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-      <line x1="90" y1="36" x2="96" y2="41" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-      <line x1="90" y1="44" x2="85" y2="52" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-      <line x1="90" y1="44" x2="95" y2="52" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-      <!-- flag -->
-      <line x1="96" y1="41" x2="96" y2="28" stroke="#ffca28" stroke-width="1.5"/>
-      <path d="M96,28 L106,32 L96,36 Z" fill="#ffca28"/>
+    <circle cx="60" cy="60" r="56" fill="#0f0f1a" stroke="rgba(255,107,0,0.25)" stroke-width="1.5"/>
+    <g id="b4LogoFig" filter="url(#b4-glow-splash)" stroke="#ff8a3d" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <circle cx="60" cy="24" r="7" stroke-width="3"/>
+      <path d="M60,33 L60,54" stroke-width="3"/>
+      <path d="M60,38 L48,26" stroke-width="3"/>
+      <path d="M60,38 L72,26" stroke-width="3"/>
+      <path d="M60,54 L48,66 L42,62" stroke-width="3"/>
+      <path d="M60,54 L72,66 L78,62" stroke-width="3"/>
     </g>
-    <!-- stars above peak -->
-    <circle class="star" cx="90" cy="10" r="1.5" fill="#ffca28" style="animation: star-twinkle 1.8s ease-in-out infinite 0s;"/>
-    <circle class="star" cx="75" cy="5" r="1" fill="#ffca28" style="animation: star-twinkle 1.8s ease-in-out infinite 0.4s;"/>
-    <circle class="star" cx="105" cy="5" r="1" fill="#ffca28" style="animation: star-twinkle 1.8s ease-in-out infinite 0.8s;"/>
-    <circle class="star" cx="68" cy="14" r="1.2" fill="#ff9500" style="animation: star-twinkle 1.8s ease-in-out infinite 1.1s;"/>
-    <circle class="star" cx="112" cy="14" r="1.2" fill="#ff9500" style="animation: star-twinkle 1.8s ease-in-out infinite 0.6s;"/>
+    <path d="M60,80 C63,74 68,72 67,68 C66.5,66 65,65 65.5,62 C67,66 68.5,67 68,64 C70,67 70.5,70 69,74 C67,78 53,78 51,74 C49.5,70 50,67 52,64 C51.5,67 53,66 54.5,62 C55,65 53.5,66 53,68 C52,72 57,74 60,80Z" fill="url(#b4-fire-splash)"/>
+    <path d="M60,70 C60.8,68 62,67.5 61.8,66 C61,67 60.5,67.2 60,66.5 C59.5,67.2 59,67 58.2,66 C58,67.5 59.2,68 60,70Z" fill="rgba(255,255,200,0.5)"/>
+    <ellipse cx="60" cy="82" rx="20" ry="5" fill="none" stroke="rgba(255,107,0,0.2)" stroke-width="1"/>
+    <ellipse cx="60" cy="86" rx="28" ry="6" fill="none" stroke="rgba(255,107,0,0.1)" stroke-width="1"/>
+    <circle cx="40" cy="76" r="1.5" fill="#ffca28" opacity="0.5"/>
+    <circle cx="80" cy="76" r="1.5" fill="#ff6b00" opacity="0.5"/>
+    <circle cx="36" cy="82" r="1" fill="#ff2d55" opacity="0.3"/>
+    <circle cx="84" cy="82" r="1" fill="#ff9500" opacity="0.3"/>
   </svg>`,
 
   // V5: Dumbbell / Iron
@@ -4653,7 +4637,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-notif2';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-b4logo1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -4948,7 +4932,7 @@ window.addEventListener('load',()=>{
   },9000);
   updateSplashVersionTag();
   prepIconWrap();
-  const v=Math.floor(Math.random()*5);
+  const v=3;
   currentVariant=v;
   setTimeout(()=>playVariantOnce(v),300);
 });
