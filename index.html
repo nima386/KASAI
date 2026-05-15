@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43';
+const KASAI_APP_VERSION = 'kasai-v43-fix1';
 </script>
 <style>
 :root {
@@ -296,6 +296,43 @@ body{
   touch-action:manipulation;
   display:flex;align-items:center;justify-content:center;gap:8px;
   position:relative;
+}
+
+.daily-ex-section{display:none;margin:2px 0 18px;}
+.daily-ex-section.show{display:block;}
+.daily-ex-grid{display:flex;flex-direction:column;gap:8px;}
+.daily-ex-card{
+  background:linear-gradient(135deg,rgba(255,107,0,.10),rgba(110,99,242,.08)),var(--bg-card);
+  border:1px solid rgba(255,107,0,.18);
+  border-radius:var(--r-md);
+  padding:12px;
+  position:relative;overflow:hidden;
+}
+.daily-ex-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.daily-ex-icon{
+  width:34px;height:34px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,107,0,.13);font-size:1.05rem;flex-shrink:0;
+}
+.daily-ex-main{flex:1;min-width:0;}
+.daily-ex-name{font-weight:800;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.daily-ex-sub{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;}
+.daily-ex-count{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:900;color:#ffca28;}
+.daily-ex-bar{height:5px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-bottom:10px;}
+.daily-ex-fill{height:100%;width:0;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:inherit;transition:width .25s var(--ease);}
+.daily-ex-actions{display:flex;gap:8px;}
+.daily-ex-plus,.daily-ex-menu{
+  border:none;border-radius:999px;cursor:pointer;touch-action:manipulation;
+  font-family:'JetBrains Mono',monospace;font-weight:800;
+}
+.daily-ex-plus{
+  flex:1;padding:9px 12px;color:#fff;
+  background:linear-gradient(135deg,#ff9500,#ff2d55);
+  box-shadow:0 10px 22px rgba(255,80,0,.18);
+}
+.daily-ex-menu{
+  width:42px;color:var(--text-secondary);background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
 }
 
 /* -- SECTION ROWS -- */
@@ -2090,6 +2127,26 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .add-ex-row-tp:active{background:rgba(255,255,255,.03);}
 
+.daily-plan-block{
+  background:#141020;border:1px solid rgba(255,107,0,.12);border-radius:14px;
+  overflow:hidden;margin:10px 0 12px;
+}
+.daily-plan-row{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.daily-plan-row:active{background:rgba(255,107,0,.06);}
+.daily-plan-icon{font-size:1.05rem;flex-shrink:0;}
+.daily-plan-name{font-size:.8rem;font-weight:800;color:#fff8f0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.daily-plan-meta{font-family:'JetBrains Mono',monospace;font-size:.42rem;color:#ff9500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;}
+.daily-plan-del{font-size:.75rem;color:rgba(255,45,85,.66);padding:6px;cursor:pointer;flex-shrink:0;}
+.add-daily-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 14px;color:#ff9500;font-size:.76rem;cursor:pointer;
+  background:rgba(255,107,0,.04);-webkit-tap-highlight-color:transparent;
+}
+
 /* Add muscle group */
 .add-mg-block{
   display:flex;align-items:center;justify-content:center;gap:8px;
@@ -2827,7 +2884,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-fix1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -2907,7 +2964,7 @@ body.splash-done #splash{display:none;}
         <div>
           <label class="field-label">E-Mail</label>
           <div class="field-wrap">
-            <span class="field-icon">-</span>
+            <span class="field-icon">✉</span>
             <input type="email" class="field" id="gate-login-email" placeholder="du@beispiel.com" autocomplete="email">
           </div>
         </div>
@@ -2920,7 +2977,7 @@ body.splash-done #splash{display:none;}
         </div>
       </div>
       <div class="forgot-row"><button class="forgot-link" id="gate-reset-password">// passwort vergessen?</button></div>
-      <button class="btn-primary" id="gate-login-btn">Anmelden -</button>
+      <button class="btn-primary" id="gate-login-btn">Anmelden →</button>
       <div class="divider"><span>// oder schnell mit</span></div>
       <div class="social-row">
         <button class="btn-social" id="gate-apple-login">Apple</button>
@@ -2950,7 +3007,7 @@ body.splash-done #splash{display:none;}
         <div>
           <label class="field-label">E-Mail</label>
           <div class="field-wrap">
-            <span class="field-icon">-</span>
+            <span class="field-icon">✉</span>
             <input type="email" class="field" id="gate-signup-email" placeholder="du@beispiel.com" autocomplete="email">
           </div>
         </div>
@@ -2966,7 +3023,7 @@ body.splash-done #splash{display:none;}
           <div class="pw-strength-label" id="gate-pw-label">// passwort eingeben</div>
         </div>
       </div>
-      <button class="btn-primary" id="gate-signup-btn">Konto erstellen -</button>
+      <button class="btn-primary" id="gate-signup-btn">Konto erstellen →</button>
       <div class="divider"><span>// oder</span></div>
       <div class="social-row">
         <button class="btn-social" id="gate-apple-signup">Apple</button>
@@ -2996,9 +3053,9 @@ body.splash-done #splash{display:none;}
       </div>
       <div class="auth-kicker" style="margin-bottom:10px;">// mail-app öffnen</div>
       <div class="mail-app-grid">
-        <a class="mail-app-btn" href="googlegmail://"><span class="mail-app-icon">-</span>Gmail</a>
-        <a class="mail-app-btn" href="message://"><span class="mail-app-icon">-</span>Mail</a>
-        <a class="mail-app-btn" href="ms-outlook://"><span class="mail-app-icon">-</span>Outlook</a>
+        <a class="mail-app-btn" href="googlegmail://"><span class="mail-app-icon">✉</span>Gmail</a>
+        <a class="mail-app-btn" href="message://"><span class="mail-app-icon">✉</span>Mail</a>
+        <a class="mail-app-btn" href="ms-outlook://"><span class="mail-app-icon">✉</span>Outlook</a>
       </div>
       <button class="btn-primary" id="gate-confirmed-email-btn">Ich habe bestätigt -</button>
       <button class="btn-social" id="gate-resend-confirmation" style="padding:14px;margin-top:10px;">E-Mail erneut senden</button>
@@ -3018,10 +3075,10 @@ body.splash-done #splash{display:none;}
       <div class="settings-list">
         <div class="setting-row"><div class="setting-icon icon-purple">👤</div><div class="setting-text"><div class="setting-name">Persönliche Daten</div><div class="setting-sub">Profil · Ziele · Account</div></div></div>
         <div class="setting-row"><div class="setting-icon icon-purple">💾</div><div class="setting-text"><div class="setting-name">Daten & Backup</div><div class="setting-sub">Supabase · geschützt · synchron</div></div></div>
-        <div class="setting-row"><div class="setting-icon icon-red">-</div><div class="setting-text"><div class="setting-name">Abmelden</div><div class="setting-sub">Zur Login-Seite zurück</div></div></div>
+        <div class="setting-row"><div class="setting-icon icon-red">⏻</div><div class="setting-text"><div class="setting-name">Abmelden</div><div class="setting-sub">Zur Login-Seite zurück</div></div></div>
       </div>
-      <button class="btn-logout" id="gate-logout-btn">- Abmelden</button>
-      <button class="btn-primary" id="gate-open-app-btn" style="margin-top:10px;">Zur App -</button>
+      <button class="btn-logout" id="gate-logout-btn">⏻ Abmelden</button>
+      <button class="btn-primary" id="gate-open-app-btn" style="margin-top:10px;">Zur App →</button>
       <div class="version-mono">// kasai · account required</div>
     </div>
 
@@ -3210,7 +3267,7 @@ document.addEventListener('click', async function(e){
     </div>
     <div class="screen-body">
       <div class="calendar-meta">
-        <div class="calendar-swipe">- swipe -</div>
+        <div class="calendar-swipe">‹ swipe ›</div>
         <div class="concept-pill" id="calendar-week-pill">KW</div>
       </div>
       <div class="calendar-strip" id="calendar-strip"></div>
@@ -3249,18 +3306,26 @@ document.addEventListener('click', async function(e){
             <div class="stat-lbl">Readiness</div>
           </div>
         </div>
-        <button class="cta-btn" id="start-workout-btn">- Training starten</button>
+        <button class="cta-btn" id="start-workout-btn">Training starten →</button>
+      </div>
+
+      <div class="daily-ex-section" id="daily-ex-section">
+        <div class="section-row">
+          <div class="section-row-title">Über den Tag</div>
+          <span class="section-row-link" id="daily-ex-edit-link">bearbeiten →</span>
+        </div>
+        <div class="daily-ex-grid" id="daily-ex-grid"></div>
       </div>
 
       <div class="section-row">
         <div class="section-row-title">Muskelgruppen heute</div>
-        <span class="section-row-link">bearbeiten -</span>
+        <span class="section-row-link" id="muscle-edit-link">bearbeiten →</span>
       </div>
       <div class="cat-grid" id="muscle-grid"></div>
 
       <div class="section-row">
         <div class="section-row-title">Übungen</div>
-        <span class="section-row-link">+ hinzufügen</span>
+        <span class="section-row-link" id="exercise-add-link">+ hinzufügen</span>
       </div>
       <div class="ex-list" id="exercise-list"></div>
 
@@ -3301,8 +3366,8 @@ document.addEventListener('click', async function(e){
           <div class="run-card-head">
             <div class="run-card-title" id="run-calendar-label">Monat</div>
             <div class="run-cal-nav">
-              <button class="run-cal-btn" id="run-prev-month" aria-label="Vorheriger Monat">-</button>
-              <button class="run-cal-btn" id="run-next-month" aria-label="Nächster Monat">-</button>
+              <button class="run-cal-btn" id="run-prev-month" aria-label="Vorheriger Monat">‹</button>
+              <button class="run-cal-btn" id="run-next-month" aria-label="Nächster Monat">›</button>
             </div>
           </div>
           <div class="run-weekdays">
@@ -3444,7 +3509,7 @@ document.addEventListener('click', async function(e){
         <div class="steps-foot">
           <div class="steps-km" id="steps-km">ca. 0,0 km</div>
           <div style="display:flex;align-items:center;">
-            <button class="card-action" id="steps-menu" aria-label="Wert setzen">-</button>
+            <button class="card-action" id="steps-menu" aria-label="Wert setzen">⋮</button>
             <button class="steps-add" id="steps-add">+ 500</button>
           </div>
         </div>
@@ -3523,7 +3588,7 @@ document.addEventListener('click', async function(e){
 
       <div class="section-row">
         <div class="section-row-title">Trainingsplan</div>
-        <span class="section-row-link" id="profile-open-settings">Einstellungen -</span>
+        <span class="section-row-link" id="profile-open-settings">Einstellungen →</span>
       </div>
       <div class="day-rows" id="profile-plan-rows"></div>
 
@@ -3534,7 +3599,7 @@ document.addEventListener('click', async function(e){
   <div id="screen-training-plan" class="screen">
     <div class="app-header">
       <div class="header-left">
-        <button class="tp-back-btn" id="tp-back-btn">- Profil</button>
+        <button class="tp-back-btn" id="tp-back-btn">← Profil</button>
       </div>
       <div style="font-size:.95rem;font-weight:800;color:var(--text-primary);">Trainingsplan</div>
       <div style="width:64px"></div>
@@ -3547,7 +3612,7 @@ document.addEventListener('click', async function(e){
   <!-- ------- SCREEN: TAG-DETAIL-EDITOR ------- -->
   <div id="screen-day-detail" class="screen">
     <div class="app-header" style="display:flex;align-items:center;gap:8px;">
-      <button class="tp-back-btn" id="dd-back-btn">- Plan</button>
+      <button class="tp-back-btn" id="dd-back-btn">← Plan</button>
       <div id="dd-header-title" style="flex:1;text-align:center;font-size:.88rem;font-weight:800;color:var(--text-primary);">Montag · Woche A</div>
       <div class="rest-toggle-wrap" style="flex-shrink:0;">
         <span class="rest-toggle-lbl">Ruhetag</span>
@@ -3568,7 +3633,7 @@ document.addEventListener('click', async function(e){
     <div class="tp-sheet-grab"></div>
     <div class="tp-sheet-head">
       <div class="tp-sheet-title" id="tp-mg-title">Muskelgruppe hinzufügen</div>
-      <button class="tp-sheet-close" id="tp-mg-close">-</button>
+      <button class="tp-sheet-close" id="tp-mg-close">×</button>
     </div>
     <div class="tp-field">
       <div class="tp-field-lbl">// Name</div>
@@ -3596,11 +3661,11 @@ document.addEventListener('click', async function(e){
         <span class="tp-emoji-pick" data-icon="🦵">🦵</span>
         <span class="tp-emoji-pick" data-icon="🦶">🦶</span>
         <span class="tp-emoji-pick" data-icon="🤸">🤸</span>
-        <span class="tp-emoji-pick" data-icon="-">-</span>
+        <span class="tp-emoji-pick" data-icon="⚡">⚡</span>
         <span class="tp-emoji-pick" data-icon="🔥">🔥</span>
         <span class="tp-emoji-pick" data-icon="💥">💥</span>
         <span class="tp-emoji-pick" data-icon="🎯">🎯</span>
-        <span class="tp-emoji-pick" data-icon=""></span>
+        <span class="tp-emoji-pick" data-icon="⭐">⭐</span>
         <span class="tp-emoji-pick" data-icon="🛡️">🛡️</span>
         <span class="tp-emoji-pick" data-icon="🔱">🔱</span>
         <span class="tp-emoji-pick" data-icon="👊">👊</span>
@@ -3629,7 +3694,7 @@ document.addEventListener('click', async function(e){
     <div class="tp-sheet-grab"></div>
     <div class="tp-sheet-head">
       <div class="tp-sheet-title" id="tp-ex-title">Übung hinzufügen</div>
-      <button class="tp-sheet-close" id="tp-ex-close">-</button>
+      <button class="tp-sheet-close" id="tp-ex-close">×</button>
     </div>
     <div class="tp-field">
       <div class="tp-field-lbl">// Übungsname</div>
@@ -3701,6 +3766,51 @@ document.addEventListener('click', async function(e){
     <button class="tp-cta" id="tp-ex-save">Übung hinzufügen</button>
   </div>
 
+  <!-- ------- OVERLAY: TAGESÜBUNG HINZUFÜGEN / BEARBEITEN ------- -->
+  <div class="tp-overlay" id="tp-daily-overlay"></div>
+  <div class="tp-sheet" id="tp-daily-sheet">
+    <div class="tp-sheet-grab"></div>
+    <div class="tp-sheet-head">
+      <div class="tp-sheet-title" id="tp-daily-title">Tagesübung hinzufügen</div>
+      <button class="tp-sheet-close" id="tp-daily-close">×</button>
+    </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Name</div>
+      <input class="tp-input" id="tp-daily-name" type="text" placeholder="z. B. Liegestütze, Klimmzüge..." maxlength="40">
+      <div class="mg-name-chips" id="tp-daily-name-chips">
+        <span class="mg-name-chip" data-val="Liegestütze">Liegestütze</span>
+        <span class="mg-name-chip" data-val="Klimmzüge">Klimmzüge</span>
+        <span class="mg-name-chip" data-val="Dips">Dips</span>
+        <span class="mg-name-chip" data-val="Plank">Plank</span>
+      </div>
+    </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Icon</div>
+      <div class="tp-emoji-grid" id="tp-daily-icons">
+        <span class="tp-emoji-pick active" data-icon="💪">💪</span>
+        <span class="tp-emoji-pick" data-icon="🔥">🔥</span>
+        <span class="tp-emoji-pick" data-icon="⚡">⚡</span>
+        <span class="tp-emoji-pick" data-icon="🎯">🎯</span>
+        <span class="tp-emoji-pick" data-icon="🏋️">🏋️</span>
+        <span class="tp-emoji-pick" data-icon="🤸">🤸</span>
+        <span class="tp-emoji-pick" data-icon="👊">👊</span>
+        <span class="tp-emoji-pick" data-icon="⭐">⭐</span>
+      </div>
+    </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Ziel & Plus-Schritt</div>
+      <div class="set-row-2">
+        <input class="tp-input" id="tp-daily-target" type="number" min="1" step="1" inputmode="numeric" placeholder="Ziel">
+        <input class="tp-input" id="tp-daily-step" type="number" min="1" step="1" inputmode="numeric" placeholder="+ Schritt">
+      </div>
+    </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Einheit</div>
+      <input class="tp-input" id="tp-daily-unit" type="text" maxlength="12" value="Wdh">
+    </div>
+    <button class="tp-cta" id="tp-daily-save">Tagesübung speichern</button>
+  </div>
+
   <!-- ------- CONFIRM DIALOG ------- -->
   <div class="tp-confirm" id="tp-confirm">
     <div class="tp-confirm-card">
@@ -3718,9 +3828,9 @@ document.addEventListener('click', async function(e){
           <div class="plan-cal-sub">Plan-Enddatum</div>
         </div>
         <div class="plan-cal-nav">
-          <button id="plan-cal-prev" type="button">-</button>
-          <button id="plan-cal-next" type="button">-</button>
-          <button class="plan-cal-close" id="plan-cal-close" type="button">-</button>
+          <button id="plan-cal-prev" type="button">‹</button>
+          <button id="plan-cal-next" type="button">›</button>
+          <button class="plan-cal-close" id="plan-cal-close" type="button">×</button>
         </div>
       </div>
       <div class="plan-cal-weekdays">
@@ -3746,7 +3856,7 @@ document.addEventListener('click', async function(e){
           <div class="kicker" style="margin-bottom:2px;" id="meal-mode">// neue mahlzeit</div>
           <div class="overlay-title" id="meal-title">Mahlzeit hinzufügen</div>
         </div>
-        <button class="overlay-close" data-close="meal-overlay">-</button>
+        <button class="overlay-close" data-close="meal-overlay">×</button>
       </div>
       <div class="set-group">
         <label>Icon</label>
@@ -3799,7 +3909,7 @@ document.addEventListener('click', async function(e){
           <div class="kicker" style="margin-bottom:2px;" id="mg-mode">// neue muskelgruppe</div>
           <div class="overlay-title" id="mg-title">Muskelgruppe hinzufügen</div>
         </div>
-        <button class="overlay-close" data-close="muscle-overlay">-</button>
+        <button class="overlay-close" data-close="muscle-overlay">×</button>
       </div>
       <div class="set-group">
         <label>Icon</label>
@@ -3845,7 +3955,7 @@ document.addEventListener('click', async function(e){
           <div class="kicker" style="margin-bottom:2px;" id="ex-edit-mode">// neue übung</div>
           <div class="overlay-title" id="ex-edit-title">Übung hinzufügen</div>
         </div>
-        <button class="overlay-close" data-close="exercise-overlay">-</button>
+        <button class="overlay-close" data-close="exercise-overlay">×</button>
       </div>
       <div class="set-group">
         <label>Name</label>
@@ -3899,7 +4009,7 @@ document.addEventListener('click', async function(e){
           <div class="kicker" style="margin-bottom:2px;" id="am-kicker">// wert setzen</div>
           <div class="overlay-title" id="am-title">Wert setzen</div>
         </div>
-        <button class="overlay-close" data-close="amount-overlay">-</button>
+        <button class="overlay-close" data-close="amount-overlay">×</button>
       </div>
       <div class="set-group">
         <label id="am-label">Aktueller Wert</label>
@@ -3907,7 +4017,7 @@ document.addEventListener('click', async function(e){
       </div>
       <div class="amount-quick" id="am-quick"></div>
       <div class="set-row-2" style="margin-top:14px;">
-        <button class="del-btn" id="am-reset" style="margin-top:0;">- Zurücksetzen</button>
+        <button class="del-btn" id="am-reset" style="margin-top:0;">↺ Zurücksetzen</button>
         <button class="cta-btn"  id="am-save"  style="margin-top:0;">Speichern</button>
       </div>
     </div>
@@ -3922,7 +4032,7 @@ document.addEventListener('click', async function(e){
           <div class="kicker" style="margin-bottom:2px;" id="habit-mode">// neuer habit</div>
           <div class="overlay-title" id="habit-title">Gewohnheit hinzufügen</div>
         </div>
-        <button class="overlay-close" data-close="habit-overlay">-</button>
+        <button class="overlay-close" data-close="habit-overlay">×</button>
       </div>
       <div class="set-group">
         <label>Icon</label>
@@ -3972,7 +4082,7 @@ document.addEventListener('click', async function(e){
       <div class="overlay-grab"></div>
       <div class="overlay-head">
         <div class="overlay-title">Einstellungen</div>
-        <button class="overlay-close" data-close="settings-overlay">-</button>
+        <button class="overlay-close" data-close="settings-overlay">×</button>
       </div>
 
       <!-- Profil-Karte (nur sichtbar wenn eingeloggt) -->
@@ -4072,7 +4182,7 @@ document.addEventListener('click', async function(e){
       </div>
       <!-- Account-Aktionen (nur sichtbar wenn eingeloggt) -->
       <div id="settings-account-actions" style="display:none;">
-        <button class="btn-logout" id="settings-logout">- Abmelden</button>
+        <button class="btn-logout" id="settings-logout">⏻ Abmelden</button>
       </div>
       <!-- Account-Login (nur sichtbar wenn NICHT eingeloggt) -->
       <div id="settings-account-login" style="display:none;">
@@ -4090,7 +4200,7 @@ document.addEventListener('click', async function(e){
           <div class="kicker" style="margin-bottom:2px;">// readiness-check</div>
           <div class="overlay-title">Wie fühlst du dich?</div>
         </div>
-        <button class="overlay-close" data-close="readiness-overlay">-</button>
+        <button class="overlay-close" data-close="readiness-overlay">×</button>
       </div>
       <div class="slider-group">
         <div class="slider-head"><span>😴 Schlaf</span><span class="slider-val" id="rd-sleep-val">7</span></div>
@@ -4339,7 +4449,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-fix1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -5426,6 +5536,7 @@ function hasMeaningfulUserState(state){
   if([p.weightKg,p.stepGoal,p.kcalGoal,p.waterGoal,p.proteinMin,p.proteinMax].some(v=>v != null && String(v) !== '')) return true;
   if(Object.values(state.hydration || {}).some(v=>Number(v) > 0)) return true;
   if(Object.values(state.steps || {}).some(v=>Number(v) > 0)) return true;
+  if(Object.values(state.dailyExerciseLogs || {}).some(day=>hasOwnKeys(day) && Object.values(day).some(v=>Number(v) > 0))) return true;
   if(Object.values(state.habits || {}).some(day=>hasOwnKeys(day) && Object.values(day).some(Boolean))) return true;
   if(Object.values(state.sessions || {}).some(day=>hasOwnKeys(day))) return true;
   if(Object.values(state.meals || {}).some(day=>Array.isArray(day) && day.length > 0)) return true;
@@ -5446,6 +5557,7 @@ function hasMeaningfulUserState(state){
   if(plan?.weeks && Object.values(plan.weeks).some(week=>Object.values(week?.days || {}).some(day=>
     (day?.label && day.label !== 'Trainingstag') ||
     day?.isRest ||
+    (Array.isArray(day?.dailyExercises) && day.dailyExercises.some(ex=>!ex?.isArchived)) ||
     (Array.isArray(day?.exercises) && day.exercises.length > 0) ||
     (Array.isArray(day?.muscleGroups) && day.muscleGroups.length > 0) ||
     (Array.isArray(day?.muscles) && day.muscles.length > 0)
@@ -5652,6 +5764,7 @@ function normalizeState(){
   }, S.profile || {});
   if(!S.hydration) S.hydration = {};
   if(!S.steps) S.steps = {};
+  if(!S.dailyExerciseLogs) S.dailyExerciseLogs = {};
   if(!S.habits) S.habits = {};
   if(!S.sessions) S.sessions = {};
   if(!S.readiness) S.readiness = {};
@@ -5694,6 +5807,7 @@ function normalizeState(){
   if(S.freeze == null) S.freeze = 2;
   if(S.hydration[todayStr] == null) S.hydration[todayStr] = 0;
   if(S.steps[todayStr] == null) S.steps[todayStr] = 0;
+  if(!S.dailyExerciseLogs[todayStr]) S.dailyExerciseLogs[todayStr] = {};
   if(!S.habits[todayStr]) S.habits[todayStr] = {};
   if(!S.sessions[todayStr]) S.sessions[todayStr] = {};
   if(!S.meals[todayStr]) S.meals[todayStr] = [];
@@ -5941,6 +6055,8 @@ function setSelectedDate(date){
 function ensureDailyState(dayKey=selectedDateStr){
   if(S.hydration?.[dayKey] == null) S.hydration[dayKey] = 0;
   if(S.steps?.[dayKey] == null) S.steps[dayKey] = 0;
+  if(!S.dailyExerciseLogs) S.dailyExerciseLogs = {};
+  if(!S.dailyExerciseLogs[dayKey]) S.dailyExerciseLogs[dayKey] = {};
   if(!S.habits?.[dayKey]) S.habits[dayKey] = {};
   if(!S.sessions?.[dayKey]) S.sessions[dayKey] = {};
   if(!S.meals?.[dayKey]) S.meals[dayKey] = [];
@@ -6220,7 +6336,7 @@ if(S.schema !== 'fresh-v1'){
   S = {
     schema: 'fresh-v1',
     profile: S.profile || {},
-    hydration: {}, steps: {}, habits: {}, sessions: {},
+    hydration: {}, steps: {}, dailyExerciseLogs: {}, habits: {}, sessions: {},
     readiness: {}, meals: {}, prs: {},
     settings: S.settings || {},
     userHabits: [], muscles: {}, exercises: {}, runs: [], runTracker: {},
@@ -6243,6 +6359,7 @@ S.profile = Object.assign({
 // Container-Defaults
 if(!S.hydration)            S.hydration = {};
 if(!S.steps)                S.steps = {};
+if(!S.dailyExerciseLogs)    S.dailyExerciseLogs = {};
 if(!S.habits)               S.habits = {};
 if(!S.sessions)             S.sessions = {};
 if(!S.readiness)            S.readiness = {};
@@ -6287,6 +6404,7 @@ if(S.freeze == null)        S.freeze = 2;
 // Heute-Defaults: nichts vorausgefüllt
 if(S.hydration[todayStr] == null) S.hydration[todayStr] = 0;
 if(S.steps[todayStr]     == null) S.steps[todayStr]     = 0;
+if(!S.dailyExerciseLogs[todayStr]) S.dailyExerciseLogs[todayStr] = {};
 if(!S.habits[todayStr])           S.habits[todayStr]    = {};
 if(!S.sessions[todayStr])         S.sessions[todayStr]  = {};
 if(!S.meals[todayStr])            S.meals[todayStr]     = [];
@@ -6314,6 +6432,13 @@ function parseDateKey(key){
   return Number.isNaN(d.getTime()) ? new Date(today.toDateString()) : d;
 }
 
+function startOfIsoWeek(value){
+  const d = value instanceof Date ? new Date(value.toDateString()) : parseDateKey(value);
+  const isoDow = d.getDay() || 7;
+  d.setDate(d.getDate() - isoDow + 1);
+  return d;
+}
+
 function inclusiveDaysUntil(dateStr, fromDate=today){
   if(!dateStr) return null;
   const end = parseDateKey(dateStr);
@@ -6338,7 +6463,8 @@ function escapeHtml(value=''){
 
 function cleanUiIcon(icon, fallback=''){
   const value = String(icon || '').trim();
-  return value && !/[\uFFFD]/.test(value) ? value : fallback;
+  if(!value || value === '-' || value.charCodeAt(0) === 0x00ef || /[\uFFFD]/.test(value)) return fallback;
+  return value;
 }
 
 function repairMojibakeText(value){
@@ -6459,8 +6585,9 @@ function planFromTrainingPlanDay(day, jsDow){
 
 function getWeekForDate(date=today){
   const weekIds = getPlanWeekIds();
-  const start = parseDateKey(S.trainingPlan?.startDate || S.planConfig?.startDate || todayStr);
-  const diffWeeks = Math.max(0, Math.floor((parseDateKey(dateKey(date)) - start) / 604800000));
+  const start = startOfIsoWeek(S.trainingPlan?.startDate || S.planConfig?.startDate || todayStr);
+  const current = startOfIsoWeek(date);
+  const diffWeeks = Math.max(0, Math.floor((current - start) / 604800000));
   return weekIds[diffWeeks % weekIds.length] || 'A';
 }
 
@@ -6499,6 +6626,28 @@ function getSelectedTrainingPlanDay(){
   const {week, dow} = getPlanForDate(selectedDate);
   const tpIndex = dow === 0 ? 6 : dow - 1;
   return tpDay(week, tpIndex);
+}
+
+function getDailyExercisesForSelectedDay(){
+  const day = getSelectedTrainingPlanDay();
+  if(!day || day.isRest) return [];
+  return ensureDailyExercisesForDay(day)
+    .filter(ex=>!ex.isArchived)
+    .sort((a,b)=>(a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+}
+
+function findDailyExerciseForSelectedDay(exId){
+  return getDailyExercisesForSelectedDay().find(ex=>ex.id === exId) || null;
+}
+
+function getDailyExerciseCount(exId, dayKey=selectedDateStr){
+  ensureDailyState(dayKey);
+  return Math.max(0, parseInt(S.dailyExerciseLogs?.[dayKey]?.[exId]) || 0);
+}
+
+function setDailyExerciseCount(exId, count, dayKey=selectedDateStr){
+  ensureDailyState(dayKey);
+  S.dailyExerciseLogs[dayKey][exId] = Math.max(0, parseInt(count) || 0);
 }
 
 function getTrainingPlanMusclesForSelectedDay(){
@@ -6759,6 +6908,7 @@ function renderTraining(){
   renderCalendar(dow);
   renderDailyQuote(selectedDate);
   renderTodayCard(plan, week);
+  renderDailyExerciseTrackers();
   renderMuscles(plan);
   renderExerciseList(plan);
 }
@@ -6848,9 +6998,58 @@ function renderTodayCard(plan, week){
   const cta = document.getElementById('start-workout-btn');
   if(S.planConfig?.expired)     cta.textContent = 'Plan abgelaufen - verlängern oder neu anlegen?';
   else if(plan.type==='rest')   cta.textContent = '😴 Ruhetag - Protein, Habits & Erholung';
-  else if(!muscles.length)      cta.textContent = 'ï¼‹ Muskelgruppen anlegen';
+  else if(!muscles.length)      cta.textContent = '＋ Muskelgruppen anlegen';
   else if(!exs.length)          cta.textContent = '＋ Übungen hinzufügen';
-  else                          cta.textContent = '- Training starten';
+  else                          cta.textContent = 'Training starten →';
+}
+
+function renderDailyExerciseTrackers(){
+  const section = document.getElementById('daily-ex-section');
+  const grid = document.getElementById('daily-ex-grid');
+  if(!section || !grid) return;
+  const exercises = getDailyExercisesForSelectedDay();
+  if(!exercises.length){
+    section.classList.remove('show');
+    grid.innerHTML = '';
+    return;
+  }
+  section.classList.add('show');
+  grid.innerHTML = exercises.map(ex=>{
+    const count = getDailyExerciseCount(ex.id);
+    const target = Math.max(1, parseInt(ex.target) || 1);
+    const pct = Math.min(100, Math.round(count / target * 100));
+    const step = Math.max(1, parseInt(ex.step) || 1);
+    return `
+      <div class="daily-ex-card" data-daily-id="${escapeHtml(ex.id)}">
+        <div class="daily-ex-head">
+          <div class="daily-ex-icon">${escapeHtml(cleanUiIcon(ex.icon, '💪'))}</div>
+          <div class="daily-ex-main">
+            <div class="daily-ex-name">${escapeHtml(ex.name)}</div>
+            <div class="daily-ex-sub">Ziel ${target} ${escapeHtml(ex.unit)} · +${step}</div>
+          </div>
+          <div class="daily-ex-count">${count}</div>
+        </div>
+        <div class="daily-ex-bar"><div class="daily-ex-fill" style="width:${pct}%"></div></div>
+        <div class="daily-ex-actions">
+          <button class="daily-ex-plus" type="button" data-daily-add="${escapeHtml(ex.id)}">+${step} ${escapeHtml(ex.unit)}</button>
+          <button class="daily-ex-menu" type="button" data-daily-set="${escapeHtml(ex.id)}">⋮</button>
+        </div>
+      </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-daily-add]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ex = findDailyExerciseForSelectedDay(btn.dataset.dailyAdd);
+      if(!ex) return;
+      setDailyExerciseCount(ex.id, getDailyExerciseCount(ex.id) + (parseInt(ex.step) || 1));
+      saveState(S);
+      renderDailyExerciseTrackers();
+    });
+  });
+  grid.querySelectorAll('[data-daily-set]').forEach(btn=>{
+    btn.addEventListener('click',()=>openDailyExerciseAmount(btn.dataset.dailySet));
+  });
+  const editLink = document.getElementById('daily-ex-edit-link');
+  if(editLink) editLink.onclick = ()=>openSelectedPlanDayEditor();
 }
 
 function renderMuscles(plan){
@@ -6913,7 +7112,7 @@ function renderMuscles(plan){
   addEl.className = 'cat-card cat-add';
   if(muscles.length % 2 === 0) addEl.setAttribute('style','grid-column:span 2');
   addEl.innerHTML = `
-    <div class="cat-icon-wrap" style="background:rgba(110,99,242,0.15)">ï¼‹</div>
+    <div class="cat-icon-wrap" style="background:rgba(110,99,242,0.15)">＋</div>
     <div class="cat-name" style="color:var(--purple-300)">Hinzufügen</div>
     <div class="cat-meta">NEUE MUSKELGRUPPE</div>`;
   addEl.addEventListener('click',()=>{
@@ -6949,7 +7148,7 @@ function renderExerciseList(plan){
         <div class="ex-name">${ex.name}</div>
         <div class="ex-sub">${ex.sets} × ${ex.rMin}-${ex.rMax} · LETZTE: ${lastW ? lastW+' KG' : '-'}</div>
       </div>
-      ${done ? '<div class="ex-done-check">-</div>' : (i === 0 && ex.pr ? '<div class="ex-pr">- PR</div>' : '<span class="ex-arrow">-</span>')}`;
+      ${done ? '<div class="ex-done-check">✓</div>' : (i === 0 && ex.pr ? '<div class="ex-pr">★ PR</div>' : '<span class="ex-arrow">›</span>')}`;
     el.onclick = ()=> navigate('exercise', ex);
     let pT;
     el.addEventListener('touchstart',()=>{ pT = setTimeout(()=>openExerciseEdit(ex.id, plan.type), 550); }, {passive:true});
@@ -7090,7 +7289,7 @@ function renderRunList(){
   const sorted = [...(S.runs || [])].sort((a,b)=>String(b.date).localeCompare(String(a.date)) || String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
   const visible = showAll ? sorted : sorted.slice(0,4);
   const allBtn = document.getElementById('run-show-all');
-  if(allBtn) allBtn.textContent = showAll ? 'Weniger' : 'Alle -';
+  if(allBtn) allBtn.textContent = showAll ? 'Weniger' : 'Alle →';
   if(!visible.length){
     list.innerHTML = '<div class="run-empty">Noch keine Läufe. Trag deinen ersten Run ein.</div>';
     return;
@@ -7103,7 +7302,7 @@ function renderRunList(){
     const cls = run.pr ? 'pr' : km >= 10 ? 'good' : 'normal';
     return `
       <div class="run-item ${cls}">
-        <div class="run-icon">-</div>
+        <div class="run-icon">🏃</div>
         <div class="run-info">
           <div class="run-name">${km.toFixed(1)} km${run.pr ? '<span class="run-pr-badge">PR</span>' : ''}</div>
           <div class="run-meta">${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} · ${escapeHtml(run.type || 'Easy Run')} · ${Math.round(min)} min</div>
@@ -7237,11 +7436,33 @@ function buildEmptyWeekDays(){
     days[String(d)]={
       label: 'Trainingstag',
       isRest: false,
-      muscleGroups:[]
+      muscleGroups:[],
+      dailyExercises:[]
     };
   }
   return days;
 }
+
+function normalizeDailyExercise(ex={}, index=0){
+  return {
+    id: ex.id || genId(),
+    name: String(ex.name || 'Tagesübung').trim() || 'Tagesübung',
+    icon: cleanUiIcon(ex.icon, '💪'),
+    target: Math.max(1, parseInt(ex.target ?? ex.goal ?? 50) || 50),
+    step: Math.max(1, parseInt(ex.step ?? ex.increment ?? 5) || 5),
+    unit: String(ex.unit || 'Wdh').trim() || 'Wdh',
+    sortOrder: ex.sortOrder ?? index,
+    isArchived: !!ex.isArchived
+  };
+}
+
+function ensureDailyExercisesForDay(day){
+  if(!day) return [];
+  if(!Array.isArray(day.dailyExercises)) day.dailyExercises = [];
+  day.dailyExercises = day.dailyExercises.map((ex,index)=>normalizeDailyExercise(ex,index));
+  return day.dailyExercises;
+}
+
 function ensureTrainingPlanWeeks(){
   const tp = S.trainingPlan;
   if(!tp) return;
@@ -7249,8 +7470,9 @@ function ensureTrainingPlanWeeks(){
     if(!tp.weeks[wk].days) tp.weeks[wk].days = buildEmptyWeekDays();
     for(let d=0;d<7;d++){
       const dk=String(d);
-      if(!tp.weeks[wk].days[dk]) tp.weeks[wk].days[dk]={label:'Trainingstag',isRest:false,muscleGroups:[]};
+      if(!tp.weeks[wk].days[dk]) tp.weeks[wk].days[dk]={label:'Trainingstag',isRest:false,muscleGroups:[],dailyExercises:[]};
       if(!tp.weeks[wk].days[dk].muscleGroups) tp.weeks[wk].days[dk].muscleGroups=[];
+      ensureDailyExercisesForDay(tp.weeks[wk].days[dk]);
     }
   });
 }
@@ -7295,6 +7517,7 @@ function buildWeekDaysFromLegacyPlan(source){
     days[String(tpIndex)] = {
       label:p.label || (p.type === 'rest' ? 'Ruhetag' : 'Trainingstag'),
       isRest:p.type === 'rest',
+      dailyExercises:[],
       muscleGroups:(p.muscles || []).map((name, index)=>({
         id:genId(), name, icon:MUSCLE_META[name]?.icon || '💪',
         color:MUSCLE_META[name]?.color || '#FF6B00',
@@ -7437,7 +7660,7 @@ function renderTrainingPlanScreen(){
   weekLabels.forEach(wk=>{
     const t = document.createElement('div');
     t.className = 'tp-wtab'+(wk===tpActiveWeek?' active':'');
-    t.innerHTML = `Woche ${wk}${wk!=='A' && weekLabels.length>1?'<span class="wtab-del">-</span>':''}`;
+    t.innerHTML = `Woche ${wk}${wk!=='A' && weekLabels.length>1?'<span class="wtab-del">×</span>':''}`;
     t.addEventListener('click',e=>{
       if(e.target.classList.contains('wtab-del')){
         handleDeleteWeek(wk); return;
@@ -7472,10 +7695,10 @@ function renderTrainingPlanScreen(){
     row.innerHTML = `
       <div class="tp-day-abbr">${TP_DAY_ABBR[d]}</div>
       <div class="tp-day-info">
-        <div class="tp-day-label-text${day.isRest?' rest-lbl':''}">${day.isRest?'- ':''} ${day.label||'Trainingstag'}</div>
+        <div class="tp-day-label-text${day.isRest?' rest-lbl':''}">${day.isRest?'☾ ':''} ${day.label||'Trainingstag'}</div>
         ${!day.isRest && mgPreview?`<div class="tp-day-muscles">${mgPreview.toUpperCase()}</div>`:''}
       </div>
-      <div class="tp-chevron">-</div>
+      <div class="tp-chevron">›</div>
     `;
     row.addEventListener('click',()=>openDayDetailScreen(tpActiveWeek, d));
     dayRows.appendChild(row);
@@ -7718,6 +7941,51 @@ function handleDeleteWeek(wk){
 // ---------------------------------------------------------------
 // RENDER: DAY DETAIL SCREEN
 // ---------------------------------------------------------------
+function renderDayDetailDailyExercises(body, day){
+  const exs = ensureDailyExercisesForDay(day)
+    .filter(ex=>!ex.isArchived)
+    .sort((a,b)=>(a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  const sec = document.createElement('div');
+  sec.className = 'tp-section';
+  const rows = exs.map(ex=>`
+    <div class="daily-plan-row" data-daily-edit="${escapeHtml(ex.id)}">
+      <span class="daily-plan-icon">${escapeHtml(cleanUiIcon(ex.icon, '💪'))}</span>
+      <span class="daily-plan-name">${escapeHtml(ex.name)}</span>
+      <span class="daily-plan-meta">${Math.max(1, parseInt(ex.target)||1)} ${escapeHtml(ex.unit)} · +${Math.max(1, parseInt(ex.step)||1)}</span>
+      <span class="daily-plan-del" data-daily-del="${escapeHtml(ex.id)}">×</span>
+    </div>`).join('');
+  sec.innerHTML = `
+    <div class="tp-kicker">// über den tag</div>
+    <div class="daily-plan-block">
+      ${rows || '<div class="daily-plan-row" style="cursor:default;color:var(--text-muted);">Noch keine Tagesübungen</div>'}
+      <div class="add-daily-row" id="add-daily-exercise">＋ Tagesübung hinzufügen</div>
+    </div>
+  `;
+  body.appendChild(sec);
+  sec.querySelector('#add-daily-exercise')?.addEventListener('click',()=>openTpDailyModal(null));
+  sec.querySelectorAll('[data-daily-edit]').forEach(row=>{
+    row.addEventListener('click',e=>{
+      if(e.target.closest('[data-daily-del]')) return;
+      openTpDailyModal(row.dataset.dailyEdit);
+    });
+  });
+  sec.querySelectorAll('[data-daily-del]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const ex = ensureDailyExercisesForDay(day).find(item=>item.id===btn.dataset.dailyDel);
+      if(!ex) return;
+      showConfirm(
+        'Tagesübung archivieren?',
+        `"${ex.name}" verschwindet aus diesem Tag. Bisherige Tageswerte bleiben im Verlauf erhalten.`,
+        [
+          {label:'Archivieren', cls:'danger', cb:()=>{ ex.isArchived=true; saveState(S); renderDayDetailScreen(); }},
+          {label:'Abbrechen', cls:'ghost', cb:()=>{}},
+        ]
+      );
+    });
+  });
+}
+
 function renderDayDetailScreen(){
   const day = tpDay(ddActiveWeek, ddActiveDay);
   if(!day) return;
@@ -7766,6 +8034,7 @@ function renderDayDetailScreen(){
 
   if(day.isRest){ body.style.pointerEvents='none'; return; }
   body.style.pointerEvents='';
+  renderDayDetailDailyExercises(body, day);
 
   // -- Muskelgruppen --
   const mgsEl = document.createElement('div');
@@ -7785,7 +8054,7 @@ function renderDayDetailScreen(){
       <span class="mg-icon-h">${mg.icon||'💪'}</span>
       <span class="mg-name-h">${mg.name}</span>
       <span class="mg-count-h">${exs.length} Übung${exs.length!==1?'en':''}</span>
-      <span class="mg-del-h" data-mgid="${mg.id}">-</span>
+      <span class="mg-del-h" data-mgid="${mg.id}">×</span>
     `;
     hdr.querySelector('.mg-del-h').addEventListener('click',e=>{
       e.stopPropagation();
@@ -7814,7 +8083,7 @@ function renderDayDetailScreen(){
         <span class="ex-name-h">${ex.name}</span>
         <span class="ex-sets-h">${ex.targetSets}×${ex.repsMin}-${ex.repsMax}</span>
         <span class="ex-rest-h">${ex.restSeconds}s</span>
-        <span class="ex-del-h" data-exid="${ex.id}" data-mgid="${mg.id}">-</span>
+        <span class="ex-del-h" data-exid="${ex.id}" data-mgid="${mg.id}">×</span>
       `;
       exRow.addEventListener('click',e=>{
         if(e.target.classList.contains('ex-del-h')){ e.stopPropagation(); return; }
@@ -7869,7 +8138,7 @@ function openTpMgModal(mgId=null){
   document.getElementById('tp-mg-name').value = mg?.name||'';
 
   // Reset pickers
-  document.querySelectorAll('.tp-emoji-pick').forEach(e=>{
+  document.querySelectorAll('#tp-mg-emojis .tp-emoji-pick').forEach(e=>{
     e.classList.toggle('active', e.dataset.icon===(mg?.icon||'💪'));
   });
   document.querySelectorAll('.tp-color-dot').forEach(d=>{
@@ -7888,7 +8157,7 @@ function closeTpMgModal(){
 function saveTpMgModal(){
   const name  = document.getElementById('tp-mg-name').value.trim();
   if(!name){ document.getElementById('tp-mg-name').focus(); return; }
-  const icon  = document.querySelector('.tp-emoji-pick.active')?.dataset.icon||'💪';
+  const icon  = document.querySelector('#tp-mg-emojis .tp-emoji-pick.active')?.dataset.icon||'💪';
   const color = document.querySelector('.tp-color-dot.active')?.dataset.color||'#FF6B00';
   const day   = tpDay(ddActiveWeek, ddActiveDay);
   if(!day) return;
@@ -7902,6 +8171,65 @@ function saveTpMgModal(){
   saveState(S);
   closeTpMgModal();
   renderDayDetailScreen();
+}
+
+// ---------------------------------------------------------------
+// MODAL: ADD / EDIT DAILY EXERCISE
+// ---------------------------------------------------------------
+let _tpDailyEditId = null;
+
+function openTpDailyModal(exId=null){
+  _tpDailyEditId = exId;
+  const day = tpDay(ddActiveWeek, ddActiveDay);
+  if(!day) return;
+  const ex = exId ? ensureDailyExercisesForDay(day).find(item=>item.id===exId) : null;
+  const isEdit = !!ex;
+  document.getElementById('tp-daily-title').textContent = isEdit ? 'Tagesübung bearbeiten' : 'Tagesübung hinzufügen';
+  document.getElementById('tp-daily-save').textContent = isEdit ? 'Änderungen speichern' : 'Tagesübung speichern';
+  document.getElementById('tp-daily-name').value = ex?.name || '';
+  document.getElementById('tp-daily-target').value = ex?.target || 50;
+  document.getElementById('tp-daily-step').value = ex?.step || 5;
+  document.getElementById('tp-daily-unit').value = ex?.unit || 'Wdh';
+  document.querySelectorAll('#tp-daily-icons .tp-emoji-pick').forEach(pick=>{
+    pick.classList.toggle('active', pick.dataset.icon === (ex?.icon || '💪'));
+  });
+  document.getElementById('tp-daily-overlay').classList.add('open');
+  document.getElementById('tp-daily-sheet').classList.add('open');
+}
+
+function closeTpDailyModal(){
+  document.getElementById('tp-daily-overlay').classList.remove('open');
+  document.getElementById('tp-daily-sheet').classList.remove('open');
+}
+
+function saveTpDailyModal(){
+  const day = tpDay(ddActiveWeek, ddActiveDay);
+  if(!day) return;
+  const name = document.getElementById('tp-daily-name').value.trim();
+  if(!name){ document.getElementById('tp-daily-name').focus(); return; }
+  const data = {
+    name,
+    icon: document.querySelector('#tp-daily-icons .tp-emoji-pick.active')?.dataset.icon || '💪',
+    target: Math.max(1, parseInt(document.getElementById('tp-daily-target').value) || 50),
+    step: Math.max(1, parseInt(document.getElementById('tp-daily-step').value) || 5),
+    unit: document.getElementById('tp-daily-unit').value.trim() || 'Wdh'
+  };
+  const list = ensureDailyExercisesForDay(day);
+  if(_tpDailyEditId){
+    const ex = list.find(item=>item.id===_tpDailyEditId);
+    if(ex) Object.assign(ex, data);
+  } else {
+    list.push(normalizeDailyExercise({
+      id: genId(),
+      ...data,
+      sortOrder: list.length,
+      isArchived: false
+    }, list.length));
+  }
+  saveState(S);
+  closeTpDailyModal();
+  renderDayDetailScreen();
+  if(currentScreen === 'training') renderTraining();
 }
 
 // ---------------------------------------------------------------
@@ -8020,6 +8348,17 @@ function initTpListeners(){
   });
   document.querySelectorAll('#tp-mg-name-chips .mg-name-chip').forEach(c=>{
     c.addEventListener('click',()=>{ document.getElementById('tp-mg-name').value=c.dataset.val; });
+  });
+
+  // Daily exercise modal
+  document.getElementById('tp-daily-overlay')?.addEventListener('click', closeTpDailyModal);
+  document.getElementById('tp-daily-close')?.addEventListener('click', closeTpDailyModal);
+  document.getElementById('tp-daily-save')?.addEventListener('click', saveTpDailyModal);
+  document.querySelectorAll('#tp-daily-icons .tp-emoji-pick').forEach(e=>{
+    e.addEventListener('click',()=>{ document.querySelectorAll('#tp-daily-icons .tp-emoji-pick').forEach(x=>x.classList.remove('active')); e.classList.add('active'); });
+  });
+  document.querySelectorAll('#tp-daily-name-chips .mg-name-chip').forEach(c=>{
+    c.addEventListener('click',()=>{ document.getElementById('tp-daily-name').value=c.dataset.val; });
   });
 
   // EX modal
@@ -8152,7 +8491,7 @@ function renderProfile(){
       <div class="day-name">${TP_DAY_ABBR[d]}</div>
       <div class="day-type">${escapeHtml(day.label || (day.isRest ? 'Ruhetag' : 'Trainingstag'))}</div>
       <span class="concept-pill">${day.isRest ? 'Rest' : `${mgs.length} MG · ${exCount} EX`}</span>
-      <div class="day-edit">-</div>`;
+      <div class="day-edit">›</div>`;
     row.addEventListener('click',()=>{
       tpActiveWeek = profileActiveWeek;
       openTrainingPlanScreen();
@@ -8902,7 +9241,7 @@ function enhancePremiumButton(btn, variant='login'){
     ? '<div class="kasai-dot" style="background:rgba(255,85,119,.9)"></div><div class="kasai-dot" style="background:rgba(255,85,119,.9)"></div><div class="kasai-dot" style="background:rgba(255,85,119,.9)"></div>'
     : '<div class="kasai-dot"></div><div class="kasai-dot"></div><div class="kasai-dot"></div>';
   const text = isLogout && !label.includes('power-icon')
-    ? `<span class="power-icon">-</span>${label.replace('-','').trim()}`
+    ? `<span class="power-icon">⏻</span>${label.replace(/[⏻-]/g,'').trim()}`
     : label;
   btn.innerHTML = `
     ${effect}
@@ -9739,8 +10078,8 @@ KDOM.setClick('mg-delete', ()=>{
   if(currentScreen==='training') renderTraining();
 });
 
-// "BEARBEITEN -" Link in Muskel-Section
-KDOM.onQuery('#screen-training .section-row .section-row-link', 'click', ()=>{
+// "Bearbeiten" in der Muskelgruppen-Section
+KDOM.setClick('muscle-edit-link', ()=>{
   const type = getTodayPlan().plan.type;
   if(type === 'rest') return;
   if(getSelectedTrainingPlanDay()) openSelectedPlanDayEditor();
@@ -9850,8 +10189,8 @@ KDOM.setClick('ex-edit-delete', ()=>{
   if(currentScreen==='training') renderTraining();
 });
 
-// "+ HINZUFÜGEN" Link in Übungen-Section (zweiter section-row-link)
-document.querySelectorAll('#screen-training .section-row-link')[1]?.addEventListener('click',()=>{
+// "+ Hinzufügen" in der Übungen-Section
+KDOM.setClick('exercise-add-link', ()=>{
   const type = getTodayPlan().plan.type;
   if(type === 'rest') return;
   if(getSelectedTrainingPlanDay()){
@@ -9868,10 +10207,12 @@ document.querySelectorAll('#screen-training .section-row-link')[1]?.addEventList
 // ---------------------------------------------------
 // AMOUNT OVERLAY (Hydration / Steps Set & Reset)
 // ---------------------------------------------------
-let _amountTarget = null; // 'water' | 'steps'
+let _amountTarget = null; // 'water' | 'steps' | 'dailyExercise'
+let _amountDailyExerciseId = null;
 
 function openAmount(target){
   _amountTarget = target;
+  _amountDailyExerciseId = null;
   const cur = target==='water' ? (S.hydration[selectedDateStr]||0) : (S.steps[selectedDateStr]||0);
   const goal = target==='water' ? parseIntegerInput(S.profile.waterGoal) : parseIntegerInput(S.profile.stepGoal);
   const unit = target==='water' ? 'ml' : 'Schritte';
@@ -9896,23 +10237,56 @@ function openAmount(target){
   showOverlay('amount-overlay');
 }
 
+function openDailyExerciseAmount(exId){
+  const ex = findDailyExerciseForSelectedDay(exId);
+  if(!ex) return;
+  _amountTarget = 'dailyExercise';
+  _amountDailyExerciseId = ex.id;
+  const cur = getDailyExerciseCount(ex.id);
+  const goal = Math.max(1, parseInt(ex.target) || 1);
+  const step = Math.max(1, parseInt(ex.step) || 1);
+  document.getElementById('am-kicker').textContent = '// tagesübung setzen';
+  document.getElementById('am-title').textContent = ex.name;
+  document.getElementById('am-label').textContent = `Aktuell - ${cur} ${ex.unit} (Ziel ${goal})`;
+  document.getElementById('am-input').value = cur;
+  const quick = document.getElementById('am-quick');
+  const opts = [
+    {lbl:`+${step}`,v:step},
+    {lbl:`+${step*2}`,v:step*2},
+    {lbl:`+${step*5}`,v:step*5},
+    {lbl:`-${step}`,v:-step}
+  ];
+  quick.innerHTML = opts.map(o=>`<button data-add="${o.v}">${o.lbl}</button>`).join('');
+  quick.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const inp = document.getElementById('am-input');
+      inp.value = Math.max(0, (parseInt(inp.value)||0) + parseInt(b.dataset.add));
+    });
+  });
+  showOverlay('amount-overlay');
+}
+
 KDOM.setClick('am-save', ()=>{
   const v = Math.max(0, parseInt(document.getElementById('am-input').value)||0);
   ensureDailyState(selectedDateStr);
   if(_amountTarget==='water'){ S.hydration[selectedDateStr] = v; }
   else if(_amountTarget==='steps'){ S.steps[selectedDateStr] = v; }
+  else if(_amountTarget==='dailyExercise' && _amountDailyExerciseId){ setDailyExerciseCount(_amountDailyExerciseId, v); }
   saveState(S);
   hideOverlay('amount-overlay');
   if(_amountTarget==='water' && currentScreen==='nutrition') renderHydration();
   if(_amountTarget==='steps' && currentScreen==='habits')    renderSteps();
+  if(_amountTarget==='dailyExercise' && currentScreen==='training') renderDailyExerciseTrackers();
 });
 KDOM.setClick('am-reset', ()=>{
   if(_amountTarget==='water') S.hydration[selectedDateStr] = 0;
   if(_amountTarget==='steps') S.steps[selectedDateStr]     = 0;
+  if(_amountTarget==='dailyExercise' && _amountDailyExerciseId) setDailyExerciseCount(_amountDailyExerciseId, 0);
   saveState(S);
   hideOverlay('amount-overlay');
   if(_amountTarget==='water' && currentScreen==='nutrition') renderHydration();
   if(_amountTarget==='steps' && currentScreen==='habits')    renderSteps();
+  if(_amountTarget==='dailyExercise' && currentScreen==='training') renderDailyExerciseTrackers();
 });
 
 KDOM.setClick('hydration-menu', e=>{ e.stopPropagation(); openAmount('water'); });
