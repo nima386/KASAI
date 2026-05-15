@@ -9,14 +9,14 @@
 <meta name="apple-mobile-web-app-title" content="KASAI">
 <meta name="theme-color" content="#08080f">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/kasai-icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/app-logo-b5.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-b5.png">
 <title>KASAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-notif2';
+const KASAI_APP_VERSION = 'kasai-v43-splash-b5';
 </script>
 <style>
 :root {
@@ -2285,14 +2285,28 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .tp-chevron{font-size:.9rem;color:var(--text-muted);}
 .tp-rolling-meta{
-  display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px;
+  display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-bottom:12px;
+  min-width:0;overflow:hidden;
 }
 .tp-rolling-date{
-  display:flex;flex-direction:column;gap:5px;
+  display:flex;flex-direction:column;gap:5px;min-width:0;
 }
 .tp-rolling-date span{
   font-family:'JetBrains Mono',monospace;font-size:.42rem;letter-spacing:.14em;
   color:var(--text-muted);text-transform:uppercase;font-weight:700;
+}
+.tp-rolling-date .tp-input{
+  width:100%;max-width:100%;min-width:0;
+  padding:12px 10px;text-align:center;
+  font-size:clamp(.78rem,4.2vw,.86rem);line-height:1.2;
+  box-sizing:border-box;
+}
+.tp-rolling-date input[type="date"]{
+  -webkit-appearance:none;appearance:none;
+  min-height:52px;overflow:hidden;
+}
+.tp-rolling-date input[type="date"]::-webkit-date-and-time-value{
+  text-align:center;min-width:0;max-width:100%;
 }
 .tp-day-del{
   width:28px;height:28px;border-radius:50%;border:none;
@@ -2828,6 +2842,20 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   align-items: center; justify-content: center;
   z-index: 200000; overflow: hidden;
 }
+.external-splash-frame{
+  position:absolute;inset:0;width:100%;height:100%;
+  border:0;background:#04020a;display:none;z-index:30;
+}
+#splash.external-splash-active > :not(.external-splash-frame):not(.version-tag):not(.exit-overlay){
+  opacity:0!important;pointer-events:none!important;
+}
+#splash.external-splash-active .external-splash-frame{display:block;}
+#splash.external-splash-active .version-tag{
+  z-index:60;opacity:1!important;
+  bottom:max(18px, env(safe-area-inset-bottom, 18px));
+  color:rgba(255,202,40,.82);
+}
+#splash.external-splash-active .exit-overlay{z-index:80;}
 
 /* -- SHARED -- */
 .bg-burst { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
@@ -3101,6 +3129,7 @@ body.splash-done #splash{display:none;}
 <body class="auth-locked">
 <!-- SPLASH -->
 <div id="splash">
+  <iframe class="external-splash-frame" id="externalSplashFrame" title="KASAI Splash" aria-hidden="true"></iframe>
   <div class="bg-burst" id="bgBurst"></div>
   <div class="grid-overlay" id="gridOverlay"></div>
   <div class="particle-field" id="particleField"></div>
@@ -3129,7 +3158,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-notif2 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-splash-b5 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4690,12 +4719,21 @@ const icons = [
   </svg>`
 ];
 
+const externalSplashFiles = [
+  './splash/01-you-vs-you.html',
+  './splash/02-dont-stop.html',
+  './splash/03-discipline.html',
+  './splash/04-push-repeat.html',
+  './splash/05-burn-brighter.html',
+  './splash/06-no-excuses.html'
+];
+
 // -- UTILS --
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-notif2';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-splash-b5';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -4812,8 +4850,19 @@ function runImpactRings(){
 }
 
 // -- RESET --
+function resetExternalSplash(){
+  const frame = $('externalSplashFrame');
+  if(frame){
+    frame.removeAttribute('src');
+    frame.style.display = 'none';
+  }
+  const splash = $('splash');
+  if(splash) splash.classList.remove('external-splash-active');
+}
+
 function resetAll(){
   updateSplashVersionTag();
+  resetExternalSplash();
   $('iconWrap').style.opacity='0'; $('iconWrap').style.transition='none';
   $('iconGlow').style.opacity='0'; $('iconGlow').style.animation='none';
   $('bgBurst').style.opacity='0'; $('bgBurst').style.background='';
@@ -4964,13 +5013,52 @@ async function playSplash(variant){
   finishSplash();
 }
 
+async function playExternalSplash(index){
+  const splash = $('splash');
+  const frame = $('externalSplashFrame');
+  if(!splash || !frame || !externalSplashFiles[index]){
+    finishSplash();
+    return;
+  }
+  updateSplashVersionTag();
+  splash.classList.add('external-splash-active');
+  frame.style.display = 'block';
+  frame.src = `${externalSplashFiles[index]}?v=${encodeURIComponent(KASAI_APP_VERSION)}`;
+  const tag = $('versionTag');
+  if(tag){
+    tag.style.transition = 'opacity 0.45s ease';
+    tag.style.opacity = '1';
+  }
+  await sleep(4700);
+  $('exitOverlay').style.transition='opacity 0.55s cubic-bezier(0.4,0,0.2,1)';
+  $('exitOverlay').style.opacity='1';
+  await sleep(520);
+  finishSplash();
+}
+
+function pickSplashVariant(){
+  const total = icons.length + externalSplashFiles.length;
+  if(total <= 1) return 0;
+  let picked = Math.floor(Math.random() * total);
+  try{
+    const last = Number(localStorage.getItem('kasai.lastSplashVariant'));
+    if(Number.isFinite(last) && picked === last){
+      picked = (picked + 1 + Math.floor(Math.random() * (total - 1))) % total;
+    }
+    localStorage.setItem('kasai.lastSplashVariant', String(picked));
+  }catch(_){}
+  return picked;
+}
+
 // -- RANDOM VARIANT STATE --
 let currentVariant=-1;
 function playVariantOnce(v){
   currentVariant=v;
   resetAll();
   setTimeout(()=>{
-    playSplash(v).catch(error=>{
+    const externalIndex = v - icons.length;
+    const play = externalIndex >= 0 ? playExternalSplash(externalIndex) : playSplash(v);
+    play.catch(error=>{
       console.warn('Splash animation failed, continuing to app.', error);
       finishSplash();
     });
@@ -4990,7 +5078,7 @@ window.addEventListener('load',()=>{
   },9000);
   updateSplashVersionTag();
   prepIconWrap();
-  const v=Math.floor(Math.random()*5);
+  const v=pickSplashVariant();
   currentVariant=v;
   setTimeout(()=>playVariantOnce(v),300);
 });

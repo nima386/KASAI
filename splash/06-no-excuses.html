@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KASAI — NO EXCUSES</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── BG: Glitch aesthetic ── */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #020104;
+  }
+
+  /* Red/orange diagonal slashes */
+  .slash-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .slash {
+    position: absolute;
+    width: 200%;
+    height: 1px;
+    transform-origin: center;
+    animation: slash-move 8s linear infinite;
+  }
+  .slash:nth-child(1) { top: 20%; background: linear-gradient(90deg, transparent, rgba(255,45,85,0.08), transparent); transform: rotate(-15deg); animation-delay: 0s; }
+  .slash:nth-child(2) { top: 40%; background: linear-gradient(90deg, transparent, rgba(255,107,0,0.06), transparent); transform: rotate(-15deg); animation-delay: 2s; }
+  .slash:nth-child(3) { top: 60%; background: linear-gradient(90deg, transparent, rgba(255,45,85,0.07), transparent); transform: rotate(-15deg); animation-delay: 4s; }
+  .slash:nth-child(4) { top: 80%; background: linear-gradient(90deg, transparent, rgba(255,107,0,0.05), transparent); transform: rotate(-15deg); animation-delay: 6s; }
+
+  @keyframes slash-move {
+    0% { transform: rotate(-15deg) translateX(-50%); }
+    100% { transform: rotate(-15deg) translateX(50%); }
+  }
+
+  /* Glitch flicker overlay */
+  .glitch-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: glitch-flicker 4s step-end infinite;
+  }
+  @keyframes glitch-flicker {
+    0%, 95%, 100% { opacity: 0; }
+    96% { opacity: 1; background: rgba(255,45,85,0.03); transform: translateX(2px); }
+    97% { opacity: 1; background: rgba(255,107,0,0.02); transform: translateX(-3px); }
+    98% { opacity: 0; }
+  }
+
+  .overlay-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    background: radial-gradient(ellipse 55% 55% at 50% 50%, transparent 10%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+  }
+
+  /* ── CONTENT ── */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Logo: Fist/Power */
+  .logo-wrap {
+    opacity: 0;
+    animation: glitch-in 0.3s steps(4) 0.4s forwards;
+    margin-bottom: 48px;
+  }
+  @keyframes glitch-in {
+    0% { opacity: 0; transform: translateX(-5px); filter: blur(4px); }
+    25% { opacity: 0.5; transform: translateX(3px); }
+    50% { opacity: 0.8; transform: translateX(-2px); }
+    75% { opacity: 0.9; transform: translateX(1px); }
+    100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+  }
+
+  .logo-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255,45,85,0.35);
+    background: rgba(255,45,85,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+  .logo-box::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,45,85,0.1);
+  }
+
+  .logo-name {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-align: center;
+    color: rgba(255,45,85,0.6);
+  }
+
+  /* ── QUOTE: Aggressive reveal ── */
+  .quote-block {
+    position: relative;
+    text-align: center;
+  }
+
+  /* Strike-through "EXCUSES" that appears first, then gets crossed */
+  .line-no {
+    overflow: hidden;
+  }
+  .word-no {
+    font-size: clamp(22px, 5vw, 36px);
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: rgba(255,255,255,0.25);
+    opacity: 0;
+    animation: fade-in 0.5s ease 0.8s forwards;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .line-main {
+    overflow: hidden;
+    position: relative;
+  }
+  .word-main {
+    font-size: clamp(56px, 13vw, 110px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    opacity: 0;
+    line-height: 1;
+    display: inline-block;
+    position: relative;
+  }
+
+  .wm1 {
+    animation: hard-slam 0.25s cubic-bezier(0,0,0.2,1) 1.4s forwards;
+  }
+
+  @keyframes hard-slam {
+    from { opacity: 0; transform: translateY(-100%) scaleY(1.4); }
+    to   { opacity: 1; transform: translateY(0) scaleY(1); }
+  }
+
+  /* Red strike-through line over the word */
+  .strike {
+    position: absolute;
+    left: -5%;
+    right: -5%;
+    top: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ff2d55, #ff6b00, #ff2d55, transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    z-index: 2;
+  }
+  /* NO strike — this is "NO" excuses, the strike is decorative emphasis */
+
+  /* The actual "NO" */
+  .mega-no {
+    font-size: clamp(80px, 20vw, 160px);
+    font-weight: 900;
+    line-height: 0.85;
+    text-transform: uppercase;
+    opacity: 0;
+    display: block;
+    animation: mega-slam 0.3s cubic-bezier(0,0,0.2,1) 1.8s forwards;
+  }
+  .mega-no span {
+    background: linear-gradient(180deg, #ff2d55, #ff6b00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes mega-slam {
+    from { opacity: 0; transform: scale(2.5); filter: blur(10px); }
+    to   { opacity: 1; transform: scale(1); filter: blur(0); }
+  }
+
+  @keyframes fade-in { to { opacity: 1; } }
+
+  /* Bottom sub */
+  .sub-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(255,45,85,0.3);
+    margin-top: 28px;
+    opacity: 0;
+    animation: fade-in 0.8s ease 2.4s forwards;
+  }
+
+  /* ── BOTTOM ── */
+  .bottom {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    animation: fade-in 1s ease 2.8s forwards;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bottom-line {
+    width: 20px;
+    height: 1px;
+    background: rgba(255,45,85,0.3);
+  }
+  .bottom-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,45,85,0.25);
+  }
+
+  /* ── SCREEN SHAKE on slam ── */
+  .shake-wrap {
+    animation: shake 0.15s ease 1.8s;
+  }
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* Flash */
+  .flash {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    animation: red-flash 0.15s ease 1.4s, red-flash 0.2s ease 1.8s;
+  }
+  @keyframes red-flash {
+    0% { opacity: 0; background: rgba(255,45,85,0.1); }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Side red accent bars */
+  .side-bar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    z-index: 8;
+    opacity: 0;
+    animation: bar-show 0.5s ease 2.2s forwards;
+  }
+  .side-bar--l { left: 0; background: linear-gradient(180deg, transparent, #ff2d55, transparent); }
+  .side-bar--r { right: 0; background: linear-gradient(180deg, transparent, #ff6b00, transparent); }
+  @keyframes bar-show {
+    to { opacity: 0.3; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="slash-container">
+  <div class="slash"></div>
+  <div class="slash"></div>
+  <div class="slash"></div>
+  <div class="slash"></div>
+</div>
+<div class="glitch-overlay"></div>
+<div class="overlay-vignette"></div>
+<div class="flash"></div>
+<div class="side-bar side-bar--l"></div>
+<div class="side-bar side-bar--r"></div>
+
+<div class="splash shake-wrap">
+  <div class="logo-wrap">
+    <div class="logo-box">
+      <svg width="24" height="24" viewBox="0 0 120 120" fill="none">
+        <path d="M68,10 L52,42 L64,42 L42,78 L56,78 L38,110 L82,58 L66,58 L86,22 L68,22 Z" fill="url(#bl6)" opacity="0.9"/>
+        <defs><linearGradient id="bl6" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#ffca28"/><stop offset="50%" stop-color="#ff6b00"/><stop offset="100%" stop-color="#ff2d55"/></linearGradient></defs>
+      </svg>
+    </div>
+    <div class="logo-name">KASAI</div>
+  </div>
+
+  <div class="quote-block">
+    <div class="line-main"><span class="word-main wm1 mega-no"><span>NO</span></span></div>
+    <div class="line-no"><span class="word-no">Excuses</span></div>
+  </div>
+
+  <div class="sub-text">Show up or shut up</div>
+</div>
+
+<div class="bottom">
+  <div class="bottom-line"></div>
+  <div class="bottom-text">Train like fire</div>
+  <div class="bottom-line"></div>
+</div>
+
+</body>
+</html>

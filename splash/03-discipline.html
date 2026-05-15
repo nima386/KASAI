@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KASAI — DISCIPLINE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── BG: Slow breathing dark ── */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #030208;
+  }
+
+  /* Vertical light shaft */
+  .light-shaft {
+    position: fixed;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 120%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,202,40,0.08) 30%, rgba(255,202,40,0.15) 50%, rgba(255,202,40,0.08) 70%, transparent 100%);
+    z-index: 1;
+    animation: shaft-breathe 4s ease-in-out infinite;
+  }
+  @keyframes shaft-breathe {
+    0%, 100% { opacity: 0.3; width: 2px; }
+    50% { opacity: 1; width: 80px; filter: blur(30px); }
+  }
+
+  /* Horizontal scan line */
+  .scan-line {
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255,202,40,0.1);
+    z-index: 2;
+    animation: scan-down 6s linear infinite;
+  }
+  @keyframes scan-down {
+    0% { top: -2%; opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { top: 102%; opacity: 0; }
+  }
+
+  .overlay-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, transparent 0%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+  }
+
+  /* ── CONTENT ── */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Logo: Shield */
+  .logo-wrap {
+    opacity: 0;
+    animation: slow-reveal 2s ease 0.5s forwards;
+    margin-bottom: 52px;
+  }
+  @keyframes slow-reveal {
+    from { opacity: 0; filter: blur(12px); }
+    to   { opacity: 1; filter: blur(0); }
+  }
+
+  .logo-shield {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+  .logo-shield::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    background: radial-gradient(circle, rgba(255,202,40,0.08), transparent 70%);
+    filter: blur(8px);
+  }
+
+  .logo-label {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    text-align: center;
+    color: rgba(255,202,40,0.5);
+  }
+
+  /* ── MAIN WORD: Letter-by-letter reveal ── */
+  .word-container {
+    position: relative;
+    overflow: hidden;
+    max-width: calc(100vw - 28px);
+  }
+
+  .main-word {
+    font-size: clamp(40px, 10vw, 88px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: transparent;
+    position: relative;
+    display: flex;
+  }
+
+  .letter {
+    display: inline-block;
+    opacity: 0;
+    color: #ffffff;
+    animation: letter-drop 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+    position: relative;
+  }
+  .letter::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ffca28, #ff6b00);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: underline-grow 0.3s ease forwards;
+  }
+
+  .l1  { animation-delay: 1.5s; } .l1::after  { animation-delay: 1.9s; }
+  .l2  { animation-delay: 1.65s; } .l2::after  { animation-delay: 2.05s; }
+  .l3  { animation-delay: 1.8s; } .l3::after  { animation-delay: 2.2s; }
+  .l4  { animation-delay: 1.95s; } .l4::after  { animation-delay: 2.35s; }
+  .l5  { animation-delay: 2.1s; } .l5::after  { animation-delay: 2.5s; }
+  .l6  { animation-delay: 2.25s; } .l6::after  { animation-delay: 2.65s; }
+  .l7  { animation-delay: 2.4s; } .l7::after  { animation-delay: 2.8s; }
+  .l8  { animation-delay: 2.55s; } .l8::after  { animation-delay: 2.95s; }
+  .l9  { animation-delay: 2.7s; } .l9::after  { animation-delay: 3.1s; }
+  .l10 { animation-delay: 2.85s; } .l10::after { animation-delay: 3.25s; }
+
+  @keyframes letter-drop {
+    from { opacity: 0; transform: translateY(-30px); filter: blur(4px); }
+    to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes underline-grow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* Sub text */
+  .sub-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(255,202,40,0.35);
+    margin-top: 24px;
+    opacity: 0;
+    animation: fade-up 1s ease 3.5s forwards;
+    text-align: center;
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── BOTTOM ── */
+  .bottom {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fade-up 1s ease 4s forwards;
+  }
+
+  .bottom-logo {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    background: linear-gradient(135deg, #ffca28, #ff6b00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bottom-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: rgba(255,149,0,0.2);
+    text-transform: uppercase;
+  }
+
+  /* ── CORNER MARKS ── */
+  .corner {
+    position: fixed;
+    z-index: 10;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    animation: fade-up 0.8s ease 4.2s forwards;
+  }
+  .corner--tl { top: 24px; left: 24px; border-top: 1px solid rgba(255,202,40,0.15); border-left: 1px solid rgba(255,202,40,0.15); }
+  .corner--tr { top: 24px; right: 24px; border-top: 1px solid rgba(255,202,40,0.15); border-right: 1px solid rgba(255,202,40,0.15); }
+  .corner--bl { bottom: 24px; left: 24px; border-bottom: 1px solid rgba(255,202,40,0.15); border-left: 1px solid rgba(255,202,40,0.15); }
+  .corner--br { bottom: 24px; right: 24px; border-bottom: 1px solid rgba(255,202,40,0.15); border-right: 1px solid rgba(255,202,40,0.15); }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="light-shaft"></div>
+<div class="scan-line"></div>
+<div class="overlay-vignette"></div>
+
+<div class="corner corner--tl"></div>
+<div class="corner corner--tr"></div>
+<div class="corner corner--bl"></div>
+<div class="corner corner--br"></div>
+
+<div class="splash">
+  <div class="logo-wrap">
+    <div class="logo-shield">
+      <svg width="44" height="52" viewBox="0 0 60 70" fill="none">
+        <path d="M30,4 L54,16 L54,38 C54,54 40,66 30,70 C20,66 6,54 6,38 L6,16 Z" fill="none" stroke="rgba(255,202,40,0.3)" stroke-width="1.5"/>
+        <path d="M30,12 L48,22 L48,38 C48,50 38,60 30,64 C22,60 12,50 12,38 L12,22 Z" fill="rgba(255,202,40,0.03)"/>
+        <path d="M30,26 C31.5,30 35,31 34.5,34.5 C34,36 33,37 33.5,39 C34.5,36 35.5,35 35,33 C37,35.5 37.5,38 36,41 C34,45 26,45 24,41 C22.5,38 23,35.5 25,33 C24.5,35 25.5,36 26.5,39 C27,37 26,36 25.5,34.5 C25,31 28.5,30 30,26Z" fill="url(#sh)"/>
+        <defs><linearGradient id="sh" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#ffca28"/><stop offset="100%" stop-color="#ff6b00"/></linearGradient></defs>
+      </svg>
+    </div>
+    <div class="logo-label">KASAI</div>
+  </div>
+
+  <div class="word-container">
+    <div class="main-word">
+      <span class="letter l1">D</span>
+      <span class="letter l2">I</span>
+      <span class="letter l3">S</span>
+      <span class="letter l4">C</span>
+      <span class="letter l5">I</span>
+      <span class="letter l6">P</span>
+      <span class="letter l7">L</span>
+      <span class="letter l8">I</span>
+      <span class="letter l9">N</span>
+      <span class="letter l10">E</span>
+    </div>
+  </div>
+
+  <div class="sub-text">Is what separates you</div>
+</div>
+
+<div class="bottom">
+  <div class="bottom-logo">KASAI</div>
+  <div class="bottom-tagline">火 · Train like fire</div>
+</div>
+
+</body>
+</html>

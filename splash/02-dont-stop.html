@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KASAI — DON'T STOP BRO</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── BG ── */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #050208;
+  }
+  /* Pulsing radial light */
+  .bg-pulse {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,45,85,0.12) 0%, rgba(255,107,0,0.06) 30%, transparent 70%);
+    filter: blur(40px);
+    animation: pulse-bg 3s ease-in-out infinite;
+    z-index: 0;
+  }
+  @keyframes pulse-bg {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%,-50%) scale(1.3); opacity: 1; }
+  }
+
+  /* Speed lines */
+  .speed-lines {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .speed-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,107,0,0.15) 30%, rgba(255,45,85,0.1) 70%, transparent 100%);
+    animation: speed-sweep 2s linear infinite;
+  }
+  .speed-line:nth-child(1) { top: 18%; animation-delay: 0s; animation-duration: 1.8s; }
+  .speed-line:nth-child(2) { top: 35%; animation-delay: 0.3s; animation-duration: 2.2s; }
+  .speed-line:nth-child(3) { top: 52%; animation-delay: 0.7s; animation-duration: 1.6s; }
+  .speed-line:nth-child(4) { top: 68%; animation-delay: 0.1s; animation-duration: 2.5s; }
+  .speed-line:nth-child(5) { top: 82%; animation-delay: 0.5s; animation-duration: 1.9s; }
+  @keyframes speed-sweep {
+    0% { transform: translateX(-100%); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+
+  .overlay-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background: radial-gradient(ellipse 55% 55% at 50% 50%, transparent 10%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+  }
+
+  /* ── CONTENT ── */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Logo: Kettlebell with flame */
+  .logo-wrap {
+    opacity: 0;
+    animation: slam-in 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards;
+    margin-bottom: 48px;
+  }
+  @keyframes slam-in {
+    from { opacity: 0; transform: scale(2) translateY(-30px); filter: blur(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  }
+
+  .logo-mark {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(255,45,85,0.15), rgba(255,107,0,0.08));
+    border: 1.5px solid rgba(255,45,85,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,45,85,0.1);
+    animation: ring-spin 4s linear infinite;
+  }
+  @keyframes ring-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .logo-name {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-align: center;
+    background: linear-gradient(135deg, #ff6b00, #ff2d55);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── QUOTE: Staggered word slam ── */
+  .words {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .word-row {
+    overflow: hidden;
+    line-height: 1;
+  }
+
+  .word {
+    font-size: clamp(42px, 10vw, 80px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    display: inline-block;
+  }
+
+  /* Each word slams in from different direction */
+  .w1 {
+    color: #ffffff;
+    animation: slam-left 0.5s cubic-bezier(0.16,1,0.3,1) 1.0s forwards;
+  }
+  .w2 {
+    color: #ffffff;
+    animation: slam-right 0.5s cubic-bezier(0.16,1,0.3,1) 1.4s forwards;
+  }
+  .w3 {
+    background: linear-gradient(135deg, #ff6b00, #ff2d55);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: slam-up 0.5s cubic-bezier(0.16,1,0.3,1) 1.8s forwards;
+  }
+
+  @keyframes slam-left {
+    from { opacity: 0; transform: translateX(-80px) scale(1.1); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes slam-right {
+    from { opacity: 0; transform: translateX(80px) scale(1.1); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes slam-up {
+    from { opacity: 0; transform: translateY(60px) scale(1.2); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Separator dots */
+  .dot-row {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0;
+    opacity: 0;
+    animation: fade-in 0.5s ease 2.2s forwards;
+  }
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ff6b00;
+  }
+  .dot:nth-child(2) { background: #ff2d55; }
+  .dot:nth-child(3) { background: #ffca28; }
+
+  @keyframes fade-in { to { opacity: 1; } }
+
+  /* ── BOTTOM ── */
+  .bottom {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    animation: fade-in 1s ease 2.8s forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .bottom-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,107,0,0.35);
+  }
+  .bottom-bar {
+    width: 40px;
+    height: 2px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, #ff6b00, #ff2d55);
+    opacity: 0.5;
+  }
+
+  /* ── SCREEN FLASH on word slam ── */
+  .flash {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(255,107,0,0.08);
+    pointer-events: none;
+    opacity: 0;
+    animation: flash-1 0.15s ease 1.0s, flash-2 0.15s ease 1.4s, flash-3 0.2s ease 1.8s;
+  }
+  @keyframes flash-1 { 50% { opacity: 1; } }
+  @keyframes flash-2 { 50% { opacity: 1; } }
+  @keyframes flash-3 { 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="bg-pulse"></div>
+<div class="speed-lines">
+  <div class="speed-line"></div>
+  <div class="speed-line"></div>
+  <div class="speed-line"></div>
+  <div class="speed-line"></div>
+  <div class="speed-line"></div>
+</div>
+<div class="overlay-vignette"></div>
+<div class="flash"></div>
+
+<div class="splash">
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-mark">
+      <svg width="26" height="26" viewBox="0 0 120 120" fill="none">
+        <ellipse cx="60" cy="78" rx="22" ry="20" fill="none" stroke="#ff8a3d" stroke-width="4"/>
+        <path d="M45,62 C45,50 55,45 60,45 C65,45 75,50 75,62" fill="none" stroke="#ff8a3d" stroke-width="4" stroke-linecap="round"/>
+        <path d="M60,18 C62,22 66,24 65.5,28 C65,30 63.5,31 64.2,33 C65.5,30 66.5,29 66,27 C68,29.5 68.5,32 67,35 C65,38 55,38 53,35 C51.5,32 52,29.5 54,27 C53.5,29 54.5,30 55.8,33 C56.5,31 55,30 54.5,28 C54,24 58,22 60,18Z" fill="url(#kb)"/>
+        <defs><linearGradient id="kb" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#ffca28"/><stop offset="100%" stop-color="#ff2d55"/></linearGradient></defs>
+      </svg>
+    </div>
+    <div class="logo-name">KASAI</div>
+  </div>
+
+  <!-- Words -->
+  <div class="words">
+    <div class="word-row"><div class="word w1">DON'T</div></div>
+    <div class="word-row"><div class="word w2">STOP</div></div>
+    <div class="dot-row"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="word-row"><div class="word w3">BRO</div></div>
+  </div>
+</div>
+
+<div class="bottom">
+  <div class="bottom-sub">Keep pushing forward</div>
+  <div class="bottom-bar"></div>
+</div>
+
+</body>
+</html>

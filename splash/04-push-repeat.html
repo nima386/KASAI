@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KASAI — PUSH. REPEAT.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── BG: Rhythmic pulse ── */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: #04020a;
+  }
+
+  /* Concentric rings pulsing outward */
+  .ring-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255,107,0,0.08);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ring-out 3s ease-out infinite;
+  }
+  .ring:nth-child(1) { width: 100px; height: 100px; animation-delay: 0s; }
+  .ring:nth-child(2) { width: 100px; height: 100px; animation-delay: 0.6s; }
+  .ring:nth-child(3) { width: 100px; height: 100px; animation-delay: 1.2s; }
+  .ring:nth-child(4) { width: 100px; height: 100px; animation-delay: 1.8s; }
+
+  @keyframes ring-out {
+    0% { width: 60px; height: 60px; opacity: 0.6; border-color: rgba(255,107,0,0.2); }
+    100% { width: 800px; height: 800px; opacity: 0; border-color: rgba(255,45,85,0.05); }
+  }
+
+  .overlay-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    background: radial-gradient(ellipse 55% 50% at 50% 50%, transparent 10%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+  }
+
+  /* ── CONTENT ── */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Logo: Weight plate */
+  .logo-wrap {
+    opacity: 0;
+    animation: pop-in 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards;
+    margin-bottom: 44px;
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .logo-plate {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,107,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    position: relative;
+    background: rgba(255,107,0,0.04);
+  }
+  .logo-plate::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255,107,0,0.15);
+  }
+  .logo-plate-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,149,0,0.5);
+    letter-spacing: 1px;
+  }
+  .logo-name {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-align: center;
+    background: linear-gradient(135deg, #ffca28, #ff6b00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── COUNTER ── */
+  .counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(16px, 3.5vw, 22px);
+    color: rgba(255,107,0,0.4);
+    letter-spacing: 4px;
+    opacity: 0;
+    animation: fade-in 0.5s ease 0.8s forwards;
+    margin-bottom: 8px;
+  }
+  .counter-num {
+    display: inline-block;
+    color: rgba(255,202,40,0.7);
+    font-weight: 700;
+    animation: count-tick 0.3s ease-in-out;
+  }
+
+  @keyframes fade-in { to { opacity: 1; } }
+
+  /* ── WORDS: Typewriter rhythm ── */
+  .line-1, .line-2, .line-3 {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .line-1 .text {
+    font-size: clamp(50px, 12vw, 90px);
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: stamp 0.3s cubic-bezier(0.16,1,0.3,1) 1.2s forwards;
+  }
+  .line-2 .text {
+    font-size: clamp(50px, 12vw, 90px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    background: linear-gradient(135deg, #ff6b00, #ff2d55);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: stamp 0.3s cubic-bezier(0.16,1,0.3,1) 1.8s forwards;
+  }
+
+  @keyframes stamp {
+    from { opacity: 0; transform: scale(1.4); filter: blur(6px); }
+    to   { opacity: 1; transform: scale(1); filter: blur(0); }
+  }
+
+  /* Period dot animation */
+  .period {
+    display: inline-block;
+    opacity: 0;
+    color: #ff6b00;
+  }
+  .p1 { animation: dot-slam 0.2s ease 1.5s forwards; }
+  .p2 { animation: dot-slam 0.2s ease 2.1s forwards; }
+
+  @keyframes dot-slam {
+    from { opacity: 0; transform: scale(3); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Sub line */
+  .sub-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    margin-top: 20px;
+    opacity: 0;
+    overflow: hidden;
+    animation: type-reveal 0.8s steps(20) 2.6s forwards;
+    border-right: 2px solid rgba(255,107,0,0.5);
+    width: 0;
+    white-space: nowrap;
+  }
+  @keyframes type-reveal {
+    to { width: 220px; opacity: 1; }
+  }
+
+  /* ── BOTTOM ── */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 15;
+    overflow: hidden;
+  }
+  .bottom-bar-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #ff6b00, #ffca28, #ff2d55);
+    animation: bar-fill 4s ease 0.5s forwards;
+  }
+  @keyframes bar-fill {
+    to { width: 100%; }
+  }
+
+  /* Screen flash */
+  .flash {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    background: rgba(255,107,0,0.06);
+    animation: fl 0.12s ease 1.2s, fl 0.12s ease 1.8s;
+  }
+  @keyframes fl { 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="ring-container">
+  <div class="ring"></div>
+  <div class="ring"></div>
+  <div class="ring"></div>
+  <div class="ring"></div>
+</div>
+<div class="overlay-vignette"></div>
+<div class="flash"></div>
+
+<div class="splash">
+  <div class="logo-wrap">
+    <div class="logo-plate">
+      <div class="logo-plate-text">45</div>
+    </div>
+    <div class="logo-name">KASAI</div>
+  </div>
+
+  <div class="counter">SET <span class="counter-num">01</span> / 05</div>
+
+  <div class="line-1"><span class="text">PUSH</span><span class="period p1">.</span></div>
+  <div class="line-2"><span class="text">REPEAT</span><span class="period p2">.</span></div>
+
+  <div class="sub-line">After repeat</div>
+</div>
+
+<div class="bottom-bar"><div class="bottom-bar-fill"></div></div>
+
+</body>
+</html>

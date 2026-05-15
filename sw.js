@@ -1,12 +1,23 @@
-const CACHE = 'kasai-v43-notif2';
+const CACHE = 'kasai-v43-splash-b5';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icons/kasai-icon.svg',
+  './icons/app-logo-b5.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './icons/icon-b5-192.png',
+  './icons/icon-b5-512.png',
+  './icons/icon-b5-maskable-512.png',
+  './icons/apple-touch-icon-b5.png',
+  './splash/01-you-vs-you.html',
+  './splash/02-dont-stop.html',
+  './splash/03-discipline.html',
+  './splash/04-push-repeat.html',
+  './splash/05-burn-brighter.html',
+  './splash/06-no-excuses.html',
   './vendor/supabase-js-2.js',
   './vendor/forge-quotes-365.js',
   './js/core/dom.js',
@@ -48,10 +59,12 @@ self.addEventListener('fetch', e => {
       fetch(e.request).then(res => {
         if (res && res.status === 200) {
           const clone = res.clone();
-          caches.open(CACHE).then(c => c.put('./index.html', clone));
+          const url = new URL(e.request.url);
+          const isAppShell = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+          caches.open(CACHE).then(c => c.put(isAppShell ? './index.html' : e.request, clone));
         }
         return res;
-      }).catch(() => caches.match('./index.html'))
+      }).catch(() => caches.match(e.request).then(cached => cached || caches.match('./index.html')))
     );
     return;
   }

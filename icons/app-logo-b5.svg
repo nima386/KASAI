@@ -1,0 +1,41 @@
+<svg width="512" height="512" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="b5-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a0a00"/>
+      <stop offset="50%" stop-color="#0e0810"/>
+      <stop offset="100%" stop-color="#080010"/>
+    </linearGradient>
+    <linearGradient id="b5-fire" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#ffca28"/>
+      <stop offset="45%" stop-color="#ff6b00"/>
+      <stop offset="100%" stop-color="#ff2d55"/>
+    </linearGradient>
+    <filter id="b5-glow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="120" height="120" rx="26" fill="url(#b5-bg)"/>
+  <circle cx="60" cy="60" r="56" fill="#0f0f1a" stroke="rgba(255,107,0,0.25)" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <g filter="url(#b5-glow)" stroke="#ff8a3d" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <circle cx="60" cy="24" r="6" stroke-width="2.5"/>
+    <path d="M60 31 L58 52" stroke-width="4"/>
+    <path d="M59 36 L50 52 L42 68" stroke-width="2.5"/>
+    <path d="M59 36 L70 52 L78 68" stroke-width="2.5"/>
+    <line x1="30" y1="68" x2="90" y2="68" stroke-width="3"/>
+    <rect x="26" y="60" width="8" height="16" rx="2" stroke-width="2"/>
+    <rect x="86" y="60" width="8" height="16" rx="2" stroke-width="2"/>
+    <path d="M58 52 L48 76 L44 86" stroke-width="3"/>
+    <path d="M58 52 L68 76 L72 86" stroke-width="3"/>
+  </g>
+  <path d="M52 18 C53 14 55 13 55.5 10 C56 13 55.5 14 56.5 16" fill="none" stroke="#ff6b00" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M60 16 C60.5 12 62 11 62 8 C63 11 62 13 63 16" fill="none" stroke="#ffca28" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M68 18 C68.5 14 70 13 70 10 C71 13 70 15 70.5 17" fill="none" stroke="#ff2d55" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <path d="M46 14 C47 12 48 12 48 10" stroke="rgba(255,149,0,0.3)" stroke-width="1" stroke-linecap="round"/>
+  <path d="M74 14 C75 12 76 12 76 10" stroke="rgba(255,149,0,0.3)" stroke-width="1" stroke-linecap="round"/>
+  <line x1="30" y1="90" x2="90" y2="90" stroke="rgba(255,107,0,0.12)" stroke-width="1"/>
+</svg>
