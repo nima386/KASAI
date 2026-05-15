@@ -1921,6 +1921,351 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .version-mono{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;text-align:center;padding:1rem 0;}
 
+/* KASAI Settings v2 */
+#settings-overlay.settings-v2-overlay{
+  align-items:stretch;justify-content:center;
+  background:rgba(8,8,15,.72);
+  overflow:hidden;
+}
+#settings-overlay .settings-v2-card{
+  position:relative;width:min(100%,430px);height:100%;max-height:100%;
+  padding:0;overflow-x:hidden;overflow-y:auto;
+  background:var(--bg-surface);border:0;border-radius:0;
+  transform:translateY(24px);
+  transition:transform .45s cubic-bezier(.32,.72,0,1),border-radius .45s ease,filter .45s ease;
+  transform-origin:center top;
+  -webkit-overflow-scrolling:touch;
+}
+#settings-overlay.show .settings-v2-card{transform:translateY(0);}
+#settings-overlay.show .settings-v2-card.settings-pushed{
+  transform:scale(.92) translateY(14px);
+  border-radius:20px;filter:brightness(.62);overflow:hidden;
+}
+.settings-v2-hero{
+  position:relative;width:100%;height:260px;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:24px;
+}
+.settings-v2-hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:linear-gradient(180deg,#0a0308 0%,#120800 40%,var(--bg-surface) 100%);
+}
+.settings-v2-fire-scene{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:300px;height:200px;perspective:600px;z-index:1;pointer-events:none;
+}
+.settings-v2-fire-3d{
+  position:absolute;top:20px;left:50%;width:100px;height:140px;
+  transform:translateX(-50%);transform-style:preserve-3d;
+  animation:settingsFireRotate 10s linear infinite;
+}
+@keyframes settingsFireRotate{
+  from{transform:translateX(-50%) rotateY(0deg);}
+  to{transform:translateX(-50%) rotateY(360deg);}
+}
+.settings-v2-fire-petal{
+  position:absolute;top:50%;left:50%;border-radius:50% 50% 10% 10%;
+  transform-style:preserve-3d;transform-origin:bottom center;
+  opacity:0;animation:settingsPetalOpen 2s cubic-bezier(.16,1,.3,1) forwards;
+}
+.settings-v2-fp-o1{width:45px;height:68px;background:linear-gradient(180deg,rgba(255,45,85,.5),rgba(180,20,40,.7));transform:translate(-50%,-60%) rotateY(0deg) translateZ(26px) rotateX(-30deg);animation-delay:.5s;box-shadow:0 0 12px rgba(255,45,85,.2);}
+.settings-v2-fp-o2{width:45px;height:68px;background:linear-gradient(180deg,rgba(255,60,40,.5),rgba(200,30,30,.7));transform:translate(-50%,-60%) rotateY(72deg) translateZ(26px) rotateX(-30deg);animation-delay:.7s;box-shadow:0 0 12px rgba(255,60,40,.2);}
+.settings-v2-fp-o3{width:45px;height:68px;background:linear-gradient(180deg,rgba(255,45,85,.5),rgba(180,20,40,.7));transform:translate(-50%,-60%) rotateY(144deg) translateZ(26px) rotateX(-30deg);animation-delay:.9s;box-shadow:0 0 12px rgba(255,45,85,.2);}
+.settings-v2-fp-o4{width:45px;height:68px;background:linear-gradient(180deg,rgba(255,80,30,.5),rgba(200,40,20,.7));transform:translate(-50%,-60%) rotateY(216deg) translateZ(26px) rotateX(-30deg);animation-delay:1.1s;box-shadow:0 0 12px rgba(255,80,30,.2);}
+.settings-v2-fp-o5{width:45px;height:68px;background:linear-gradient(180deg,rgba(255,45,85,.5),rgba(180,20,40,.7));transform:translate(-50%,-60%) rotateY(288deg) translateZ(26px) rotateX(-30deg);animation-delay:1.3s;box-shadow:0 0 12px rgba(255,45,85,.2);}
+.settings-v2-fp-m1{width:34px;height:50px;background:linear-gradient(180deg,rgba(255,107,0,.6),rgba(255,60,30,.8));transform:translate(-50%,-55%) rotateY(36deg) translateZ(16px) rotateX(-20deg);animation-delay:1s;box-shadow:0 0 15px rgba(255,107,0,.25);}
+.settings-v2-fp-m2{width:34px;height:50px;background:linear-gradient(180deg,rgba(255,130,0,.6),rgba(255,80,20,.8));transform:translate(-50%,-55%) rotateY(108deg) translateZ(16px) rotateX(-20deg);animation-delay:1.2s;box-shadow:0 0 15px rgba(255,130,0,.25);}
+.settings-v2-fp-m3{width:34px;height:50px;background:linear-gradient(180deg,rgba(255,107,0,.6),rgba(255,60,30,.8));transform:translate(-50%,-55%) rotateY(180deg) translateZ(16px) rotateX(-20deg);animation-delay:1.4s;box-shadow:0 0 15px rgba(255,107,0,.25);}
+.settings-v2-fp-m4{width:34px;height:50px;background:linear-gradient(180deg,rgba(255,130,0,.6),rgba(255,80,20,.8));transform:translate(-50%,-55%) rotateY(252deg) translateZ(16px) rotateX(-20deg);animation-delay:1.6s;box-shadow:0 0 15px rgba(255,130,0,.25);}
+.settings-v2-fp-m5{width:34px;height:50px;background:linear-gradient(180deg,rgba(255,107,0,.6),rgba(255,60,30,.8));transform:translate(-50%,-55%) rotateY(324deg) translateZ(16px) rotateX(-20deg);animation-delay:1.8s;box-shadow:0 0 15px rgba(255,107,0,.25);}
+.settings-v2-fp-i1{width:22px;height:34px;background:linear-gradient(180deg,rgba(255,202,40,.7),rgba(255,140,0,.9));transform:translate(-50%,-50%) rotateY(0deg) translateZ(7px) rotateX(-10deg);animation-delay:1.5s;box-shadow:0 0 18px rgba(255,202,40,.3);}
+.settings-v2-fp-i2{width:22px;height:34px;background:linear-gradient(180deg,rgba(255,220,60,.7),rgba(255,160,10,.9));transform:translate(-50%,-50%) rotateY(120deg) translateZ(7px) rotateX(-10deg);animation-delay:1.7s;box-shadow:0 0 18px rgba(255,220,60,.3);}
+.settings-v2-fp-i3{width:22px;height:34px;background:linear-gradient(180deg,rgba(255,202,40,.7),rgba(255,140,0,.9));transform:translate(-50%,-50%) rotateY(240deg) translateZ(7px) rotateX(-10deg);animation-delay:1.9s;box-shadow:0 0 18px rgba(255,202,40,.3);}
+.settings-v2-fire-core{
+  position:absolute;top:50%;left:50%;width:20px;height:20px;margin:-10px 0 0 -10px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,230,150,1),rgba(255,180,50,.7),transparent);
+  box-shadow:0 0 25px rgba(255,180,50,.5),0 0 50px rgba(255,100,0,.3);
+  animation:settingsCoreGlow 2s ease-in-out infinite;
+}
+@keyframes settingsCoreGlow{
+  0%,100%{box-shadow:0 0 25px rgba(255,180,50,.5),0 0 50px rgba(255,100,0,.3);transform:scale(1);}
+  50%{box-shadow:0 0 40px rgba(255,180,50,.7),0 0 80px rgba(255,100,0,.4);transform:scale(1.15);}
+}
+@keyframes settingsPetalOpen{
+  from{opacity:0;transform:translate(-50%,-50%) scale(.2);filter:blur(6px) brightness(2);}
+  to{opacity:1;filter:blur(0) brightness(1);}
+}
+.settings-v2-ember{
+  position:absolute;border-radius:50%;z-index:2;pointer-events:none;
+  animation:settingsEmberRise linear infinite;
+}
+@keyframes settingsEmberRise{
+  0%{opacity:0;transform:translateY(0) scale(1);}
+  10%{opacity:.8;}
+  100%{opacity:0;transform:translateY(-160px) scale(.2);}
+}
+.settings-v2-se1{width:2px;height:2px;left:22%;bottom:30%;background:#ff6b00;animation-duration:3s;box-shadow:0 0 4px #ff6b00;}
+.settings-v2-se2{width:3px;height:3px;left:48%;bottom:25%;background:#ffca28;animation-duration:3.5s;animation-delay:.5s;box-shadow:0 0 5px #ffca28;}
+.settings-v2-se3{width:2px;height:2px;left:72%;bottom:32%;background:#ff2d55;animation-duration:2.8s;animation-delay:1s;box-shadow:0 0 4px #ff2d55;}
+.settings-v2-se4{width:2px;height:2px;left:36%;bottom:22%;background:#ff9500;animation-duration:4s;animation-delay:1.5s;box-shadow:0 0 4px #ff9500;}
+.settings-v2-se5{width:3px;height:3px;left:62%;bottom:28%;background:#ff6b00;animation-duration:3.2s;animation-delay:2s;box-shadow:0 0 5px #ff6b00;}
+.settings-v2-hero-vignette{
+  position:absolute;inset:0;z-index:3;
+  background:radial-gradient(ellipse 70% 60% at 50% 30%,transparent 20%,rgba(10,10,20,.9) 100%);
+  pointer-events:none;
+}
+.settings-v2-hero-close{
+  position:absolute;top:max(16px,calc(env(safe-area-inset-top,0px) + 10px));right:16px;z-index:10;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  color:var(--text-secondary);font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.settings-v2-hero-text{position:relative;z-index:5;text-align:center;}
+.settings-v2-hero-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,149,0,.4);margin-bottom:4px;
+}
+.settings-v2-hero-title{font-size:1.5rem;font-weight:900;letter-spacing:0;}
+.settings-v2-hero-title span{
+  background:linear-gradient(135deg,#ffca28,#ff6b00,#ff2d55);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.settings-v2-content{padding:0 20px calc(40px + env(safe-area-inset-bottom,0px));position:relative;z-index:5;}
+#settings-overlay .settings-v2-profile-card{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,rgba(255,107,0,.08),rgba(255,45,85,.05));
+  border:1px solid rgba(255,107,0,.15);border-radius:var(--r-lg);
+  padding:16px;margin:-18px 0 12px;position:relative;z-index:6;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  cursor:pointer;transition:transform .25s ease;
+}
+#settings-overlay .settings-v2-profile-card:active{transform:scale(.97);}
+#settings-overlay .settings-v2-profile-card .settings-profile-avatar{
+  width:50px;height:50px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#ff6b00,#ff2d55);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:1.05rem;color:#fff;
+  box-shadow:0 0 18px rgba(255,107,0,.3);position:relative;
+}
+#settings-overlay .settings-v2-profile-card .settings-profile-avatar::after{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  border:1.5px solid rgba(255,107,0,.25);
+  animation:settingsAvatarRing 3s ease-in-out infinite;
+}
+@keyframes settingsAvatarRing{0%,100%{transform:scale(1);opacity:.4;}50%{transform:scale(1.06);opacity:.8;}}
+#settings-overlay .settings-v2-profile-card .settings-profile-name{font-weight:800;font-size:1rem;letter-spacing:0;}
+#settings-overlay .settings-v2-profile-card .settings-profile-email{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text-muted);
+  letter-spacing:.04em;margin-top:2px;word-break:break-word;
+}
+.settings-v2-profile-arrow{color:rgba(255,107,0,.4);font-size:1.2rem;flex-shrink:0;}
+#settings-overlay .settings-v2-sync{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--green);
+  letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(38,212,124,.06);border:1px solid rgba(38,212,124,.15);
+  border-radius:var(--r-full);padding:6px 12px;margin:0 0 14px;
+}
+.settings-v2-section-label{
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);
+  margin:22px 0 10px 2px;display:flex;align-items:center;gap:8px;
+}
+.settings-v2-section-label::after{
+  content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border-default),transparent);
+}
+.settings-v2-menu-rows{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.settings-v2-menu-row{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  padding:13px 14px;background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:var(--r-md);cursor:pointer;color:var(--text-primary);font:inherit;
+  transition:transform .2s var(--ease),background .2s var(--ease),border-color .2s var(--ease);
+}
+.settings-v2-menu-row:active{transform:scale(.97);}
+.settings-v2-row-icon{
+  width:36px;height:36px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.settings-v2-row-text{flex:1;min-width:0;}
+.settings-v2-row-name{font-size:.84rem;font-weight:700;}
+.settings-v2-row-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.46rem;color:var(--text-muted);
+  letter-spacing:.06em;text-transform:uppercase;margin-top:1px;
+}
+.settings-v2-row-chevron{color:var(--text-muted);font-size:.8rem;opacity:.5;}
+.settings-v2-menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.settings-v2-menu-tile{
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:var(--r-lg);padding:18px 14px;cursor:pointer;
+  display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;
+  color:var(--text-primary);font:inherit;text-align:left;
+  transition:transform .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+.settings-v2-menu-tile:active{transform:scale(.96);}
+.settings-v2-menu-tile::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:20px 20px 0 0;opacity:1;
+}
+.settings-v2-tile-fire::before{background:linear-gradient(90deg,#ff6b00,#ff2d55);}
+.settings-v2-tile-green::before{background:linear-gradient(90deg,#26d47c,#26c6da);}
+.settings-v2-tile-amber::before{background:linear-gradient(90deg,#ffca28,#ff9500);}
+.settings-v2-tile-purple::before{background:linear-gradient(90deg,#6e63f2,#a29bfe);}
+.settings-v2-tile-icon{
+  width:42px;height:42px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.settings-v2-tile-fire .settings-v2-tile-icon{background:rgba(255,107,0,.12);}
+.settings-v2-tile-green .settings-v2-tile-icon{background:rgba(38,212,124,.12);}
+.settings-v2-tile-amber .settings-v2-tile-icon{background:rgba(255,202,40,.12);}
+.settings-v2-tile-purple .settings-v2-tile-icon{background:rgba(110,99,242,.12);}
+.settings-v2-tile-name{font-size:.82rem;font-weight:700;line-height:1.2;}
+.settings-v2-tile-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.46rem;color:var(--text-muted);
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.settings-v2-account-section{margin-top:24px;}
+.settings-v2-account-section #settings-account-actions,.settings-v2-account-section #settings-account-login{margin:0;}
+.settings-v2-version{
+  font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.2em;
+  color:var(--text-muted);text-transform:uppercase;text-align:center;
+  padding:20px 0 12px;opacity:.5;
+}
+.settings-v2-sheet-backdrop{
+  position:absolute;inset:0;z-index:90;background:rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transition:opacity .4s ease;
+}
+.settings-v2-sheet-backdrop.show{opacity:1;pointer-events:auto;}
+.settings-v2-sheet{
+  position:absolute;bottom:0;left:50%;
+  transform:translateX(-50%) translateY(100%);
+  width:min(100%,430px);max-height:88vh;
+  background:var(--bg-surface);
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  border-top:1px solid rgba(255,255,255,.08);
+  z-index:100;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .5s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 -10px 60px rgba(0,0,0,.5);
+}
+.settings-v2-sheet.show{transform:translateX(-50%) translateY(0);}
+.settings-v2-sheet-grab{
+  width:36px;height:4px;background:rgba(255,255,255,.12);
+  border-radius:2px;margin:10px auto 0;flex-shrink:0;
+}
+.settings-v2-sheet-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px 10px;flex-shrink:0;
+}
+.settings-v2-sheet-title{font-size:1.1rem;font-weight:800;letter-spacing:0;}
+.settings-v2-sheet-title-icon{margin-right:8px;}
+.settings-v2-sheet-close{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg-card);border:1px solid var(--border-default);
+  color:var(--text-secondary);font-size:.85rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.settings-v2-sheet-body{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:4px 20px calc(32px + env(safe-area-inset-bottom,0px));
+}
+.settings-v2-input-card{
+  background:var(--bg-card);border:1px solid var(--border-default);
+  border-radius:var(--r-md);padding:14px;margin-bottom:10px;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+.settings-v2-input-card:focus-within{
+  border-color:rgba(255,107,0,.25);box-shadow:0 0 16px rgba(255,107,0,.05);
+}
+.settings-v2-label{
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);
+  margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.settings-v2-label-icon{font-size:.7rem;}
+.settings-v2-field,#settings-overlay .settings-v2-sheet select{
+  width:100%;background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);
+  padding:11px 13px;font-family:'JetBrains Mono',monospace;
+  font-size:16px;font-weight:600;color:var(--text-primary);outline:none;
+  -webkit-appearance:none;appearance:none;transition:border-color .2s ease,box-shadow .2s ease;
+}
+.settings-v2-field:focus,#settings-overlay .settings-v2-sheet select:focus{
+  border-color:rgba(255,107,0,.3);box-shadow:0 0 10px rgba(255,107,0,.06);
+}
+.settings-v2-field::placeholder{color:var(--text-muted);}
+.settings-v2-helper{
+  font-family:'JetBrains Mono',monospace;font-size:.44rem;letter-spacing:.08em;
+  color:rgba(255,149,0,.3);margin-top:6px;text-transform:uppercase;
+}
+.settings-v2-row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+#settings-overlay .settings-v2-notification-settings{
+  background:transparent;border:0;border-radius:0;padding:0;
+}
+#settings-overlay .settings-v2-notify-row{
+  display:grid;grid-template-columns:auto 1fr minmax(86px,112px);
+  align-items:center;gap:10px;padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);border-radius:0;
+  cursor:pointer;
+}
+#settings-overlay .settings-v2-notify-row:last-of-type{border-bottom:none;}
+#settings-overlay .settings-v2-notify-row.is-active .notify-title{color:var(--text-primary);}
+#settings-overlay .settings-v2-notify-row input[type="checkbox"]{
+  position:relative;width:42px;height:24px;border-radius:12px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  appearance:none;-webkit-appearance:none;cursor:pointer;flex-shrink:0;
+  transition:background .3s ease,border-color .3s ease,box-shadow .3s ease;
+}
+#settings-overlay .settings-v2-notify-row input[type="checkbox"]::after{
+  content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;
+  border-radius:50%;background:var(--text-muted);
+  transition:left .3s cubic-bezier(.34,1.56,.64,1),background .3s ease,box-shadow .3s ease;
+}
+#settings-overlay .settings-v2-notify-row input[type="checkbox"]:checked{
+  background:linear-gradient(135deg,rgba(255,107,0,.4),rgba(255,45,85,.3));
+  border-color:rgba(255,107,0,.3);box-shadow:0 0 12px rgba(255,107,0,.15);
+}
+#settings-overlay .settings-v2-notify-row input[type="checkbox"]:checked::after{
+  left:20px;background:#fff;box-shadow:0 0 8px rgba(255,107,0,.4);
+}
+#settings-overlay .settings-v2-notify-row input[type="time"],
+#settings-overlay .settings-v2-notify-row select{
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--r-sm);color:var(--text-primary);
+  padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  outline:none;width:100%;min-width:0;-webkit-appearance:none;appearance:none;
+}
+.settings-v2-system-row{
+  display:flex;align-items:center;justify-content:space-between;margin-top:16px;
+}
+.settings-v2-version-pill{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--purple-300);
+  padding:3px 10px;border-radius:999px;background:rgba(110,99,242,.1);
+  border:1px solid rgba(110,99,242,.2);white-space:nowrap;
+}
+#settings-overlay .settings-v2-sheet .sync-debug-card{
+  display:block;margin:0;padding:0;background:transparent;border:0;border-radius:0;
+}
+#settings-overlay .settings-v2-sheet .sync-debug-head{display:none;}
+#settings-overlay .settings-v2-sheet .sync-debug-grid{gap:6px;margin-top:10px;}
+#settings-overlay .settings-v2-sheet .sync-debug-item{
+  padding:9px;border-radius:var(--r-sm);
+  background:rgba(10,10,20,.4);border:1px solid rgba(255,255,255,.04);
+}
+.settings-v2-sheet.show .si-1{opacity:0;animation:fade-up .4s ease .1s forwards;}
+.settings-v2-sheet.show .si-2{opacity:0;animation:fade-up .4s ease .15s forwards;}
+.settings-v2-sheet.show .si-3{opacity:0;animation:fade-up .4s ease .2s forwards;}
+.settings-v2-sheet.show .si-4{opacity:0;animation:fade-up .4s ease .25s forwards;}
+.settings-v2-sheet.show .si-5{opacity:0;animation:fade-up .4s ease .3s forwards;}
+.settings-v2-sheet.show .si-6{opacity:0;animation:fade-up .4s ease .35s forwards;}
+.settings-v2-sheet.show .si-7{opacity:0;animation:fade-up .4s ease .4s forwards;}
+.settings-v2-sheet.show .si-8{opacity:0;animation:fade-up .4s ease .45s forwards;}
+@media(max-width:360px){
+  .settings-v2-row-2{grid-template-columns:1fr;}
+  .settings-v2-menu-grid{gap:6px;}
+  .settings-v2-content{padding-inline:16px;}
+}
+
 /* -- FORGE FULL CONCEPT POLISH -- */
 :root{
   --bg-base:#0a0a14;
@@ -4351,117 +4696,234 @@ document.addEventListener('click', async function(e){
   </div>
 
   <!-- ------- OVERLAY: SETTINGS ------- -->
-  <div id="settings-overlay" class="overlay">
-    <div class="overlay-card">
-      <div class="overlay-grab"></div>
-      <div class="overlay-head">
-        <div class="overlay-title">Einstellungen</div>
-        <button class="overlay-close" data-close="settings-overlay">×</button>
-      </div>
-
-      <!-- Profil-Karte (nur sichtbar wenn eingeloggt) -->
-      <div id="settings-profile-card" class="settings-profile" style="display:none;">
-        <div class="settings-profile-avatar" id="settings-profile-avatar">JM</div>
-        <div class="settings-profile-info">
-          <div class="settings-profile-name" id="settings-profile-name">Champion</div>
-          <div class="settings-profile-email" id="settings-profile-email"></div>
+  <div id="settings-overlay" class="overlay settings-v2-overlay">
+    <div class="overlay-card settings-v2-card" id="settings-shell">
+      <div class="settings-v2-hero">
+        <div class="settings-v2-hero-bg"></div>
+        <div class="settings-v2-fire-scene">
+          <div class="settings-v2-fire-3d">
+            <div class="settings-v2-fire-petal settings-v2-fp-o1"></div><div class="settings-v2-fire-petal settings-v2-fp-o2"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-o3"></div><div class="settings-v2-fire-petal settings-v2-fp-o4"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-o5"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-m1"></div><div class="settings-v2-fire-petal settings-v2-fp-m2"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-m3"></div><div class="settings-v2-fire-petal settings-v2-fp-m4"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-m5"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-i1"></div><div class="settings-v2-fire-petal settings-v2-fp-i2"></div>
+            <div class="settings-v2-fire-petal settings-v2-fp-i3"></div>
+            <div class="settings-v2-fire-core"></div>
+          </div>
+          <div class="settings-v2-ember settings-v2-se1"></div><div class="settings-v2-ember settings-v2-se2"></div>
+          <div class="settings-v2-ember settings-v2-se3"></div><div class="settings-v2-ember settings-v2-se4"></div>
+          <div class="settings-v2-ember settings-v2-se5"></div>
         </div>
-      </div>
-
-      <div class="settings-list">
-        <button class="setting-row" id="settings-open-profile" type="button">
-          <div class="setting-icon icon-purple">👤</div>
-          <div class="setting-text"><div class="setting-name">Profil & Wochenplan</div><div class="setting-sub">Woche A/B, Plan und persönliche Daten</div></div>
-        </button>
-        <button class="setting-row" id="settings-open-plan" type="button">
-          <div class="setting-icon icon-purple">🏋️</div>
-          <div class="setting-text"><div class="setting-name">Trainingsplan bearbeiten</div><div class="setting-sub">Tage, Muskelgruppen und Übungen</div></div>
-        </button>
-      </div>
-
-      <!-- Sync-Status -->
-      <div id="settings-sync-status" class="settings-sync" style="display:none;">
-        <span class="settings-sync-dot"></span>
-        <span id="settings-sync-text">// gespeichert</span>
-      </div>
-      <div id="settings-sync-debug" class="sync-debug-card">
-        <div class="sync-debug-head">
-          <div class="sync-debug-title">Sync Debug</div>
-          <div class="sync-debug-pill" id="sync-debug-version">kasai</div>
-        </div>
-        <div class="sync-debug-grid">
-          <div class="sync-debug-item"><div class="sync-debug-label">Letzter Sync</div><div class="sync-debug-value" id="sync-debug-last">-</div></div>
-          <div class="sync-debug-item"><div class="sync-debug-label">Session</div><div class="sync-debug-value" id="sync-debug-lock">-</div></div>
-          <div class="sync-debug-item"><div class="sync-debug-label">Pending Writes</div><div class="sync-debug-value" id="sync-debug-pending">0</div></div>
-          <div class="sync-debug-item"><div class="sync-debug-label">Realtime</div><div class="sync-debug-value" id="sync-debug-realtime">-</div></div>
+        <div class="settings-v2-hero-vignette"></div>
+        <button class="settings-v2-hero-close" data-close="settings-overlay" type="button">×</button>
+        <div class="settings-v2-hero-text">
+          <div class="settings-v2-hero-kicker">// kasai config</div>
+          <div class="settings-v2-hero-title"><span>Ein</span>stellungen</div>
         </div>
       </div>
 
-      <div class="set-group">
-        <label>Anzeigename</label>
-        <input id="set-name" type="text" placeholder="Wie sollen wir dich nennen?">
+      <div class="settings-v2-content">
+        <div id="settings-profile-card" class="settings-v2-profile-card" style="display:none;">
+          <div class="settings-profile-avatar" id="settings-profile-avatar">JM</div>
+          <div class="settings-profile-info">
+            <div class="settings-profile-name" id="settings-profile-name">Champion</div>
+            <div class="settings-profile-email" id="settings-profile-email"></div>
+          </div>
+          <div class="settings-v2-profile-arrow">›</div>
+        </div>
+
+        <div id="settings-sync-status" class="settings-sync settings-v2-sync" style="display:none;">
+          <span class="settings-sync-dot"></span>
+          <span id="settings-sync-text">// gespeichert</span>
+        </div>
+
+        <div class="settings-v2-section-label">Navigation</div>
+        <div class="settings-v2-menu-rows">
+          <button class="settings-v2-menu-row" id="settings-open-profile" type="button">
+            <div class="settings-v2-row-icon" style="background:rgba(255,107,0,.12);">👤</div>
+            <div class="settings-v2-row-text">
+              <div class="settings-v2-row-name">Profil & Wochenplan</div>
+              <div class="settings-v2-row-sub">Woche A/B, Plan und persönliche Daten</div>
+            </div>
+            <div class="settings-v2-row-chevron">›</div>
+          </button>
+          <button class="settings-v2-menu-row" id="settings-open-plan" type="button">
+            <div class="settings-v2-row-icon" style="background:rgba(110,99,242,.12);">🏋️</div>
+            <div class="settings-v2-row-text">
+              <div class="settings-v2-row-name">Trainingsplan bearbeiten</div>
+              <div class="settings-v2-row-sub">Tage, Muskelgruppen und Übungen</div>
+            </div>
+            <div class="settings-v2-row-chevron">›</div>
+          </button>
+        </div>
+
+        <div class="settings-v2-section-label">Konfiguration</div>
+        <div class="settings-v2-menu-grid">
+          <button class="settings-v2-menu-tile settings-v2-tile-fire" data-settings-sheet="settings-sheet-personal" type="button">
+            <div class="settings-v2-tile-icon">✦</div>
+            <div>
+              <div class="settings-v2-tile-name">Persönliche Daten</div>
+              <div class="settings-v2-tile-sub">Name, Gewicht</div>
+            </div>
+          </button>
+          <button class="settings-v2-menu-tile settings-v2-tile-green" data-settings-sheet="settings-sheet-goals" type="button">
+            <div class="settings-v2-tile-icon">🎯</div>
+            <div>
+              <div class="settings-v2-tile-name">Tagesziele</div>
+              <div class="settings-v2-tile-sub">Schritte, Kalorien, Wasser</div>
+            </div>
+          </button>
+          <button class="settings-v2-menu-tile settings-v2-tile-amber" data-settings-sheet="settings-sheet-notify" type="button">
+            <div class="settings-v2-tile-icon">🔔</div>
+            <div>
+              <div class="settings-v2-tile-name">Benachrichtigungen</div>
+              <div class="settings-v2-tile-sub">Push Notifications</div>
+            </div>
+          </button>
+          <button class="settings-v2-menu-tile settings-v2-tile-purple" data-settings-sheet="settings-sheet-system" type="button">
+            <div class="settings-v2-tile-icon">⚙</div>
+            <div>
+              <div class="settings-v2-tile-name">System</div>
+              <div class="settings-v2-tile-sub">Sync, Debug, Version</div>
+            </div>
+          </button>
+        </div>
+
+        <div class="settings-v2-account-section">
+          <div id="settings-account-actions" style="display:none;">
+            <button class="btn-logout" id="settings-logout" type="button">⏻ Abmelden</button>
+          </div>
+          <div id="settings-account-login" style="display:none;">
+            <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
+          </div>
+        </div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-splash-b5b</div>
       </div>
-      <div class="set-group">
-        <label>Gewicht (kg)</label>
-        <input id="set-weight" type="number" step="0.1" inputmode="decimal">
+    </div>
+
+    <div class="settings-v2-sheet-backdrop" id="settings-sheet-backdrop"></div>
+
+    <div class="settings-v2-sheet" id="settings-sheet-personal" aria-label="Persönliche Daten">
+      <div class="settings-v2-sheet-grab"></div>
+      <div class="settings-v2-sheet-head">
+        <div class="settings-v2-sheet-title"><span class="settings-v2-sheet-title-icon">✦</span>Persönliche Daten</div>
+        <button class="settings-v2-sheet-close" data-settings-sheet-close type="button">×</button>
       </div>
-      <div class="set-group">
-        <label>Schrittziel</label>
-        <input id="set-stepgoal" type="number" inputmode="numeric">
-      </div>
-      <div class="set-group">
-        <label>Kalorienziel (kcal)</label>
-        <input id="set-kcal" type="number" inputmode="numeric">
-      </div>
-      <div class="set-group">
-        <label>Wasserziel (ml)</label>
-        <input id="set-water" type="number" inputmode="numeric">
-      </div>
-      <div class="set-group">
-        <label>Protein-Multiplikator (Min / Max)</label>
-        <div class="set-row-2">
-          <input id="set-pmin" type="number" step="0.1" inputmode="decimal">
-          <input id="set-pmax" type="number" step="0.1" inputmode="decimal">
+      <div class="settings-v2-sheet-body">
+        <div class="settings-v2-input-card si-1">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">✦</span> Anzeigename</div>
+          <input class="settings-v2-field" id="set-name" type="text" placeholder="Wie sollen wir dich nennen?">
+        </div>
+        <div class="settings-v2-input-card si-2">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">⚖</span> Gewicht (kg)</div>
+          <input class="settings-v2-field" id="set-weight" type="number" step="0.1" inputmode="decimal">
+          <div class="settings-v2-helper">Wird für Protein-Berechnung genutzt</div>
+        </div>
+        <div class="settings-v2-input-card si-3">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">🥩</span> Protein-Multiplikator (Min / Max)</div>
+          <div class="settings-v2-row-2">
+            <div>
+              <input class="settings-v2-field" id="set-pmin" type="number" step="0.1" inputmode="decimal" style="text-align:center">
+              <div class="settings-v2-helper" style="text-align:center">Min (g/kg)</div>
+            </div>
+            <div>
+              <input class="settings-v2-field" id="set-pmax" type="number" step="0.1" inputmode="decimal" style="text-align:center">
+              <div class="settings-v2-helper" style="text-align:center">Max (g/kg)</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="set-group">
-        <label>Push Notifications</label>
-        <div class="notification-settings">
-          <div class="notify-row">
-            <input id="notify-training-enabled" type="checkbox">
-            <div class="notify-main"><div class="notify-title">Training Reminder</div><div class="notify-sub">Heute ist Pull/Woche B</div></div>
-            <input id="notify-training-time" type="time">
-          </div>
-          <div class="notify-row">
-            <input id="notify-water-enabled" type="checkbox">
-            <div class="notify-main"><div class="notify-title">Wasser Reminder</div><div class="notify-sub">Tagsüber wiederholen</div></div>
-            <select id="notify-water-interval">
-              <option value="60">60 min</option>
-              <option value="90">90 min</option>
-              <option value="120">120 min</option>
-            </select>
-          </div>
-          <div class="notify-row">
-            <input id="notify-habit-enabled" type="checkbox">
-            <div class="notify-main"><div class="notify-title">Habit Reminder</div><div class="notify-sub">Offene Gewohnheiten</div></div>
-            <input id="notify-habit-time" type="time">
-          </div>
-          <div class="notify-row">
-            <input id="notify-plan-enabled" type="checkbox">
-            <div class="notify-main"><div class="notify-title">Plan-Start</div><div class="notify-sub">Rotation & Startdatum</div></div>
-            <input id="notify-plan-time" type="time">
-          </div>
-          <button class="notify-permission" id="notify-permission" type="button">Benachrichtigungen erlauben</button>
-          <button class="notify-test-btn" id="notify-test" type="button">Test anzeigen</button>
+    </div>
+
+    <div class="settings-v2-sheet" id="settings-sheet-goals" aria-label="Tagesziele">
+      <div class="settings-v2-sheet-grab"></div>
+      <div class="settings-v2-sheet-head">
+        <div class="settings-v2-sheet-title"><span class="settings-v2-sheet-title-icon">🎯</span>Tagesziele</div>
+        <button class="settings-v2-sheet-close" data-settings-sheet-close type="button">×</button>
+      </div>
+      <div class="settings-v2-sheet-body">
+        <div class="settings-v2-input-card si-1">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">👟</span> Schrittziel</div>
+          <input class="settings-v2-field" id="set-stepgoal" type="number" inputmode="numeric">
+          <div class="settings-v2-helper">Empfehlung: 8.000 - 12.000 Schritte</div>
+        </div>
+        <div class="settings-v2-input-card si-2">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">🔥</span> Kalorienziel (kcal)</div>
+          <input class="settings-v2-field" id="set-kcal" type="number" inputmode="numeric">
+          <div class="settings-v2-helper">Tägliches Kalorienbudget</div>
+        </div>
+        <div class="settings-v2-input-card si-3">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">💧</span> Wasserziel (ml)</div>
+          <input class="settings-v2-field" id="set-water" type="number" inputmode="numeric">
+          <div class="settings-v2-helper">Empfehlung: 2.500 - 3.500 ml</div>
         </div>
       </div>
-      <!-- Account-Aktionen (nur sichtbar wenn eingeloggt) -->
-      <div id="settings-account-actions" style="display:none;">
-        <button class="btn-logout" id="settings-logout">⏻ Abmelden</button>
+    </div>
+
+    <div class="settings-v2-sheet" id="settings-sheet-notify" aria-label="Benachrichtigungen">
+      <div class="settings-v2-sheet-grab"></div>
+      <div class="settings-v2-sheet-head">
+        <div class="settings-v2-sheet-title"><span class="settings-v2-sheet-title-icon">🔔</span>Benachrichtigungen</div>
+        <button class="settings-v2-sheet-close" data-settings-sheet-close type="button">×</button>
       </div>
-      <!-- Account-Login (nur sichtbar wenn NICHT eingeloggt) -->
-      <div id="settings-account-login" style="display:none;">
-        <button class="cta-btn" id="settings-go-login" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
+      <div class="settings-v2-sheet-body notification-settings settings-v2-notification-settings">
+        <div class="notify-row settings-v2-notify-row si-1">
+          <input id="notify-training-enabled" type="checkbox" aria-label="Training Reminder aktivieren">
+          <div class="notify-main"><div class="notify-title">Training Reminder</div><div class="notify-sub">Heute ist Pull / Woche B</div></div>
+          <input id="notify-training-time" type="time">
+        </div>
+        <div class="notify-row settings-v2-notify-row si-2">
+          <input id="notify-water-enabled" type="checkbox" aria-label="Wasser Reminder aktivieren">
+          <div class="notify-main"><div class="notify-title">Wasser Reminder</div><div class="notify-sub">Tagsüber wiederholen</div></div>
+          <select id="notify-water-interval">
+            <option value="60">60 min</option>
+            <option value="90">90 min</option>
+            <option value="120">120 min</option>
+          </select>
+        </div>
+        <div class="notify-row settings-v2-notify-row si-3">
+          <input id="notify-habit-enabled" type="checkbox" aria-label="Habit Reminder aktivieren">
+          <div class="notify-main"><div class="notify-title">Habit Reminder</div><div class="notify-sub">Offene Gewohnheiten</div></div>
+          <input id="notify-habit-time" type="time">
+        </div>
+        <div class="notify-row settings-v2-notify-row si-4">
+          <input id="notify-plan-enabled" type="checkbox" aria-label="Plan-Start Reminder aktivieren">
+          <div class="notify-main"><div class="notify-title">Plan-Start</div><div class="notify-sub">Rotation & Startdatum</div></div>
+          <input id="notify-plan-time" type="time">
+        </div>
+        <button class="btn-sheet-action notify-permission si-5" id="notify-permission" type="button">Benachrichtigungen erlauben</button>
+        <button class="btn-sheet-test notify-test-btn si-6" id="notify-test" type="button">Test anzeigen</button>
+      </div>
+    </div>
+
+    <div class="settings-v2-sheet" id="settings-sheet-system" aria-label="System">
+      <div class="settings-v2-sheet-grab"></div>
+      <div class="settings-v2-sheet-head">
+        <div class="settings-v2-sheet-title"><span class="settings-v2-sheet-title-icon">⚙</span>System</div>
+        <button class="settings-v2-sheet-close" data-settings-sheet-close type="button">×</button>
+      </div>
+      <div class="settings-v2-sheet-body">
+        <div class="settings-v2-label" style="margin:0 0 10px;">
+          <span class="settings-v2-label-icon">🔄</span> Sync Debug
+        </div>
+        <div id="settings-sync-debug" class="sync-debug-card">
+          <div class="sync-debug-head">
+            <div class="sync-debug-title">Sync Debug</div>
+            <div class="sync-debug-pill" id="sync-debug-version">kasai</div>
+          </div>
+          <div class="sync-debug-grid">
+            <div class="sync-debug-item"><div class="sync-debug-label">Letzter Sync</div><div class="sync-debug-value" id="sync-debug-last">-</div></div>
+            <div class="sync-debug-item"><div class="sync-debug-label">Session</div><div class="sync-debug-value" id="sync-debug-lock">-</div></div>
+            <div class="sync-debug-item"><div class="sync-debug-label">Pending Writes</div><div class="sync-debug-value" id="sync-debug-pending">0</div></div>
+            <div class="sync-debug-item"><div class="sync-debug-label">Realtime</div><div class="sync-debug-value" id="sync-debug-realtime">-</div></div>
+          </div>
+        </div>
+        <div class="settings-v2-system-row si-2">
+          <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-splash-b5b</div>
+        </div>
       </div>
     </div>
   </div>
@@ -9743,7 +10205,10 @@ KDOM.setClick('steps-add', ()=>{
 function showOverlay(id){ document.getElementById(id).classList.add('show'); }
 function hideOverlay(id){
   document.getElementById(id).classList.remove('show');
-  if(id === 'settings-overlay') flushSettingsAutosave();
+  if(id === 'settings-overlay') {
+    closeSettingsSheet(false);
+    flushSettingsAutosave();
+  }
 }
 const notificationTimers = [];
 
@@ -10237,6 +10702,7 @@ function updateAuthUI(){
 }
 function openSettings(){
   const p = S.profile;
+  closeSettingsSheet(false);
   hydrateNotificationSettingsUI();
   document.getElementById('set-name').value     = p.name || '';
   document.getElementById('set-weight').value   = p.weightKg ?? '';
@@ -10245,6 +10711,8 @@ function openSettings(){
   document.getElementById('set-water').value    = p.waterGoal ?? '';
   document.getElementById('set-pmin').value     = p.proteinMin ?? '';
   document.getElementById('set-pmax').value     = p.proteinMax ?? '';
+  document.getElementById('settings-version-tag').textContent = KASAI_APP_VERSION;
+  document.getElementById('settings-system-version').textContent = KASAI_APP_VERSION;
   updateAuthUI();
   renderSyncDebug();
   showOverlay('settings-overlay');
@@ -10328,6 +10796,48 @@ document.querySelectorAll('.notification-settings .notify-row').forEach(row=>{
     checkbox.checked = !checkbox.checked;
     checkbox.dispatchEvent(new Event('change', {bubbles:true}));
   });
+});
+
+let _activeSettingsSheet = null;
+function openSettingsSheet(id){
+  const overlay = document.getElementById('settings-overlay');
+  const shell = document.getElementById('settings-shell');
+  const backdrop = document.getElementById('settings-sheet-backdrop');
+  const sheet = document.getElementById(id);
+  if(!overlay || !shell || !backdrop || !sheet) return;
+  if(_activeSettingsSheet && _activeSettingsSheet !== sheet) closeSettingsSheet(true);
+  _activeSettingsSheet = sheet;
+  overlay.classList.add('sheet-open');
+  shell.classList.add('settings-pushed');
+  backdrop.classList.add('show');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>sheet.classList.add('show')));
+}
+
+function closeSettingsSheet(flush=true){
+  if(flush) flushSettingsAutosave();
+  const overlay = document.getElementById('settings-overlay');
+  const shell = document.getElementById('settings-shell');
+  const backdrop = document.getElementById('settings-sheet-backdrop');
+  if(_activeSettingsSheet) _activeSettingsSheet.classList.remove('show');
+  if(backdrop) backdrop.classList.remove('show');
+  if(shell) shell.classList.remove('settings-pushed');
+  if(overlay) overlay.classList.remove('sheet-open');
+  _activeSettingsSheet = null;
+}
+
+document.querySelectorAll('[data-settings-sheet]').forEach(btn=>{
+  btn.addEventListener('click',()=>openSettingsSheet(btn.dataset.settingsSheet));
+});
+document.querySelectorAll('[data-settings-sheet-close]').forEach(btn=>{
+  btn.addEventListener('click',()=>closeSettingsSheet(true));
+});
+document.getElementById('settings-sheet-backdrop')?.addEventListener('click',()=>closeSettingsSheet(true));
+document.getElementById('settings-profile-card')?.addEventListener('click',()=>{
+  hideOverlay('settings-overlay');
+  navigate('profile');
+});
+document.addEventListener('keydown',event=>{
+  if(event.key === 'Escape' && _activeSettingsSheet) closeSettingsSheet(true);
 });
 
 document.querySelectorAll('[data-close]').forEach(b=>{
