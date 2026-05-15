@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-splash-b5';
+const CACHE = 'kasai-v43-splash-b5b';
 const ASSETS = [
   './',
   './index.html',
@@ -18,6 +18,10 @@ const ASSETS = [
   './splash/04-push-repeat.html',
   './splash/05-burn-brighter.html',
   './splash/06-no-excuses.html',
+  './splash/07-fire-rose.html',
+  './splash/08-fire-orb.html',
+  './splash/10-fire-vortex.html',
+  './splash/12-fire-cube.html',
   './vendor/supabase-js-2.js',
   './vendor/forge-quotes-365.js',
   './js/core/dom.js',

@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-splash-b5';
+const KASAI_APP_VERSION = 'kasai-v43-splash-b5b';
 </script>
 <style>
 :root {
@@ -3158,7 +3158,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-splash-b5 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-splash-b5b · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4725,7 +4725,11 @@ const externalSplashFiles = [
   './splash/03-discipline.html',
   './splash/04-push-repeat.html',
   './splash/05-burn-brighter.html',
-  './splash/06-no-excuses.html'
+  './splash/06-no-excuses.html',
+  './splash/07-fire-rose.html',
+  './splash/08-fire-orb.html',
+  './splash/10-fire-vortex.html',
+  './splash/12-fire-cube.html'
 ];
 
 // -- UTILS --
@@ -4733,7 +4737,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-splash-b5';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-splash-b5b';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
