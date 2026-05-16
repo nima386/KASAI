@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-faststart';
+const CACHE = 'kasai-v43-settingsfix1';
 const ASSETS = [
   './',
   './index.html',
