@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-bottomfill1';
+const CACHE = 'kasai-v43-splashfix1';
 const ASSETS = [
   './',
   './index.html',
