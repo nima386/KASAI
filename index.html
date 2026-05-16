@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="KASAI">
-<meta name="theme-color" content="#04020a">
+<meta name="theme-color" content="#08080f">
 <style id="kasai-startup-critical">
 html,body{margin:0;width:100%;height:100%;min-height:100%;background:#04020a;color:#f0eeff;overflow:hidden;}
 body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
@@ -24,7 +24,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-pwa-safearea1';
+const KASAI_APP_VERSION = 'kasai-v43-settingsfix1';
 </script>
 <style>
 :root {
@@ -58,19 +58,13 @@ const KASAI_APP_VERSION = 'kasai-v43-pwa-safearea1';
   --r-xs:  6px; --r-sm: 10px; --r-md: 16px;
   --r-lg:  22px; --r-xl: 30px; --r-full: 9999px;
   --ease: cubic-bezier(0.25,0.46,0.45,0.94);
-  --app-safe-top: env(safe-area-inset-top, 0px);
-  --app-safe-bottom: env(safe-area-inset-bottom, 0px);
-  --app-page-x: clamp(16px, 5vw, 22px);
-  --app-nav-height: 70px;
-  --app-nav-gap: 12px;
-  --app-bottom-space: calc(var(--app-safe-bottom) + var(--app-nav-height) + 34px);
-  --nav-h: var(--app-nav-height);
+  --nav-h: 70px;
   --nav-side: 0px;
-  --safe-bottom: var(--app-safe-bottom);
-  --safe-top: var(--app-safe-top);
-  --nav-bottom-gap: calc(var(--app-safe-bottom) + var(--app-nav-gap));
-  --nav-total-h: var(--app-nav-height);
-  --scroll-bottom: var(--app-bottom-space);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --nav-bottom-gap: 0px;
+  --nav-total-h: var(--nav-h);
+  --scroll-bottom: calc(var(--nav-h) + 34px);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -186,7 +180,7 @@ body{
   flex:1;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
-  padding:0 var(--app-page-x) var(--scroll-bottom);
+  padding:0 18px var(--scroll-bottom);
   scroll-padding-bottom:var(--scroll-bottom);
   position:relative;z-index:1;
 }
@@ -953,24 +947,8 @@ body{
 }
 
 @media(display-mode:standalone){
-  html,body{
-    width:100%;
-    height:100%;
-    min-height:100dvh;
-    margin:0!important;
-    padding:0!important;
-    overflow:hidden!important;
-    background:var(--bg-base)!important;
-  }
-  body{position:fixed;inset:0;}
+  body{position:fixed;inset:0;overflow:hidden;}
   #app{height:100dvh;min-height:100dvh;}
-  .screen{height:100dvh;min-height:100dvh;}
-  .screen-body{
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-y:contain;
-  }
 }
 
 /* -- UTILS -- */
@@ -3201,11 +3179,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 .bottom-nav .nav-item.active .nav-label{color:rgba(255,190,70,.9);}
 .bottom-nav .nav-item.morphing .nav-icon{animation:none;}
 @media(max-width:480px){
-  :root{
-    --app-nav-height:64px;
-    --app-nav-gap:10px;
-    --app-bottom-space:calc(var(--app-safe-bottom) + var(--app-nav-height) + 30px);
-  }
+  :root{--nav-h:64px;--scroll-bottom:88px;}
   .bottom-nav{
     width:min(344px, calc(100vw - 28px));
     height:64px;min-height:64px;max-height:64px;
@@ -3213,132 +3187,6 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   }
   .bottom-nav .nav-item{height:58px;min-height:58px;padding:12px 4px 14px;}
   .bottom-nav .nav-label{font-size:7px;}
-}
-
-/* === KASAI FINAL PWA SAFE AREA OVERRIDE ===
-   Adapted from the Quiz PWA reference. This block intentionally wins over
-   older mobile rules above so iPhone/PWA safe areas stay predictable. */
-:root{
-  --app-safe-top:env(safe-area-inset-top,0px);
-  --app-safe-bottom:env(safe-area-inset-bottom,0px);
-  --app-page-x:clamp(16px,5vw,22px);
-  --app-nav-height:70px;
-  --app-nav-gap:12px;
-  --app-bottom-space:calc(var(--app-safe-bottom) + var(--app-nav-height) + 34px);
-  --safe-top:var(--app-safe-top);
-  --safe-bottom:var(--app-safe-bottom);
-  --nav-h:var(--app-nav-height);
-  --nav-bottom-gap:calc(var(--app-safe-bottom) + var(--app-nav-gap));
-  --scroll-bottom:var(--app-bottom-space);
-}
-
-html,
-body{
-  width:100%;
-  min-height:100%;
-  overflow:hidden!important;
-  background-color:var(--bg-base)!important;
-}
-
-body{
-  min-height:100vh;
-  min-height:100dvh;
-  position:fixed;
-  inset:0;
-  overscroll-behavior:none;
-}
-
-#app{
-  height:100vh;
-  height:100dvh;
-  min-height:100vh;
-  min-height:100dvh;
-  overflow:hidden!important;
-}
-
-.screen{
-  position:absolute!important;
-  inset:0!important;
-  width:100%!important;
-  height:100dvh!important;
-  min-height:100dvh!important;
-  overflow:hidden!important;
-}
-
-.screen-body{
-  padding-left:var(--app-page-x)!important;
-  padding-right:var(--app-page-x)!important;
-  padding-bottom:var(--app-bottom-space)!important;
-  scroll-padding-bottom:var(--app-bottom-space)!important;
-  overflow-y:auto!important;
-  overflow-x:hidden!important;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-y:contain;
-}
-
-.app-header{
-  padding-top:calc(var(--app-safe-top) + 14px)!important;
-  padding-left:var(--app-page-x)!important;
-  padding-right:var(--app-page-x)!important;
-}
-
-.bottom-nav{
-  position:fixed!important;
-  left:50%!important;
-  right:auto!important;
-  bottom:var(--nav-bottom-gap)!important;
-  transform:translateX(-50%)!important;
-  width:min(390px,calc(100vw - 24px))!important;
-  height:var(--app-nav-height)!important;
-  min-height:var(--app-nav-height)!important;
-  max-height:var(--app-nav-height)!important;
-  z-index:28000!important;
-}
-
-.bottom-nav .nav-item{
-  min-width:0!important;
-}
-
-#splash{
-  width:100vw;
-  height:100vh;
-  height:100dvh;
-  min-height:100vh;
-  min-height:100dvh;
-}
-
-.external-splash-frame{
-  width:100vw!important;
-  height:100dvh!important;
-}
-
-@media(max-width:430px){
-  :root{
-    --app-page-x:18px;
-    --app-nav-height:66px;
-    --app-nav-gap:10px;
-    --app-bottom-space:calc(var(--app-safe-bottom) + var(--app-nav-height) + 30px);
-  }
-  .app-header{
-    padding-top:calc(var(--app-safe-top) + 10px)!important;
-  }
-  .bottom-nav{
-    width:min(356px,calc(100vw - 18px))!important;
-    border-radius:26px!important;
-  }
-  .bottom-nav .nav-item{
-    min-height:50px!important;
-  }
-}
-
-@media(display-mode:standalone){
-  .screen{
-    height:100dvh!important;
-    min-height:100dvh!important;
-  }
-  .bottom-nav{
-    bottom:calc(var(--app-safe-bottom) + var(--app-nav-gap))!important;
-  }
 }
 
 /* KASAI SPLASH SCREEN V2 */
@@ -3690,7 +3538,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-pwa-safearea1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-settingsfix1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4986,7 +4834,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-pwa-safearea1</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-settingsfix1</div>
       </div>
     </div>
 
@@ -5109,7 +4957,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-pwa-safearea1</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-settingsfix1</div>
         </div>
       </div>
     </div>
@@ -5386,7 +5234,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-pwa-safearea1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-settingsfix1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
