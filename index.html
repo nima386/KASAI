@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-premium1';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-premium2';
 </script>
 <style>
 :root {
@@ -3562,6 +3562,30 @@ body.splash-done #splash{display:none;}
 .run-form-btn{flex:1;border:none;border-radius:11px;padding:11px;font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;font-weight:900;}
 .run-form-btn.ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.08);}
 .run-form-btn.save{background:linear-gradient(135deg,#ff9500,#ff2d55);color:#fff;}
+.run-form-overlay{z-index:60000;}
+.run-form-sheet{
+  max-height:min(88vh,760px);
+  padding:12px 20px calc(24px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(165deg,rgba(23,15,35,.98),rgba(8,7,17,.995));
+  border:1px solid rgba(255,149,0,.18);
+  border-bottom:0;
+  box-shadow:0 -22px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.run-form.in-sheet{
+  display:block;
+  margin:0;
+  padding:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  opacity:1;
+  transform:none;
+  overflow:visible;
+}
+.run-form.in-sheet::before{display:none;}
+.run-form.in-sheet .run-form-title{font-size:1.08rem;margin:2px 0 14px;}
+.run-form.in-sheet .run-form-actions{position:sticky;bottom:0;padding-top:10px;background:linear-gradient(180deg,transparent,rgba(8,7,17,.96) 35%);}
 .run-detail-overlay{z-index:60000;}
 .run-detail-card{max-height:min(82vh,720px);overflow-y:auto;}
 .run-detail-hero{position:relative;margin:-2px -2px 14px;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,rgba(255,149,0,.18),rgba(255,45,85,.08));border:1px solid rgba(255,149,0,.18);padding:16px;}
@@ -3623,7 +3647,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-premium1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-premium2 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4921,7 +4945,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-premium1</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-premium2</div>
       </div>
     </div>
 
@@ -5044,7 +5068,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-premium1</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-premium2</div>
         </div>
       </div>
     </div>
@@ -5321,7 +5345,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-premium1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-premium2';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -8520,20 +8544,67 @@ function renderRunList(){
   }).join('');
 }
 
+function closeRunFormSheet(){
+  if(!S.runTracker) S.runTracker = {};
+  S.runTracker.formOpen = false;
+  saveState(S);
+  renderRunTracker();
+}
+
+function ensureRunFormOverlay(){
+  let overlay = document.getElementById('run-form-overlay');
+  if(overlay) return overlay;
+  overlay = document.createElement('div');
+  overlay.id = 'run-form-overlay';
+  overlay.className = 'overlay run-form-overlay';
+  overlay.innerHTML = '<div class="overlay-card run-form-sheet"><div class="overlay-grab"></div><div id="run-form-sheet-slot"></div></div>';
+  overlay.addEventListener('click', event=>{
+    if(event.target === overlay || event.target.closest('[data-run-form-close]')) closeRunFormSheet();
+  });
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function moveRunFormToSheet(){
+  const form = document.getElementById('run-form');
+  if(!form) return null;
+  const overlay = ensureRunFormOverlay();
+  const slot = document.getElementById('run-form-sheet-slot');
+  if(slot && form.parentElement !== slot) slot.appendChild(form);
+  form.classList.add('in-sheet');
+  return overlay;
+}
+
 function renderRunFormState(){
   const form = document.getElementById('run-form');
   if(!form) return;
+  const overlay = moveRunFormToSheet();
   setupRunFormViewportGuards();
-  form.classList.toggle('open', !!S.runTracker?.formOpen);
+  const isOpen = !!S.runTracker?.formOpen;
+  form.classList.toggle('open', isOpen);
+  overlay?.classList.toggle('show', isOpen);
   const dateInput = document.getElementById('run-input-date');
   if(dateInput){
     dateInput.max = todayStr;
-    if(S.runTracker?.formOpen && !dateInput.value) dateInput.value = todayStr;
+    if(isOpen && !dateInput.value) dateInput.value = todayStr;
   }
 }
 
 function scrollRunElementIntoView(el, behavior='smooth'){
   if(!el) return;
+  const sheet = el.closest('.run-form-sheet');
+  if(sheet){
+    const sheetRect = sheet.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const bottomPad = 22;
+    const topPad = 18;
+    if(rect.bottom > sheetRect.bottom - bottomPad){
+      sheet.scrollBy({top: rect.bottom - sheetRect.bottom + bottomPad, behavior});
+    } else if(rect.top < sheetRect.top + topPad){
+      sheet.scrollBy({top: rect.top - sheetRect.top - topPad, behavior});
+    }
+    return;
+  }
   const body = document.getElementById('run-screen-body') || el.closest('.screen-body');
   if(!body) {
     el.scrollIntoView({behavior, block:'center'});
@@ -12264,7 +12335,6 @@ document.getElementById('run-log-toggle')?.addEventListener('click',()=>{
   if(S.runTracker.formOpen) resetRunForm();
   saveState(S);
   renderRunTracker();
-  if(S.runTracker.formOpen) scrollRunFormIntoView();
 });
 document.getElementById('run-cancel')?.addEventListener('click',()=>{
   if(!S.runTracker) S.runTracker = {};

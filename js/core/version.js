@@ -1,5 +1,5 @@
 (function(){
-  const current = 'kasai-v43-premium1';
+  const current = 'kasai-v43-premium2';
   const buildDate = '2026-05-17';
 
   window.KasaiVersion = Object.freeze({

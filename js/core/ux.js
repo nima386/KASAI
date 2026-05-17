@@ -12,6 +12,14 @@
   let pulseTimer = null;
   let lastLocalSaveAt = 0;
 
+  function isDebugUiEnabled(){
+    try{
+      return new URLSearchParams(location.search).has('debug') || localStorage.getItem('kasai.debug.ui') === '1';
+    }catch(_){
+      return false;
+    }
+  }
+
   function areaLabel(area){
     return AREA_LABELS[area] || AREA_LABELS.app;
   }
@@ -40,6 +48,7 @@
   }
 
   function markLocalSave(area){
+    if(!isDebugUiEnabled()) return;
     const now = Date.now();
     if(now - lastLocalSaveAt < 450) return;
     lastLocalSaveAt = now;
@@ -48,6 +57,11 @@
 
   function setSaveStatus(state, label){
     const clean = String(label || '').replace(/^\/\/\s*/, '').trim();
+    if(!isDebugUiEnabled() && state !== 'error'){
+      const el = document.getElementById('kasai-save-pulse');
+      if(el) el.classList.remove('show');
+      return;
+    }
     if(state === 'syncing') return showSavePulse('syncing', clean || 'Speichert ...', 0);
     if(state === 'waiting') return showSavePulse('waiting', clean || 'Speichert ...', 1200);
     if(state === 'offline') return showSavePulse('offline', clean || 'Offline gespeichert', 1800);
@@ -76,6 +90,7 @@
     const safeTitle = escapeHtml(title || 'Noch nichts da');
     const safeBody = escapeHtml(body || 'Sobald du etwas anlegst, erscheint es hier.');
     const safeAction = action ? `<div class="kasai-empty-action">${escapeHtml(action)}</div>` : '';
+    return `<div class="kasai-empty-state"><div class="kasai-empty-mark">+</div><strong>${safeTitle}</strong><span>${safeBody}</span>${safeAction}</div>`;
     return `<div class="kasai-empty-state"><div class="kasai-empty-mark">＋</div><strong>${safeTitle}</strong><span>${safeBody}</span>${safeAction}</div>`;
   }
 
