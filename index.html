@@ -24,7 +24,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-splashfix1';
+const KASAI_APP_VERSION = 'kasai-v43-runfix1';
 </script>
 <style>
 :root {
@@ -3452,6 +3452,25 @@ body.splash-done #splash{display:none;}
 .run-bar-fill{position:absolute;left:0;right:0;bottom:0;height:0;border-radius:5px 5px 3px 3px;background:rgba(255,255,255,.08);transition:height .6s cubic-bezier(.34,1.3,.64,1);}
 .run-bar-fill.has-run{background:linear-gradient(180deg,#ff9500,#ff2d55);}
 .run-bar-fill.today{background:linear-gradient(180deg,#ffca28,#ff6b00);}
+.run-pause-stack{
+  position:absolute;right:3px;bottom:4px;width:5px;
+  display:flex;flex-direction:column-reverse;gap:2px;align-items:center;
+  pointer-events:none;z-index:3;opacity:.9;
+}
+.run-pause-stack i{
+  width:5px;height:2px;border-radius:999px;
+  background:rgba(230,232,244,.72);
+  box-shadow:0 0 6px rgba(230,232,244,.2);
+  animation:runPauseBlink .9s cubic-bezier(.22,1,.36,1) both;
+}
+.run-pause-more{
+  font-family:'JetBrains Mono',monospace;font-size:.42rem;line-height:1;
+  color:rgba(235,235,245,.72);margin-bottom:1px;
+}
+@keyframes runPauseBlink{
+  from{opacity:0;transform:translateY(4px) scaleX(.4);}
+  to{opacity:1;transform:translateY(0) scaleX(1);}
+}
 .run-bar-val{position:absolute;top:-15px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:.44rem;color:rgba(255,149,0,.62);}
 .run-bar-day{font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.24);text-transform:uppercase;}
 .run-bar-day.today{color:rgba(255,149,0,.72);}
@@ -3477,7 +3496,8 @@ body.splash-done #splash{display:none;}
 .run-legend i:nth-of-type(4){background:rgba(255,100,0,.42);}
 .run-list-head{margin:2px 0 8px;}
 .run-all-btn{background:transparent;cursor:pointer;}
-.run-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:13px;margin-bottom:6px;border:1px solid transparent;background:rgba(255,255,255,.018);position:relative;overflow:hidden;}
+.run-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:13px;margin-bottom:6px;border:1px solid transparent;background:rgba(255,255,255,.018);position:relative;overflow:hidden;cursor:pointer;transition:transform .18s var(--ease),border-color .18s var(--ease),background .18s var(--ease);}
+.run-item:active{transform:scale(.985);background:rgba(255,255,255,.035);border-color:rgba(255,107,0,.12);}
 .run-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:rgba(255,255,255,.12);}
 .run-item.pr::before{background:linear-gradient(180deg,#ffca28,#ff6b00);}
 .run-item.good::before{background:linear-gradient(180deg,#ff9500,#ff3d00);}
@@ -3485,6 +3505,7 @@ body.splash-done #splash{display:none;}
 .run-info{flex:1;min-width:0;}
 .run-name{font-size:.78rem;font-weight:800;color:rgba(255,255,255,.78);}
 .run-meta{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.26);}
+.run-proof-dot{display:inline-flex;align-items:center;gap:3px;margin-left:6px;color:rgba(255,202,40,.66);}
 .run-right{text-align:right;flex-shrink:0;}
 .run-km{font-size:.95rem;font-weight:900;background:linear-gradient(135deg,#ffca28,#ff6b00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .run-pace{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:rgba(255,255,255,.24);}
@@ -3492,21 +3513,50 @@ body.splash-done #splash{display:none;}
 .run-empty{padding:14px;border:1px dashed rgba(255,107,0,.16);border-radius:14px;color:rgba(255,255,255,.35);font-size:.8rem;text-align:center;}
 .run-log-btn{width:100%;margin-top:6px;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#ff9500,#ff6b00 50%,#ff2d55);color:#fff;font-weight:800;font-size:.84rem;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:8px;}
 .run-plus{font-family:'JetBrains Mono',monospace;font-size:1rem;}
-.run-form{margin-top:10px;padding:16px;background:linear-gradient(160deg,#181228,#0d0a1c);border:1px solid rgba(255,107,0,.24);border-radius:18px;display:none;opacity:0;transform:translateY(12px) scale(.98);transition:opacity .35s cubic-bezier(.34,1.3,.64,1),transform .35s cubic-bezier(.34,1.3,.64,1);}
+.run-form{margin-top:12px;padding:16px;background:linear-gradient(160deg,rgba(32,22,45,.98),rgba(10,8,22,.98));border:1px solid rgba(255,107,0,.24);border-radius:20px;display:none;opacity:0;transform:translateY(12px) scale(.98);transition:opacity .35s cubic-bezier(.34,1.3,.64,1),transform .35s cubic-bezier(.34,1.3,.64,1),border-color .2s var(--ease),box-shadow .2s var(--ease);box-shadow:0 20px 45px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden;}
+.run-form::before{content:'';position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,#ff9500,#ff2d55,transparent);opacity:.85;}
 .run-form.open{display:block;opacity:1;transform:translateY(0) scale(1);}
-.run-form-title{font-size:.9rem;font-weight:900;margin-bottom:12px;}
+.run-form:focus-within{border-color:rgba(255,149,0,.38);box-shadow:0 22px 50px rgba(0,0,0,.34),0 0 0 1px rgba(255,149,0,.08),inset 0 1px 0 rgba(255,255,255,.06);}
+.run-form-title{font-size:.95rem;font-weight:900;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.run-form-title::after{content:'// optional proof';font-family:'JetBrains Mono',monospace;font-size:.42rem;letter-spacing:.14em;color:rgba(255,149,0,.32);text-transform:uppercase;font-weight:700;}
 .run-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 .run-form label span,.run-pr-toggle span{display:block;font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:.16em;color:rgba(255,255,255,.28);text-transform:uppercase;margin-bottom:5px;}
-.run-form input,.run-form select{width:100%;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px;color:rgba(255,255,255,.82);font-family:'JetBrains Mono',monospace;font-size:.78rem;outline:none;}
+.run-form input,.run-form select{width:100%;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:10px;color:rgba(255,255,255,.82);font-family:'JetBrains Mono',monospace;font-size:16px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease);}
+.run-form input:focus,.run-form select:focus{background:rgba(255,255,255,.075);border-color:rgba(255,149,0,.38);box-shadow:0 0 0 2px rgba(255,149,0,.08);}
 .run-form input.invalid{border-color:rgba(255,95,110,.72);box-shadow:0 0 0 1px rgba(255,95,110,.18);}
 .run-pr-toggle{display:flex!important;align-items:center;gap:8px;margin-top:10px;}
 .run-pr-toggle input{width:auto;}
 .run-pr-toggle span{margin:0;}
+.run-proof-field{grid-column:1/-1;}
+.run-proof-field input[type="file"]{padding:8px;font-size:.72rem;}
+.run-proof-field input[type="file"]::file-selector-button{
+  border:0;border-radius:9px;padding:8px 10px;margin-right:8px;
+  background:rgba(255,149,0,.14);color:#ffca28;font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+}
+.run-proof-preview{min-height:38px;margin-top:7px;border:1px dashed rgba(255,149,0,.18);border-radius:12px;padding:7px;display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none;background:rgba(255,149,0,.035);}
+.run-proof-preview::-webkit-scrollbar{display:none;}
+.run-proof-empty{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;color:rgba(255,255,255,.24);text-transform:uppercase;}
+.run-proof-thumb{width:46px;height:46px;border-radius:11px;object-fit:cover;flex-shrink:0;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 18px rgba(0,0,0,.24);animation:runProofPop .26s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes runProofPop{from{opacity:0;transform:scale(.82) translateY(6px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .run-form-error{min-height:16px;margin-top:8px;color:#ff8fa0;font-size:.72rem;}
 .run-form-actions{display:flex;gap:8px;margin-top:8px;}
 .run-form-btn{flex:1;border:none;border-radius:11px;padding:11px;font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;font-weight:900;}
 .run-form-btn.ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.08);}
 .run-form-btn.save{background:linear-gradient(135deg,#ff9500,#ff2d55);color:#fff;}
+.run-detail-overlay{z-index:60000;}
+.run-detail-card{max-height:min(82vh,720px);overflow-y:auto;}
+.run-detail-hero{position:relative;margin:-2px -2px 14px;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,rgba(255,149,0,.18),rgba(255,45,85,.08));border:1px solid rgba(255,149,0,.18);padding:16px;}
+.run-detail-hero::before{content:'';position:absolute;right:-40px;top:-60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,149,0,.2),transparent 70%);filter:blur(8px);}
+.run-detail-km{font-size:2.1rem;font-weight:900;line-height:1;background:linear-gradient(135deg,#ffca28,#ff6b00,#ff2d55);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.run-detail-meta{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.08em;color:rgba(255,255,255,.38);text-transform:uppercase;margin-top:5px;}
+.run-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.run-detail-stat{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:10px;text-align:center;}
+.run-detail-stat strong{display:block;font-size:1rem;color:rgba(255,255,255,.86);}
+.run-detail-stat span{font-family:'JetBrains Mono',monospace;font-size:.44rem;color:rgba(255,255,255,.28);letter-spacing:.12em;text-transform:uppercase;}
+.run-proof-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:10px;}
+.run-proof-gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 14px 28px rgba(0,0,0,.25);animation:runProofPop .28s cubic-bezier(.34,1.56,.64,1) both;}
+.run-proof-none{padding:12px;border:1px dashed rgba(255,149,0,.18);border-radius:14px;color:rgba(255,255,255,.32);font-size:.78rem;text-align:center;}
 @media(max-width:360px){.run-form-grid,.run-stat-row{grid-template-columns:1fr;}}
 
 </style>
@@ -3543,7 +3593,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-splashfix1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-runfix1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4055,6 +4105,8 @@ document.addEventListener('click', async function(e){
             <label><span>Dauer (min)</span><input id="run-input-min" type="number" min="1" max="9999" placeholder="0"></label>
             <label><span>Datum</span><input id="run-input-date" type="date"></label>
             <label><span>Art</span><select id="run-input-type"><option>Easy Run</option><option>Tempo</option><option>Long Run</option><option>Intervall</option></select></label>
+            <label><span>Pausen</span><input id="run-input-pauses" type="number" min="0" max="99" step="1" inputmode="numeric" placeholder="0"></label>
+            <label class="run-proof-field"><span>Strava/Runtastic Beweisbilder</span><input id="run-input-proof" type="file" accept="image/*" multiple><div class="run-proof-preview" id="run-proof-preview"><div class="run-proof-empty">Optional · Screenshot hochladen</div></div></label>
           </div>
           <label class="run-pr-toggle"><input id="run-input-pr" type="checkbox"><span>PR markieren</span></label>
           <div class="run-form-error" id="run-form-error"></div>
@@ -4839,7 +4891,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-splashfix1</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-runfix1</div>
       </div>
     </div>
 
@@ -4962,7 +5014,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-splashfix1</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-runfix1</div>
         </div>
       </div>
     </div>
@@ -5239,7 +5291,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-splashfix1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-runfix1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -6285,6 +6337,8 @@ function applyRunRecords(rows=[]){
       min: Number(row.duration_min || 0),
       type: row.run_type || 'Easy Run',
       pr: !!row.is_pr,
+      pauses: Number(localById.get(String(row.id))?.pauses || 0) || 0,
+      proofImages: normalizeRunProofImages(localById.get(String(row.id))?.proofImages || []),
       notes: row.notes || '',
       createdAt: row.created_at || new Date().toISOString()
     });
@@ -6648,6 +6702,8 @@ function normalizeState(){
     min: Number(run.min ?? run.duration_min ?? 0) || 0,
     type: run.type || run.run_type || 'Easy Run',
     pr: !!(run.pr ?? run.is_pr),
+    pauses: Math.max(0, parseInt(run.pauses ?? run.pauseCount ?? 0) || 0),
+    proofImages: normalizeRunProofImages(run.proofImages || run.proofs || run.images || []),
     notes: run.notes || '',
     createdAt: run.createdAt || run.created_at || new Date().toISOString()
   })).filter(run=>run.date && run.km > 0 && run.min > 0);
@@ -7243,6 +7299,8 @@ S.runs = (S.runs || []).map(run=>({
   min: Number(run.min ?? run.duration_min ?? 0) || 0,
   type: run.type || run.run_type || 'Easy Run',
   pr: !!(run.pr ?? run.is_pr),
+  pauses: Math.max(0, parseInt(run.pauses ?? run.pauseCount ?? 0) || 0),
+  proofImages: normalizeRunProofImages(run.proofImages || run.proofs || run.images || []),
   notes: run.notes || '',
   createdAt: run.createdAt || run.created_at || new Date().toISOString()
 })).filter(run=>run.date && run.km > 0 && run.min > 0);
@@ -8145,6 +8203,98 @@ function renderExerciseList(plan){
 
 // KASAI Run Tracker - embedded Training section
 const RUN_TYPES = ['Easy Run','Tempo','Long Run','Intervall'];
+const RUN_PROOF_LIMIT = 3;
+const _runWeekAnimatedSignatures = new Set();
+let _pendingRunProofImages = [];
+let _runFormViewportGuardReady = false;
+
+function normalizeRunProofImages(images=[]){
+  if(!Array.isArray(images)) return [];
+  return images
+    .map((img, index)=>{
+      if(typeof img === 'string') return {id:`proof_${index}`, dataUrl:img, name:'Beweisbild', createdAt:new Date().toISOString()};
+      if(!img || typeof img !== 'object' || !img.dataUrl) return null;
+      return {
+        id: img.id || genClientId('proof'),
+        dataUrl: String(img.dataUrl),
+        name: img.name || 'Beweisbild',
+        type: img.type || '',
+        createdAt: img.createdAt || new Date().toISOString()
+      };
+    })
+    .filter(Boolean)
+    .slice(0, RUN_PROOF_LIMIT);
+}
+
+function runProofPreviewMarkup(images=_pendingRunProofImages){
+  const normalized = normalizeRunProofImages(images);
+  if(!normalized.length) return '<div class="run-proof-empty">Optional · Screenshot hochladen</div>';
+  return normalized.map(img=>`<img class="run-proof-thumb" src="${img.dataUrl}" alt="${escapeHtml(img.name || 'Beweisbild')}">`).join('');
+}
+
+function updateRunProofPreview(){
+  const preview = document.getElementById('run-proof-preview');
+  if(preview) preview.innerHTML = runProofPreviewMarkup();
+}
+
+function compressRunProofFile(file){
+  return new Promise((resolve,reject)=>{
+    if(!file || !file.type?.startsWith('image/')){
+      reject(new Error('Bitte nur Bilder hochladen.'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Bild konnte nicht gelesen werden.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Bild konnte nicht verarbeitet werden.'));
+      img.onload = () => {
+        const maxSide = 1200;
+        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve({
+          id: genClientId('proof'),
+          name: file.name || 'Beweisbild',
+          type: 'image/jpeg',
+          dataUrl: canvas.toDataURL('image/jpeg', .78),
+          createdAt: new Date().toISOString()
+        });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleRunProofFiles(files){
+  const input = document.getElementById('run-input-proof');
+  const errorEl = document.getElementById('run-form-error');
+  const selected = Array.from(files || []).slice(0, RUN_PROOF_LIMIT);
+  if(errorEl) errorEl.textContent = '';
+  if(!selected.length){
+    _pendingRunProofImages = [];
+    updateRunProofPreview();
+    return;
+  }
+  try{
+    _pendingRunProofImages = [];
+    updateRunProofPreview();
+    const images = [];
+    for(const file of selected) images.push(await compressRunProofFile(file));
+    _pendingRunProofImages = images;
+    updateRunProofPreview();
+  }catch(error){
+    if(errorEl) errorEl.textContent = error?.message || 'Bild konnte nicht geladen werden.';
+    _pendingRunProofImages = [];
+    updateRunProofPreview();
+  }finally{
+    if(input) input.value = '';
+  }
+}
 
 function runMonthDate(){
   const offset = S.runTracker?.monthOffset || 0;
@@ -8157,10 +8307,11 @@ function runsForMonth(monthDate=runMonthDate()){
 }
 function sumRunsByDate(runs){
   return runs.reduce((acc, run)=>{
-    if(!acc[run.date]) acc[run.date] = {km:0, min:0, count:0};
+    if(!acc[run.date]) acc[run.date] = {km:0, min:0, count:0, pauses:0};
     acc[run.date].km += Number(run.km || 0);
     acc[run.date].min += Number(run.min || 0);
     acc[run.date].count += 1;
+    acc[run.date].pauses += Math.max(0, parseInt(run.pauses || 0) || 0);
     return acc;
   }, {});
 }
@@ -8199,7 +8350,6 @@ function moveRunSectionToScreen(){
 function renderRunWeekBars(){
   const wrap = document.getElementById('run-week-bars');
   if(!wrap) return;
-  wrap.innerHTML = '';
   const mode = S.runTracker?.chartMode || 'km';
   const monday = new Date(today);
   monday.setDate(today.getDate() - ((today.getDay()+6)%7));
@@ -8208,26 +8358,45 @@ function renderRunWeekBars(){
     d.setDate(monday.getDate()+i);
     const key = dateKey(d);
     const runs = (S.runs || []).filter(run=>run.date === key);
-    return {date:d,key,km:runs.reduce((sum, run)=>sum + Number(run.km || 0), 0),min:runs.reduce((sum, run)=>sum + Number(run.min || 0), 0)};
+    return {
+      date:d,
+      key,
+      km:runs.reduce((sum, run)=>sum + Number(run.km || 0), 0),
+      min:runs.reduce((sum, run)=>sum + Number(run.min || 0), 0),
+      pauses:runs.reduce((sum, run)=>sum + (Math.max(0, parseInt(run.pauses || 0) || 0)), 0)
+    };
   });
+  const signature = `${mode}|${days.map(day=>`${day.key}:${day.km.toFixed(2)}:${Math.round(day.min)}:${day.pauses}`).join('|')}`;
+  const shouldAnimate = !_runWeekAnimatedSignatures.has(signature);
+  _runWeekAnimatedSignatures.add(signature);
+  wrap.innerHTML = '';
   const max = Math.max(1, ...days.map(day=>mode === 'km' ? day.km : day.min));
   days.forEach((day, index)=>{
     const value = mode === 'km' ? day.km : day.min;
     const isToday = day.key === todayStr;
     const pct = value ? Math.max(8, value / max * 100) : 0;
+    const pauseCount = Math.min(6, Math.max(0, parseInt(day.pauses || 0) || 0));
+    const pauseMarkup = value && pauseCount ? `
+          <div class="run-pause-stack" style="height:${pct}%">
+            ${Array.from({length:pauseCount}, (_,i)=>`<i style="animation-delay:${i * 55}ms"></i>`).join('')}
+            ${day.pauses > pauseCount ? `<span class="run-pause-more">+${day.pauses - pauseCount}</span>` : ''}
+          </div>` : '';
     const col = document.createElement('div');
     col.className = 'run-bar-col';
     col.innerHTML = `
       <div class="run-bar-track ${isToday ? 'today' : ''}">
         ${value ? `<div class="run-bar-val">${mode === 'km' ? value.toFixed(1)+'k' : Math.round(value)+'m'}</div>` : ''}
-        <div class="run-bar-fill ${value ? 'has-run' : ''} ${isToday ? 'today' : ''}"></div>
+        <div class="run-bar-fill ${value ? 'has-run' : ''} ${isToday ? 'today' : ''}" style="height:${shouldAnimate ? 0 : pct}%"></div>
+        ${pauseMarkup}
       </div>
       <div class="run-bar-day ${isToday ? 'today' : ''}">${TP_DAY_ABBR[index].slice(0,1)}</div>`;
     wrap.appendChild(col);
-    requestAnimationFrame(()=>setTimeout(()=>{
-      const fill = col.querySelector('.run-bar-fill');
-      if(fill) fill.style.height = `${pct}%`;
-    }, index * 60));
+    if(shouldAnimate){
+      requestAnimationFrame(()=>setTimeout(()=>{
+        const fill = col.querySelector('.run-bar-fill');
+        if(fill) fill.style.height = `${pct}%`;
+      }, index * 60));
+    }
   });
 }
 
@@ -8284,12 +8453,16 @@ function renderRunList(){
     const pace = km ? (min/km).toFixed(1) : '-';
     const d = parseDateKey(run.date);
     const cls = run.pr ? 'pr' : km >= 10 ? 'good' : 'normal';
+    const pauses = Math.max(0, parseInt(run.pauses || 0) || 0);
+    const proofCount = normalizeRunProofImages(run.proofImages || []).length;
+    const pauseText = pauses ? ` · ${pauses} Pause${pauses === 1 ? '' : 'n'}` : '';
+    const proofText = proofCount ? `<span class="run-proof-dot">▣ ${proofCount}</span>` : '';
     return `
-      <div class="run-item ${cls}">
+      <div class="run-item ${cls}" data-run-detail="${escapeHtml(run.id)}">
         <div class="run-icon">🏃</div>
         <div class="run-info">
-          <div class="run-name">${km.toFixed(1)} km${run.pr ? '<span class="run-pr-badge">PR</span>' : ''}</div>
-          <div class="run-meta">${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} · ${escapeHtml(run.type || 'Easy Run')} · ${Math.round(min)} min</div>
+          <div class="run-name">${km.toFixed(1)} km${run.pr ? '<span class="run-pr-badge">PR</span>' : ''}${proofText}</div>
+          <div class="run-meta">${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} · ${escapeHtml(run.type || 'Easy Run')} · ${Math.round(min)} min${pauseText}</div>
         </div>
         <div class="run-right">
           <div class="run-km">${km.toFixed(1)}</div>
@@ -8302,6 +8475,7 @@ function renderRunList(){
 function renderRunFormState(){
   const form = document.getElementById('run-form');
   if(!form) return;
+  setupRunFormViewportGuards();
   form.classList.toggle('open', !!S.runTracker?.formOpen);
   const dateInput = document.getElementById('run-input-date');
   if(dateInput){
@@ -8310,11 +8484,65 @@ function renderRunFormState(){
   }
 }
 
+function scrollRunElementIntoView(el, behavior='smooth'){
+  if(!el) return;
+  const body = document.getElementById('run-screen-body') || el.closest('.screen-body');
+  if(!body) {
+    el.scrollIntoView({behavior, block:'center'});
+    return;
+  }
+  const bodyRect = body.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
+  const bottomPad = 18;
+  const topPad = 14;
+  if(rect.bottom > bodyRect.bottom - bottomPad){
+    body.scrollBy({top: rect.bottom - bodyRect.bottom + bottomPad, behavior});
+  } else if(rect.top < bodyRect.top + topPad){
+    body.scrollBy({top: rect.top - bodyRect.top - topPad, behavior});
+  }
+}
+
+function scrollRunFormIntoView(){
+  const form = document.getElementById('run-form');
+  if(!form) return;
+  requestAnimationFrame(()=>{
+    scrollRunElementIntoView(form, 'smooth');
+    setTimeout(()=>scrollRunElementIntoView(form, 'smooth'), 260);
+  });
+}
+
+function keepRunInputAboveKeyboard(input){
+  if(!input) return;
+  const run = () => scrollRunElementIntoView(input, 'smooth');
+  setTimeout(run, 80);
+  setTimeout(run, 260);
+  setTimeout(run, 520);
+}
+
+function setupRunFormViewportGuards(){
+  if(_runFormViewportGuardReady) return;
+  const form = document.getElementById('run-form');
+  if(!form) return;
+  _runFormViewportGuardReady = true;
+  form.addEventListener('focusin', event=>{
+    if(event.target.matches('input,select,textarea')) keepRunInputAboveKeyboard(event.target);
+  });
+  window.visualViewport?.addEventListener('resize', ()=>{
+    if(currentScreen !== 'run') return;
+    const active = document.activeElement;
+    if(active && form.contains(active)) keepRunInputAboveKeyboard(active);
+  });
+}
+
 function resetRunForm(){
-  ['run-input-km','run-input-min'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value = ''; });
+  ['run-input-km','run-input-min','run-input-pauses'].forEach(id=>{ const el = document.getElementById(id); if(el) el.value = ''; });
   document.getElementById('run-input-date').value = todayStr;
   document.getElementById('run-input-type').value = 'Easy Run';
   document.getElementById('run-input-pr').checked = false;
+  const proofInput = document.getElementById('run-input-proof');
+  if(proofInput) proofInput.value = '';
+  _pendingRunProofImages = [];
+  updateRunProofPreview();
   document.getElementById('run-form-error').textContent = '';
   document.querySelectorAll('#run-form input').forEach(input=>input.classList.remove('invalid'));
 }
@@ -8322,17 +8550,20 @@ function resetRunForm(){
 async function saveRunEntry(){
   const kmEl = document.getElementById('run-input-km');
   const minEl = document.getElementById('run-input-min');
+  const pausesEl = document.getElementById('run-input-pauses');
   const dateEl = document.getElementById('run-input-date');
   const typeEl = document.getElementById('run-input-type');
   const errorEl = document.getElementById('run-form-error');
-  [kmEl,minEl,dateEl].forEach(el=>el.classList.remove('invalid'));
+  [kmEl,minEl,pausesEl,dateEl].forEach(el=>el?.classList.remove('invalid'));
   const km = parseNumberInput(kmEl.value);
   const min = parseIntegerInput(minEl.value);
+  const pauses = Math.max(0, parseInt(pausesEl?.value || 0) || 0);
   const runDate = dateEl.value;
   const type = RUN_TYPES.includes(typeEl.value) ? typeEl.value : 'Easy Run';
   let error = '';
   if(!km || km <= 0){ kmEl.classList.add('invalid'); error = 'Distanz muss größer als 0 sein.'; }
   else if(!min || min <= 0){ minEl.classList.add('invalid'); error = 'Dauer muss größer als 0 sein.'; }
+  else if(pauses > 99){ pausesEl?.classList.add('invalid'); error = 'Bitte maximal 99 Pausen eintragen.'; }
   else if(!runDate || parseDateKey(runDate) > today){ dateEl.classList.add('invalid'); error = 'Datum darf nicht in der Zukunft liegen.'; }
   if(error){
     errorEl.textContent = error;
@@ -8345,6 +8576,8 @@ async function saveRunEntry(){
     min,
     type,
     pr: document.getElementById('run-input-pr').checked,
+    pauses,
+    proofImages: normalizeRunProofImages(_pendingRunProofImages),
     notes: '',
     createdAt: new Date().toISOString()
   });
@@ -8355,6 +8588,61 @@ async function saveRunEntry(){
   if(authSession?.user){
     try{ await flushStateSync(); }catch(error){ console.warn('Run sync failed', error); }
   }
+}
+
+function ensureRunDetailOverlay(){
+  let overlay = document.getElementById('run-detail-overlay');
+  if(overlay) return overlay;
+  overlay = document.createElement('div');
+  overlay.id = 'run-detail-overlay';
+  overlay.className = 'overlay run-detail-overlay';
+  overlay.innerHTML = '<div class="overlay-card run-detail-card"><div class="overlay-grab"></div><div id="run-detail-content"></div></div>';
+  overlay.addEventListener('click', event=>{
+    if(event.target === overlay || event.target.closest('[data-run-detail-close]')) closeRunDetail();
+  });
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function closeRunDetail(){
+  document.getElementById('run-detail-overlay')?.classList.remove('show');
+}
+
+function openRunDetail(runId){
+  const run = (S.runs || []).find(item=>String(item.id) === String(runId));
+  if(!run) return;
+  const overlay = ensureRunDetailOverlay();
+  const content = document.getElementById('run-detail-content');
+  const km = Number(run.km || 0);
+  const min = Number(run.min || 0);
+  const pace = km ? (min/km).toFixed(1) : '-';
+  const d = parseDateKey(run.date);
+  const pauses = Math.max(0, parseInt(run.pauses || 0) || 0);
+  const images = normalizeRunProofImages(run.proofImages || []);
+  const gallery = images.length
+    ? `<div class="run-proof-gallery">${images.map(img=>`<img src="${img.dataUrl}" alt="${escapeHtml(img.name || 'Beweisbild')}">`).join('')}</div>`
+    : '<div class="run-proof-none">Keine Beweisbilder hinterlegt.</div>';
+  content.innerHTML = `
+    <div class="overlay-head" style="padding:0;margin-bottom:10px;">
+      <div>
+        <div class="kicker">// laufdetails</div>
+        <div class="overlay-title">Run vom ${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}</div>
+      </div>
+      <button class="overlay-close" type="button" data-run-detail-close>×</button>
+    </div>
+    <div class="run-detail-hero">
+      <div class="run-detail-km">${km.toFixed(1)} km</div>
+      <div class="run-detail-meta">${escapeHtml(run.type || 'Easy Run')} · ${Math.round(min)} min${run.pr ? ' · PR' : ''}</div>
+    </div>
+    <div class="run-detail-grid">
+      <div class="run-detail-stat"><strong>${pace}</strong><span>min/km</span></div>
+      <div class="run-detail-stat"><strong>${pauses}</strong><span>Pausen</span></div>
+      <div class="run-detail-stat"><strong>${images.length}</strong><span>Bilder</span></div>
+    </div>
+    <div class="run-card-title">Beweisbilder</div>
+    ${gallery}
+  `;
+  overlay.classList.add('show');
 }
 
 // ---------------------------------------------------------------
@@ -11872,6 +12160,7 @@ document.getElementById('run-log-toggle')?.addEventListener('click',()=>{
   if(S.runTracker.formOpen) resetRunForm();
   saveState(S);
   renderRunTracker();
+  if(S.runTracker.formOpen) scrollRunFormIntoView();
 });
 document.getElementById('run-cancel')?.addEventListener('click',()=>{
   if(!S.runTracker) S.runTracker = {};
@@ -11881,9 +12170,15 @@ document.getElementById('run-cancel')?.addEventListener('click',()=>{
   renderRunTracker();
 });
 document.getElementById('run-save')?.addEventListener('click',saveRunEntry);
+document.getElementById('run-input-proof')?.addEventListener('change',event=>handleRunProofFiles(event.target.files));
+document.getElementById('run-list')?.addEventListener('click',event=>{
+  const item = event.target.closest('[data-run-detail]');
+  if(item) openRunDetail(item.dataset.runDetail);
+});
 
 initTpListeners();
 moveRunSectionToScreen();
+setupRunFormViewportGuards();
 updateBottomNav(currentScreen);
 window.addEventListener('resize',()=>document.querySelectorAll('.bottom-nav').forEach(nav=>moveNeonSlider(nav)));
 renderTraining();
