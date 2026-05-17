@@ -12,6 +12,7 @@
 html,body{margin:0;width:100%;height:100%;min-height:100%;background:#04020a;color:#f0eeff;overflow:hidden;}
 body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 #splash{position:fixed;inset:0;z-index:200000;background:#04020a;overflow:hidden;}
+#splash.splash-booting > *{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
 #splash::before{content:'KASAI';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;font-size:56px;font-weight:900;letter-spacing:.08em;color:#ff9500;}
 #splash::after{content:'// TRAIN LIKE FIRE';position:absolute;left:50%;top:calc(50% + 54px);transform:translateX(-50%);font-family:ui-monospace,monospace;font-size:8px;letter-spacing:3px;color:rgba(255,149,0,.42);white-space:nowrap;}
 #splash.splash-playing::before,#splash.splash-playing::after,#splash.external-splash-active::before,#splash.external-splash-active::after{opacity:0;}
@@ -24,7 +25,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-runfix1';
+const KASAI_APP_VERSION = 'kasai-v43-runfix2';
 </script>
 <style>
 :root {
@@ -3222,6 +3223,12 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 #splash.splash-playing::after,
 #splash.external-splash-active::before,
 #splash.external-splash-active::after{opacity:0;}
+#splash.splash-booting > :not(.version-tag):not(.exit-overlay){
+  opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+}
+#splash.splash-booting .external-splash-frame{
+  display:none!important;
+}
 .external-splash-frame{
   position:absolute;inset:0;width:100%;height:100%;
   border:0;background:#04020a;display:none;z-index:30;
@@ -3513,17 +3520,22 @@ body.splash-done #splash{display:none;}
 .run-empty{padding:14px;border:1px dashed rgba(255,107,0,.16);border-radius:14px;color:rgba(255,255,255,.35);font-size:.8rem;text-align:center;}
 .run-log-btn{width:100%;margin-top:6px;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#ff9500,#ff6b00 50%,#ff2d55);color:#fff;font-weight:800;font-size:.84rem;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:8px;}
 .run-plus{font-family:'JetBrains Mono',monospace;font-size:1rem;}
-.run-form{margin-top:12px;padding:16px;background:linear-gradient(160deg,rgba(32,22,45,.98),rgba(10,8,22,.98));border:1px solid rgba(255,107,0,.24);border-radius:20px;display:none;opacity:0;transform:translateY(12px) scale(.98);transition:opacity .35s cubic-bezier(.34,1.3,.64,1),transform .35s cubic-bezier(.34,1.3,.64,1),border-color .2s var(--ease),box-shadow .2s var(--ease);box-shadow:0 20px 45px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden;}
+.run-form{margin-top:12px;padding:16px;background:linear-gradient(160deg,rgba(35,24,49,.985),rgba(10,8,22,.99));border:1px solid rgba(255,107,0,.24);border-radius:20px;display:none;opacity:0;transform:translateY(12px) scale(.98);transition:opacity .35s cubic-bezier(.34,1.3,.64,1),transform .35s cubic-bezier(.34,1.3,.64,1),border-color .2s var(--ease),box-shadow .2s var(--ease);box-shadow:0 20px 45px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden;}
 .run-form::before{content:'';position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,#ff9500,#ff2d55,transparent);opacity:.85;}
 .run-form.open{display:block;opacity:1;transform:translateY(0) scale(1);}
 .run-form:focus-within{border-color:rgba(255,149,0,.38);box-shadow:0 22px 50px rgba(0,0,0,.34),0 0 0 1px rgba(255,149,0,.08),inset 0 1px 0 rgba(255,255,255,.06);}
 .run-form-title{font-size:.95rem;font-weight:900;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .run-form-title::after{content:'// optional proof';font-family:'JetBrains Mono',monospace;font-size:.42rem;letter-spacing:.14em;color:rgba(255,149,0,.32);text-transform:uppercase;font-weight:700;}
-.run-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.run-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 9px;}
+.run-form label{min-width:0;}
 .run-form label span,.run-pr-toggle span{display:block;font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:.16em;color:rgba(255,255,255,.28);text-transform:uppercase;margin-bottom:5px;}
-.run-form input,.run-form select{width:100%;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:10px;color:rgba(255,255,255,.82);font-family:'JetBrains Mono',monospace;font-size:16px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease);}
+.run-form input,.run-form select{width:100%;min-width:0;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 11px;color:rgba(255,255,255,.86);font-family:'JetBrains Mono',monospace;font-size:16px;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 24px rgba(0,0,0,.13);transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease),transform .18s var(--ease);}
 .run-form input:focus,.run-form select:focus{background:rgba(255,255,255,.075);border-color:rgba(255,149,0,.38);box-shadow:0 0 0 2px rgba(255,149,0,.08);}
 .run-form input.invalid{border-color:rgba(255,95,110,.72);box-shadow:0 0 0 1px rgba(255,95,110,.18);}
+.run-form select{appearance:none;-webkit-appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,rgba(255,202,40,.72) 50%),linear-gradient(135deg,rgba(255,202,40,.72) 50%,transparent 50%),linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.04));background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%,0 0;background-size:5px 5px,5px 5px,100% 100%;background-repeat:no-repeat;}
+.run-field-date input,.run-field-type select{text-align:center;font-weight:800;letter-spacing:.01em;}
+.run-field-type select{text-align-last:center;}
+.run-field-date,.run-field-type{position:relative;}
 .run-pr-toggle{display:flex!important;align-items:center;gap:8px;margin-top:10px;}
 .run-pr-toggle input{width:auto;}
 .run-pr-toggle span{margin:0;}
@@ -3557,13 +3569,21 @@ body.splash-done #splash{display:none;}
 .run-proof-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:10px;}
 .run-proof-gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 14px 28px rgba(0,0,0,.25);animation:runProofPop .28s cubic-bezier(.34,1.56,.64,1) both;}
 .run-proof-none{padding:12px;border:1px dashed rgba(255,149,0,.18);border-radius:14px;color:rgba(255,255,255,.32);font-size:.78rem;text-align:center;}
+.run-detail-proof-uploader{margin-top:12px;border:1px solid rgba(255,149,0,.16);border-radius:16px;padding:11px;background:linear-gradient(135deg,rgba(255,149,0,.07),rgba(255,45,85,.035));}
+.run-detail-proof-uploader label{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;}
+.run-detail-proof-uploader input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+.run-detail-proof-copy{min-width:0;}
+.run-detail-proof-copy strong{display:block;font-size:.76rem;color:rgba(255,255,255,.8);}
+.run-detail-proof-copy span{display:block;margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.run-detail-proof-action{flex-shrink:0;border-radius:999px;padding:8px 10px;background:rgba(255,149,0,.14);border:1px solid rgba(255,149,0,.24);color:#ffca28;font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;font-weight:900;}
+.run-detail-proof-status{min-height:15px;margin-top:7px;font-size:.68rem;color:rgba(255,255,255,.36);}
 @media(max-width:360px){.run-form-grid,.run-stat-row{grid-template-columns:1fr;}}
 
 </style>
 </head>
 <body class="auth-locked">
 <!-- SPLASH -->
-<div id="splash">
+<div id="splash" class="splash-booting">
   <iframe class="external-splash-frame" id="externalSplashFrame" title="KASAI Splash" aria-hidden="true"></iframe>
   <div class="bg-burst" id="bgBurst"></div>
   <div class="grid-overlay" id="gridOverlay"></div>
@@ -3593,7 +3613,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-runfix1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-runfix2 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4103,8 +4123,8 @@ document.addEventListener('click', async function(e){
           <div class="run-form-grid">
             <label><span>Distanz (km)</span><input id="run-input-km" type="number" step="0.1" min="0.1" max="999" placeholder="0.0"></label>
             <label><span>Dauer (min)</span><input id="run-input-min" type="number" min="1" max="9999" placeholder="0"></label>
-            <label><span>Datum</span><input id="run-input-date" type="date"></label>
-            <label><span>Art</span><select id="run-input-type"><option>Easy Run</option><option>Tempo</option><option>Long Run</option><option>Intervall</option></select></label>
+            <label class="run-field-date"><span>Datum</span><input id="run-input-date" type="date"></label>
+            <label class="run-field-type"><span>Art</span><select id="run-input-type"><option>Easy Run</option><option>Tempo</option><option>Long Run</option><option>Intervall</option></select></label>
             <label><span>Pausen</span><input id="run-input-pauses" type="number" min="0" max="99" step="1" inputmode="numeric" placeholder="0"></label>
             <label class="run-proof-field"><span>Strava/Runtastic Beweisbilder</span><input id="run-input-proof" type="file" accept="image/*" multiple><div class="run-proof-preview" id="run-proof-preview"><div class="run-proof-empty">Optional · Screenshot hochladen</div></div></label>
           </div>
@@ -4891,7 +4911,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-runfix1</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-runfix2</div>
       </div>
     </div>
 
@@ -5014,7 +5034,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-runfix1</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-runfix2</div>
         </div>
       </div>
     </div>
@@ -5291,7 +5311,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-runfix1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-runfix2';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -5325,7 +5345,7 @@ function finishSplash(){
   stopEmbers();
   const splash = $('splash');
   if(splash){
-    splash.classList.remove('splash-playing');
+    splash.classList.remove('splash-playing','splash-booting');
     splash.style.opacity='0';
     splash.style.pointerEvents='none';
   }
@@ -5601,6 +5621,7 @@ async function playExternalSplash(index){
   });
   frame.src = `${externalSplashFiles[index]}?v=${encodeURIComponent(KASAI_APP_VERSION)}`;
   await frameReady;
+  splash.classList.remove('splash-booting');
   splash.classList.add('external-splash-active','external-splash-ready');
   const tag = $('versionTag');
   if(tag){
@@ -5635,7 +5656,10 @@ function playVariantOnce(v){
   resetAll();
   const splash = $('splash');
   const externalIndex = v - icons.length;
-  if(splash && externalIndex < 0) splash.classList.add('splash-playing');
+  if(splash && externalIndex < 0){
+    splash.classList.remove('splash-booting');
+    splash.classList.add('splash-playing');
+  }
   setTimeout(()=>{
     const play = externalIndex >= 0 ? playExternalSplash(externalIndex) : playSplash(v);
     play.catch(error=>{
@@ -8600,12 +8624,56 @@ function ensureRunDetailOverlay(){
   overlay.addEventListener('click', event=>{
     if(event.target === overlay || event.target.closest('[data-run-detail-close]')) closeRunDetail();
   });
+  overlay.addEventListener('change', event=>{
+    const input = event.target.closest('[data-run-detail-proof]');
+    if(input) handleRunDetailProofFiles(input.dataset.runId, input.files, input);
+  });
   document.body.appendChild(overlay);
   return overlay;
 }
 
 function closeRunDetail(){
   document.getElementById('run-detail-overlay')?.classList.remove('show');
+}
+
+function setRunDetailProofStatus(text, tone='muted'){
+  const el = document.getElementById('run-detail-proof-status');
+  if(!el) return;
+  el.textContent = text || '';
+  el.style.color = tone === 'error' ? '#ff8fa0' : tone === 'ok' ? 'rgba(100,220,130,.78)' : 'rgba(255,255,255,.36)';
+}
+
+async function handleRunDetailProofFiles(runId, files, input){
+  const run = (S.runs || []).find(item=>String(item.id) === String(runId));
+  if(!run) return;
+  const existing = normalizeRunProofImages(run.proofImages || []);
+  const slots = Math.max(0, RUN_PROOF_LIMIT - existing.length);
+  const selected = Array.from(files || []).slice(0, slots);
+  if(input) input.value = '';
+  if(!slots){
+    setRunDetailProofStatus(`Maximal ${RUN_PROOF_LIMIT} Bilder pro Lauf.`, 'error');
+    return;
+  }
+  if(!selected.length){
+    setRunDetailProofStatus('');
+    return;
+  }
+  try{
+    setRunDetailProofStatus('Bilder werden komprimiert ...');
+    const images = [];
+    for(const file of selected) images.push(await compressRunProofFile(file));
+    run.proofImages = normalizeRunProofImages([...existing, ...images]);
+    run.updatedAt = new Date().toISOString();
+    saveState(S);
+    renderRunTracker();
+    openRunDetail(runId);
+    setRunDetailProofStatus('Beweisbilder gespeichert.', 'ok');
+    if(authSession?.user){
+      try{ await flushStateSync(); }catch(error){ console.warn('Run proof sync failed', error); }
+    }
+  }catch(error){
+    setRunDetailProofStatus(error?.message || 'Bild konnte nicht geladen werden.', 'error');
+  }
 }
 
 function openRunDetail(runId){
@@ -8619,6 +8687,7 @@ function openRunDetail(runId){
   const d = parseDateKey(run.date);
   const pauses = Math.max(0, parseInt(run.pauses || 0) || 0);
   const images = normalizeRunProofImages(run.proofImages || []);
+  const proofSlots = Math.max(0, RUN_PROOF_LIMIT - images.length);
   const gallery = images.length
     ? `<div class="run-proof-gallery">${images.map(img=>`<img src="${img.dataUrl}" alt="${escapeHtml(img.name || 'Beweisbild')}">`).join('')}</div>`
     : '<div class="run-proof-none">Keine Beweisbilder hinterlegt.</div>';
@@ -8641,6 +8710,17 @@ function openRunDetail(runId){
     </div>
     <div class="run-card-title">Beweisbilder</div>
     ${gallery}
+    <div class="run-detail-proof-uploader">
+      <label>
+        <input data-run-detail-proof data-run-id="${escapeHtml(run.id)}" type="file" accept="image/*" multiple ${proofSlots ? '' : 'disabled'}>
+        <div class="run-detail-proof-copy">
+          <strong>${proofSlots ? 'Beweisbilder nachtragen' : 'Limit erreicht'}</strong>
+          <span>${proofSlots ? `Noch ${proofSlots} Upload${proofSlots === 1 ? '' : 's'} möglich` : `Maximal ${RUN_PROOF_LIMIT} Bilder gespeichert`}</span>
+        </div>
+        <div class="run-detail-proof-action">${proofSlots ? 'Upload' : 'Voll'}</div>
+      </label>
+      <div class="run-detail-proof-status" id="run-detail-proof-status"></div>
+    </div>
   `;
   overlay.classList.add('show');
 }
