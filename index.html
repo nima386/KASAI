@@ -21,11 +21,13 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link rel="icon" href="icons/app-logo-b5.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-b5.png">
 <title>KASAI</title>
+<script src="./js/core/version.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-runfix3';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-premium1';
 </script>
 <style>
 :root {
@@ -3621,7 +3623,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-runfix3 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-premium1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4919,7 +4921,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-runfix3</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-premium1</div>
       </div>
     </div>
 
@@ -5042,7 +5044,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-runfix3</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-premium1</div>
         </div>
       </div>
     </div>
@@ -5319,7 +5321,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-runfix3';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-premium1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -5713,6 +5715,14 @@ document.head.appendChild(style);
 <script src="./vendor/supabase-js-2.js"></script>
 <script src="./vendor/forge-quotes-365.js"></script>
 <script src="./js/core/dom.js"></script>
+<script src="./js/core/state.js"></script>
+<script src="./js/core/mock-data.js"></script>
+<script src="./js/core/ux.js"></script>
+<script src="./js/features/ui.js"></script>
+<script src="./js/features/sync.js"></script>
+<script src="./js/features/run.js"></script>
+<script src="./js/features/training.js"></script>
+<script src="./js/features/settings.js"></script>
 <script>
 ['gesturestart','gesturechange','gestureend'].forEach(type=>{
   document.addEventListener(type, e=>e.preventDefault(), {passive:false});
@@ -7069,6 +7079,7 @@ function loadLocalUserStateRecord(session=authSession){
 // Sync-Status-Indikator im Settings-Overlay
 function setSyncStatus(state, label){
   const el = document.getElementById('settings-sync-status');
+  try{ window.KasaiUX?.setSaveStatus?.(state, label); }catch(_){}
   if(!el) return;
   const textEl = document.getElementById('settings-sync-text');
   el.classList.remove('ok','syncing','error','waiting','offline');
@@ -7263,12 +7274,17 @@ function queueImmediateCloudSync(snapshot, area=guessSyncArea()){
 function saveState(s, area=guessSyncArea()){
   let snapshot = null;
   try{
-    snapshot = JSON.parse(JSON.stringify(s));
-    snapshot.updatedAt = new Date().toISOString();
+    snapshot = window.KasaiState?.cloneWithUpdatedAt
+      ? window.KasaiState.cloneWithUpdatedAt(s)
+      : JSON.parse(JSON.stringify(s));
+    snapshot.updatedAt = snapshot.updatedAt || new Date().toISOString();
     const session = authSession?.user ? authSession : readPersistedSupabaseSession();
     if(session?.user && (isHydratedForSession(session) || hasMeaningfulUserState(snapshot))) saveLocalUserState(snapshot, session);
   }catch(_){}
-  if(snapshot && hasMeaningfulUserState(snapshot)) queueImmediateCloudSync(snapshot, area);
+  if(snapshot && hasMeaningfulUserState(snapshot)){
+    try{ window.KasaiUX?.markLocalSave?.(area); }catch(_){}
+    queueImmediateCloudSync(snapshot, area);
+  }
 }
 
 async function flushStateSync(){

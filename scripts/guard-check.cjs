@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const vm = require('vm');
 
 function read(path){
@@ -23,7 +24,20 @@ const inlineScripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<
 
 checkSyntax('index.html inline scripts', inlineScripts);
 checkSyntax('sw.js', read('sw.js'));
-checkSyntax('js/core/dom.js', read('js/core/dom.js'));
+
+function walk(dir){
+  if(!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir, {withFileTypes:true}).flatMap(entry => {
+    const full = path.join(dir, entry.name);
+    if(entry.isDirectory()) return walk(full);
+    return full;
+  });
+}
+
+walk('js')
+  .filter(file => file.endsWith('.js'))
+  .filter(file => !file.startsWith(path.join('vendor', path.sep)))
+  .forEach(file => checkSyntax(file.replace(/\\/g, '/'), read(file)));
 
 const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map(match=>match[1]));
 const missing = [];
@@ -39,4 +53,27 @@ if(missing.length){
   process.exitCode = 1;
 }else{
   console.log('ok DOM ids: direct bindings resolve');
+}
+
+const missingAssets = [];
+const sw = read('sw.js');
+const assetsMatch = sw.match(/const ASSETS = \[([\s\S]*?)\];/);
+if(assetsMatch){
+  const assetPattern = /['"]([^'"]+)['"]/g;
+  let assetMatch;
+  while((assetMatch = assetPattern.exec(assetsMatch[1]))){
+    const asset = assetMatch[1];
+    if(/^https?:\/\//.test(asset)) continue;
+    const clean = asset.replace(/^\.\//, '');
+    const file = clean === '' ? 'index.html' : clean;
+    if(!fs.existsSync(file)) missingAssets.push(asset);
+  }
+}
+
+if(missingAssets.length){
+  console.error('missing service-worker assets:');
+  missingAssets.forEach(asset=>console.error(`- ${asset}`));
+  process.exitCode = 1;
+}else{
+  console.log('ok service-worker assets exist');
 }

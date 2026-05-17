@@ -1,8 +1,9 @@
-const CACHE = 'kasai-v43-runfix3';
+const CACHE = 'kasai-v43-premium1';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './styles/premium-ux.css',
   './icons/kasai-icon.svg',
   './icons/app-logo-b5.svg',
   './icons/icon-192.png',
@@ -24,7 +25,16 @@ const ASSETS = [
   './splash/12-fire-cube.html',
   './vendor/supabase-js-2.js',
   './vendor/forge-quotes-365.js',
+  './js/core/version.js',
   './js/core/dom.js',
+  './js/core/state.js',
+  './js/core/mock-data.js',
+  './js/core/ux.js',
+  './js/features/ui.js',
+  './js/features/sync.js',
+  './js/features/run.js',
+  './js/features/training.js',
+  './js/features/settings.js',
   'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap',
 ];
 
@@ -66,17 +76,17 @@ self.addEventListener('fetch', e => {
         const cacheKey = isAppShell ? './index.html' : e.request;
         const cache = await caches.open(CACHE);
         const cached = await cache.match(cacheKey);
-        const network = fetch(e.request).then(res => {
+        const network = fetch(e.request, {cache:'no-store'}).then(res => {
           if (res && res.status === 200) cache.put(cacheKey, res.clone());
           return res;
         });
-        if (cached) {
-          e.waitUntil(network.catch(() => {}));
-          return cached;
-        }
         try {
-          return await network;
+          return await Promise.race([
+            network,
+            new Promise((_, reject) => setTimeout(() => reject(new Error('network timeout')), cached ? 2200 : 4500))
+          ]);
         } catch (_) {
+          e.waitUntil(network.catch(() => {}));
           return (await cache.match(cacheKey)) || cache.match('./index.html');
         }
       })()
