@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n1';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n3';
 </script>
 <style>
 :root {
@@ -2238,6 +2238,58 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   font-family:'JetBrains Mono',monospace;font-size:.44rem;letter-spacing:.08em;
   color:rgba(255,149,0,.3);margin-top:6px;text-transform:uppercase;
 }
+.language-premium{
+  display:flex;flex-direction:column;gap:12px;margin-top:2px;
+}
+.language-premium-card{
+  width:100%;position:relative;overflow:hidden;border-radius:20px;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;
+  padding:15px;border:1px solid rgba(255,255,255,.075);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),
+    rgba(12,10,22,.84);
+  color:var(--text-primary);text-align:left;cursor:pointer;touch-action:manipulation;
+  transition:transform .2s var(--ease),border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.language-premium-card::before{
+  content:'';position:absolute;inset:0;opacity:0;pointer-events:none;
+  background:radial-gradient(circle at 18% 0%,rgba(255,149,0,.22),transparent 36%),
+             linear-gradient(135deg,rgba(255,202,40,.09),rgba(255,45,85,.05));
+  transition:opacity .2s ease;
+}
+.language-premium-card:active{transform:scale(.985);}
+.language-premium-card.active{
+  border-color:rgba(255,149,0,.42);
+  box-shadow:0 16px 38px rgba(255,80,0,.12), inset 0 0 0 1px rgba(255,255,255,.035);
+}
+.language-premium-card.active::before{opacity:1;}
+.language-flag{
+  position:relative;width:42px;height:42px;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;font-size:1.35rem;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);
+}
+.language-copy{position:relative;min-width:0;display:flex;flex-direction:column;gap:3px;}
+.language-copy strong{font-size:.95rem;font-weight:900;letter-spacing:0;}
+.language-copy span{
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.09em;
+  text-transform:uppercase;color:rgba(255,255,255,.36);line-height:1.35;
+}
+.language-check{
+  position:relative;width:30px;height:30px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.09);color:transparent;
+  background:rgba(255,255,255,.045);font-weight:900;
+}
+.language-premium-card.active .language-check{
+  color:#06170d;background:#26d47c;border-color:#26d47c;
+  box-shadow:0 0 18px rgba(38,212,124,.22);
+}
+.language-live-preview{
+  margin-top:14px;padding:12px 14px;border-radius:18px;
+  background:rgba(255,149,0,.075);border:1px dashed rgba(255,149,0,.22);
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;
+  text-transform:uppercase;color:rgba(255,202,40,.72);line-height:1.45;
+}
 .settings-v2-row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 #settings-overlay .settings-v2-notification-settings{
   background:transparent;border:0;border-radius:0;padding:0;
@@ -3709,7 +3761,10 @@ body.splash-done #splash{display:none;}
   display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;
   border-radius:13px;padding:9px;background:rgba(5,4,12,.32);
   border:1px solid rgba(255,255,255,.055);
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .18s var(--ease),border-color .18s var(--ease),background .18s var(--ease);
 }
+.time-task-item:active{transform:scale(.985);background:rgba(255,255,255,.055);}
 .time-task-icon{
   width:28px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.055);font-size:.9rem;
@@ -3727,6 +3782,14 @@ body.splash-done #splash{display:none;}
 .time-task-check.done{
   color:#06170d;background:#26d47c;border-color:#26d47c;
   box-shadow:0 0 18px rgba(38,212,124,.22);
+}
+.scroll-focus{
+  animation:kasai-scroll-focus 1.25s ease both;
+}
+@keyframes kasai-scroll-focus{
+  0%{box-shadow:0 0 0 rgba(38,212,124,0);border-color:rgba(38,212,124,.12);}
+  28%{box-shadow:0 0 0 1px rgba(38,212,124,.62),0 0 28px rgba(38,212,124,.22);border-color:rgba(38,212,124,.65);}
+  100%{box-shadow:0 0 0 rgba(38,212,124,0);border-color:var(--border-default);}
 }
 .time-chip{
   display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;
@@ -3804,7 +3867,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n3 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4376,7 +4439,7 @@ document.addEventListener('click', async function(e){
             <label><span>Distanz (km)</span><input id="run-input-km" type="number" step="0.1" min="0.1" max="999" placeholder="0.0"></label>
             <label><span>Dauer (min)</span><input id="run-input-min" type="number" min="1" max="9999" placeholder="0"></label>
             <label class="run-field-date"><span>Datum</span><input id="run-input-date" type="date"></label>
-            <label class="run-field-type"><span>Art</span><select id="run-input-type"><option>Easy Run</option><option>Tempo</option><option>Long Run</option><option>Intervall</option></select></label>
+            <label class="run-field-type"><span>Art</span><select id="run-input-type"><option value="Easy Run">Easy Run</option><option value="Tempo">Tempo</option><option value="Long Run">Long Run</option><option value="Intervall">Intervall</option></select></label>
             <label><span>Pausen</span><input id="run-input-pauses" type="number" min="0" max="99" step="1" inputmode="numeric" placeholder="0"></label>
             <label class="run-proof-field"><span>Strava/Runtastic Beweisbilder</span><input id="run-input-proof" type="file" accept="image/*" multiple><div class="run-proof-preview" id="run-proof-preview"><div class="run-proof-empty">Optional · Screenshot hochladen</div></div></label>
           </div>
@@ -5198,7 +5261,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n1</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n3</div>
       </div>
     </div>
 
@@ -5310,16 +5373,25 @@ document.addEventListener('click', async function(e){
         <button class="settings-v2-sheet-close" data-settings-sheet-close type="button">×</button>
       </div>
       <div class="settings-v2-sheet-body">
-        <div class="settings-v2-input-card si-1">
-          <div class="settings-v2-label"><span class="settings-v2-label-icon">🇩🇪</span> Deutsch</div>
-          <button class="btn-sheet-action" data-lang-choice="de" type="button">Deutsch aktivieren</button>
-          <div class="settings-v2-helper">Alle sichtbaren App-Texte wechseln sofort auf Deutsch.</div>
+        <div class="language-premium si-1">
+          <button class="language-premium-card" data-lang-choice="de" type="button">
+            <span class="language-flag">🇩🇪</span>
+            <span class="language-copy">
+              <strong>Deutsch</strong>
+              <span>Alle App-Texte, Hinweise und Buttons auf Deutsch.</span>
+            </span>
+            <span class="language-check">✓</span>
+          </button>
+          <button class="language-premium-card" data-lang-choice="en" type="button">
+            <span class="language-flag">🇬🇧</span>
+            <span class="language-copy">
+              <strong>English</strong>
+              <span>All app labels, hints and buttons in English.</span>
+            </span>
+            <span class="language-check">✓</span>
+          </button>
         </div>
-        <div class="settings-v2-input-card si-2">
-          <div class="settings-v2-label"><span class="settings-v2-label-icon">🇬🇧</span> English</div>
-          <button class="btn-sheet-action" data-lang-choice="en" type="button">Use English</button>
-          <div class="settings-v2-helper">All visible app labels switch immediately without restart.</div>
-        </div>
+        <div class="language-live-preview si-2">Die Sprache wird sofort übernommen - ohne Neustart.</div>
       </div>
     </div>
 
@@ -5347,7 +5419,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n1</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n3</div>
         </div>
       </div>
     </div>
@@ -5624,7 +5696,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n3';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -7611,10 +7683,10 @@ window.addEventListener('beforeunload',()=>{
 });
 
 const TIME_OF_DAY = {
-  morning: {label:'Morgens', short:'Morgen', en:'Morning', icon:'☀', color:'#ffca28', notifyTime:'06:30', headline:'Was steht morgens an?'},
-  midday:  {label:'Mittags', short:'Mittag', en:'Midday',  icon:'◐', color:'#26c6da', notifyTime:'11:30', headline:'Was steht mittags an?'},
-  evening: {label:'Abends',  short:'Abend',  en:'Evening', icon:'◒', color:'#ff9500', notifyTime:'17:30', headline:'Was steht abends an?'},
-  night:   {label:'Nachts',  short:'Nacht',  en:'Night',   icon:'☾', color:'#8a80f8', notifyTime:'20:30', headline:'Was steht nachts an?'}
+  morning: {label:'Morgens', short:'Morgen', en:'Morning', icon:'☀', color:'#ffca28', notifyTime:'06:30', headline:'Morgens'},
+  midday:  {label:'Mittags', short:'Mittag', en:'Midday',  icon:'◐', color:'#26c6da', notifyTime:'11:30', headline:'Mittags'},
+  evening: {label:'Abends',  short:'Abend',  en:'Evening', icon:'◒', color:'#ff9500', notifyTime:'17:30', headline:'Abends'},
+  night:   {label:'Nachts',  short:'Nacht',  en:'Night',   icon:'☾', color:'#8a80f8', notifyTime:'20:30', headline:'Nachts'}
 };
 const TIME_OF_DAY_ORDER = ['morning','midday','evening','night'];
 function normalizeTimeOfDay(value, fallback='morning'){
@@ -7827,9 +7899,193 @@ const KASAI_I18N = {
   'erledigt':'done',
   'offen':'open',
   'Ziel':'Goal',
-  'anzeigename':'display name'
+  'anzeigename':'display name',
+  'Dein Plan.':'Your plan.',
+  'Deine Daten.':'Your data.',
+  'Dein Weg.':'Your way.',
+  '火 · trainiere wie Feuer':'火 · train like fire',
+  'Komplett anpassbar. Trainingsplan, Ernährung & Gewohnheiten - alles in einer App.':'Fully customizable. Training plan, nutrition and habits - all in one app.',
+  'Modulare Trainingspläne':'Modular training plans',
+  'Push · Pull · Beine · Custom':'Push · Pull · Legs · Custom',
+  'Auto-Tracking & PRs':'Auto tracking & PRs',
+  'Verlauf · Progression · Streaks':'History · Progression · Streaks',
+  'Protein- & Schritt-Ziele':'Protein & step goals',
+  'Health · Makros · Habits':'Health · macros · habits',
+  'Account erstellen →':'Create account →',
+  'Bereits Account? Anmelden':'Already have an account? Log in',
+  '// willkommen zurück':'// welcome back',
+  'Hey, Champion 👊':'Hey, champion 👊',
+  'Melde dich an und mach da weiter, wo du aufgehört hast.':'Log in and continue where you left off.',
+  'Anmelden':'Log in',
+  'Anmelden →':'Log in →',
+  'Registrieren':'Sign up',
+  'Passwort':'Password',
+  'Dein Passwort':'Your password',
+  '// passwort vergessen?':'// forgot password?',
+  '// oder schnell mit':'// or continue with',
+  'einloggen':'log in',
+  'Noch kein Account?':'No account yet?',
+  'Jetzt registrieren':'Sign up now',
+  'Passwort vergessen?':'Forgot password?',
+  'Gib deine E-Mail ein. Wir schicken dir einen sicheren Link zum Zurücksetzen.':'Enter your email. We will send you a secure reset link.',
+  'Kein Stress.':'No stress.',
+  'Der Link öffnet KASAI wieder und zeigt dir direkt die Seite für dein neues Passwort.':'The link opens KASAI again and takes you straight to your new password page.',
+  'Reset-Link senden →':'Send reset link →',
+  'Wieder eingefallen?':'Remembered it?',
+  'Zurück zum Login':'Back to login',
+  '// neu hier':'// new here',
+  'Account erstellen':'Create account',
+  'Starte deinen Trainings-Track in unter einer Minute.':'Start tracking your training in under a minute.',
+  'Name':'Name',
+  'Wie sollen wir dich nennen?':'What should we call you?',
+  'Mind. 8 Zeichen':'Min. 8 characters',
+  '// passwort eingeben':'// enter password',
+  'Konto erstellen →':'Create account →',
+  '// oder':'// or',
+  'registrieren':'sign up',
+  'Schon dabei?':'Already in?',
+  'Jetzt einloggen':'Log in now',
+  '// fast fertig':'// almost done',
+  'Check deine E-Mail':'Check your email',
+  'Wir haben dir einen Bestätigungslink geschickt.':'We sent you a confirmation link.',
+  'Tippe auf den Link in der Mail, dann komm zurück in die App.':'Tap the link in the email, then come back to the app.',
+  '// mail-app öffnen':'// open mail app',
+  'Ich habe bestätigt -':'I confirmed it',
+  'Falsche E-Mail?':'Wrong email?',
+  'Zurück':'Back',
+  '// neuer zugang':'// new access',
+  'Neues Passwort setzen':'Set new password',
+  'Dein Reset-Link wurde erkannt. Wähle jetzt ein neues sicheres Passwort.':'Your reset link was detected. Choose a new secure password now.',
+  'Neues Passwort':'New password',
+  'Wiederholen':'Repeat',
+  'Noch einmal eingeben':'Enter it again',
+  'Passwort speichern →':'Save password →',
+  'Nicht dein Link?':'Not your link?',
+  '// mein konto':'// my account',
+  'Profil & Settings':'Profile & Settings',
+  'Daten & Backup':'Data & Backup',
+  'Zur Login-Seite zurück':'Back to the login page',
+  'Zur App →':'Open app →',
+  'Laufen':'Run',
+  'Ernährung':'Nutrition',
+  'Gewohnheiten':'Habits',
+  'Profil':'Profile',
+  'Zurück':'Back',
+  'zurück':'back',
+  'Lauf Tracker':'Run Tracker',
+  'Meine Runs':'My Runs',
+  'Lauf eintragen':'Add Run',
+  '+ Lauf eintragen':'+ Add Run',
+  'Neuen Lauf eintragen':'Add New Run',
+  'Distanz (km)':'Distance (km)',
+  'Dauer (min)':'Duration (min)',
+  'Datum':'Date',
+  'Art':'Type',
+  'Pausen':'Breaks',
+  'Strava/Runtastic Beweisbilder':'Strava/Runtastic proof images',
+  'Optional · Screenshot hochladen':'Optional · upload screenshot',
+  'Dateien auswählen':'Choose files',
+  'Abbrechen':'Cancel',
+  'Speichern':'Save',
+  'Letzte Läufe':'Recent Runs',
+  'Noch keine Läufe. Trag deinen ersten Run ein.':'No runs yet. Add your first run.',
+  'Locker Lauf':'Easy Run',
+  'Langer Lauf':'Long Run',
+  'Mahlzeiten':'Meals',
+  'Noch keine Mahlzeiten - tippe auf + Neu':'No meals yet - tap + New',
+  'Kalorien':'Calories',
+  'Kohlenhydrate':'Carbs',
+  'Fett':'Fat',
+  'Wasser':'Water',
+  'Schritte':'Steps',
+  'Makros':'Macros',
+  'Ziel offen':'goal open',
+  'ZIEL OFFEN':'GOAL OPEN',
+  'Bedarf: Profilwerte eintragen':'Need: enter profile values',
+  'ZU WENIG':'TOO LOW',
+  'KNAPP DRUNTER':'JUST BELOW',
+  'FAST GESCHAFFT':'ALMOST THERE',
+  'IM ZIEL -':'ON TARGET',
+  'ÜBER ZIEL':'OVER TARGET',
+  'Tägliche Gewohnheiten':'Daily Habits',
+  'Taegliche Gewohnheiten':'Daily Habits',
+  '// tage in serie':'// day streak',
+  '// SCHRITTE HEUTE':'// STEPS TODAY',
+  '// heute':'// today',
+  '+ neu':'+ new',
+  'Noch keine Gewohnheiten - tippe auf + Neu, um deine erste anzulegen':'No habits yet - tap + New to create your first one',
+  'LOESCHEN':'DELETE',
+  'löschen':'delete',
+  'SERIE':'STREAK',
+  'TAGE':'DAYS',
+  'tage':'days',
+  'streak: 0':'streak: 0',
+  'Alle App-Texte, Hinweise und Buttons auf Deutsch.':'All app labels, hints and buttons in German.',
+  'All app labels, hints and buttons in English.':'All app labels, hints and buttons in English.',
+  'Die Sprache wird sofort übernommen - ohne Neustart.':'Language applies instantly - no restart needed.',
+  'Keine Übungen für heute.':'No exercises for today.',
+  'Noch keine Übungen - tippe auf + Hinzufügen oder lege erst eine Muskelgruppe an':'No exercises yet - tap + Add or create a muscle group first',
+  'Ruhetag - kein Training heute.':'Rest day - no training today.',
+  'Hinzufügen':'Add',
+  'NEUE MUSKELGRUPPE':'NEW MUSCLE GROUP',
+  'TIPPEN ZUM ANLEGEN':'TAP TO CREATE',
+  'Muskeln':'Muscles',
+  'Satz':'Set',
+  'Gewicht':'Weight',
+  'Wdh.':'Reps',
+  'Nächste Session:':'Next session:',
+  'vorgeschlagen':'suggested',
+  'Noch keine Daten.':'No data yet.',
+  'letzte':'last',
+  'sessions':'sessions',
+  'Session wird geprüft...':'Checking session...',
+  'Bitte E-Mail und Passwort eingeben.':'Please enter email and password.',
+  'Bitte E-Mail und Passwort mit mindestens 8 Zeichen eingeben.':'Please enter email and a password with at least 8 characters.',
+  'Supabase ist nicht geladen. Bitte Verbindung prüfen und App neu öffnen.':'Supabase did not load. Please check your connection and reopen the app.',
+  'Supabase ist nicht geladen. Bitte App neu öffnen.':'Supabase did not load. Please reopen the app.',
+  'Login fehlgeschlagen.':'Login failed.',
+  'Registrierung fehlgeschlagen.':'Sign-up failed.',
+  'Account erstellt. Bitte bestätige deine E-Mail.':'Account created. Please confirm your email.',
+  'Noch nicht bestätigt. Öffne den Link in deiner E-Mail und versuch es erneut.':'Not confirmed yet. Open the link in your email and try again.',
+  'E-Mail fehlt. Bitte registriere dich erneut.':'Email is missing. Please sign up again.',
+  'Trage erst deine E-Mail oben ein, dann erneut tippen.':'Enter your email above first, then tap again.',
+  'Provider muss in Supabase aktiviert sein.':'Provider must be enabled in Supabase.',
+  'Bitte nur Bilder hochladen.':'Please upload images only.',
+  'Bitte maximal 99 Pausen eintragen.':'Please enter at most 99 breaks.',
+  'Beweisbilder gespeichert.':'Proof images saved.',
+  'Bild konnte nicht geladen werden.':'Image could not be loaded.',
+  'Bilder werden komprimiert ...':'Compressing images ...'
 };
 const KASAI_I18N_REVERSE = Object.fromEntries(Object.entries(KASAI_I18N).map(([de,en])=>[en,de]));
+const KASAI_TERM_TRANSLATIONS = {
+  en: [
+    ['Run Tracker','Run Tracker'], ['Meine Runs','My Runs'], ['Lauf eintragen','Add Run'], ['Neuen Lauf eintragen','Add New Run'],
+    ['Ernährung','Nutrition'], ['Gewohnheiten','Habits'], ['Profil','Profile'], ['Einstellungen','Settings'], ['Gesundheit','Health'], ['Konto','Account'],
+    ['Kohlenhydrate','Carbs'], ['Fett','Fat'], ['Kalorien','Calories'], ['Wasser','Water'], ['Schritte','Steps'], ['Makros','Macros'],
+    ['Muskelgruppen','muscle groups'], ['Muskelgruppe','muscle group'], ['Tagesübungen','daily exercises'], ['Tagesübung','daily exercise'],
+    ['Übungen','exercises'], ['Übung','exercise'], ['Sätze','sets'], ['Satz','set'], ['Woche','Week'], ['Wochen','Weeks'],
+    ['Tage','days'], ['Tag','Day'], ['Heute','Today'], ['heute','today'], ['Morgens','Morning'], ['Mittags','Midday'],
+    ['Abends','Evening'], ['Nachts','Night'], ['Morgen','Morning'], ['Mittag','Midday'], ['Abend','Evening'], ['Nacht','Night'],
+    ['Ruhetag','Rest day'], ['Trainingstag','Training day'], ['Dauer','Duration'], ['Distanz','Distance'], ['Pausen','Breaks'],
+    ['BEINE','LEGS'], ['Beine','Legs'], ['EIGEN','CUSTOM'], ['Eigen','Custom'], ['VERLAUF','HISTORY'], ['Verlauf','History'], ['GESUNDHEIT','HEALTH'],
+    ['Ziel','Goal'], ['offen','open'], ['erledigt','done'], ['Hinzufügen','Add'], ['hinzufügen','add'], ['Bearbeiten','Edit'], ['bearbeiten','edit'],
+    ['Zurück','Back'], ['zurück','back'], ['Speichern','Save'], ['Abbrechen','Cancel'], ['Locker Lauf','Easy Run'], ['Langer Lauf','Long Run'],
+    ['Läufe','Runs'], ['Laufen','Run'], ['Lauf','Run']
+  ],
+  de: [
+    ['Daily Habits','Tägliche Gewohnheiten'], ['Run Tracker','Lauf Tracker'], ['My Runs','Meine Läufe'], ['Add New Run','Neuen Lauf eintragen'],
+    ['Add Run','Lauf eintragen'], ['Nutrition','Ernährung'], ['Habits','Gewohnheiten'], ['Profile','Profil'], ['Settings','Einstellungen'], ['Health','Gesundheit'], ['Account','Konto'],
+    ['Carbs','Kohlenhydrate'], ['Fat','Fett'], ['Calories','Kalorien'], ['Water','Wasser'], ['Steps','Schritte'], ['Macros','Makros'],
+    ['muscle groups','Muskelgruppen'], ['muscle group','Muskelgruppe'], ['daily exercises','Tagesübungen'], ['daily exercise','Tagesübung'],
+    ['Exercises','Übungen'], ['exercises','Übungen'], ['Exercise','Übung'], ['exercise','Übung'], ['sets','Sätze'], ['set','Satz'],
+    ['Weeks','Wochen'], ['Week','Woche'], ['days','Tage'], ['Day','Tag'], ['Today','Heute'], ['today','heute'],
+    ['Morning','Morgens'], ['Midday','Mittags'], ['Evening','Abends'], ['Night','Nachts'], ['Rest day','Ruhetag'], ['Training day','Trainingstag'],
+    ['Duration','Dauer'], ['Distance','Distanz'], ['Breaks','Pausen'], ['LEGS','BEINE'], ['Legs','Beine'], ['CUSTOM','EIGEN'], ['Custom','Eigen'],
+    ['HISTORY','VERLAUF'], ['History','Verlauf'], ['HEALTH','GESUNDHEIT'], ['Goal','Ziel'], ['open','offen'], ['done','erledigt'],
+    ['Add','Hinzufügen'], ['add','hinzufügen'], ['Edit','Bearbeiten'], ['edit','bearbeiten'], ['Back','Zurück'], ['back','zurück'],
+    ['Save','Speichern'], ['Cancel','Abbrechen'], ['Easy Run','Locker Lauf'], ['Long Run','Langer Lauf'], ['Runs','Läufe'], ['Run','Laufen']
+  ]
+};
 let _i18nApplying = false;
 let _i18nTimer = null;
 
@@ -7844,29 +8100,36 @@ function translatePhrase(text, lang=currentLanguage()){
   const trail = text.slice(text.indexOf(trimmed) + trimmed.length);
   const dict = lang === 'en' ? KASAI_I18N : KASAI_I18N_REVERSE;
   let out = dict[trimmed] || trimmed;
-  if(lang === 'en'){
-    out = out
-      .replace(/\bÜbung(en)?\b/g, (_, plural)=>plural ? 'exercises' : 'exercise')
-      .replace(/\bMuskelgruppe(n)?\b/g, (_, plural)=>plural ? 'muscle groups' : 'muscle group')
-      .replace(/\bSätze\b/g, 'sets')
-      .replace(/\bWoche\b/g, 'Week')
-      .replace(/\bHeute\b/g, 'Today')
-      .replace(/\bTage\b/g, 'days')
-      .replace(/\bDauer\b/g, 'Duration')
-      .replace(/\bReadiness\b/g, 'Readiness');
-  } else {
-    out = out
-      .replace(/\bexercises\b/g, 'Übungen')
-      .replace(/\bexercise\b/g, 'Übung')
-      .replace(/\bmuscle groups\b/g, 'Muskelgruppen')
-      .replace(/\bmuscle group\b/g, 'Muskelgruppe')
-      .replace(/\bsets\b/g, 'Sätze')
-      .replace(/\bWeek\b/g, 'Woche')
-      .replace(/\bToday\b/g, 'Heute')
-      .replace(/\bdays\b/g, 'Tage')
-      .replace(/\bDuration\b/g, 'Dauer');
-  }
+  (KASAI_TERM_TRANSLATIONS[lang] || []).forEach(([from,to])=>{
+    out = out.split(from).join(to);
+  });
   return lead + out + trail;
+}
+
+function localizeStaticControls(lang=currentLanguage()){
+  const navLabels = {
+    training: lang === 'en' ? 'Training' : 'Training',
+    run: lang === 'en' ? 'Run' : 'Laufen',
+    nutrition: lang === 'en' ? 'Nutrition' : 'Ernährung',
+    habits: lang === 'en' ? 'Habits' : 'Gewohnheiten',
+    profile: lang === 'en' ? 'Profile' : 'Profil'
+  };
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    const label = item.querySelector('.nav-label');
+    const key = item.dataset.screen || 'training';
+    if(label && navLabels[key]) label.textContent = navLabels[key];
+  });
+  const runTypeLabels = {
+    'Easy Run': {de:'Locker Lauf', en:'Easy Run'},
+    'Tempo': {de:'Tempo', en:'Tempo'},
+    'Long Run': {de:'Langer Lauf', en:'Long Run'},
+    'Intervall': {de:'Intervall', en:'Interval'}
+  };
+  document.querySelectorAll('#run-input-type option').forEach(option=>{
+    if(!option.value) option.value = option.textContent.trim();
+    const label = runTypeLabels[option.value] || runTypeLabels[option.textContent.trim()];
+    if(label) option.textContent = label[lang] || option.value;
+  });
 }
 
 function applyI18n(root=document.body){
@@ -7898,6 +8161,7 @@ function applyI18n(root=document.body){
       if(value) el.setAttribute(attr, translatePhrase(value, lang));
     });
   });
+  localizeStaticControls(lang);
   _i18nApplying = false;
 }
 
@@ -8735,6 +8999,40 @@ function getTimeTaskBucketsForSelectedDay(plan){
   return buckets;
 }
 
+function flashScrollTarget(el){
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.remove('scroll-focus');
+  void el.offsetWidth;
+  el.classList.add('scroll-focus');
+  setTimeout(()=>el.classList.remove('scroll-focus'), 1400);
+}
+
+function findRenderedByDataset(selector, key, value){
+  return Array.from(document.querySelectorAll(selector))
+    .find(el=>String(el.dataset[key] || '') === String(value || ''));
+}
+
+function getExercisesForTimeTaskMuscle(id, name, plan){
+  const day = getSelectedTrainingPlanDay();
+  if(day && !day.isRest){
+    const mg = (day.muscleGroups || []).find(item=>
+      String(item.id || '') === String(id || '') || String(item.name || '') === String(name || '')
+    );
+    if(mg) return (mg.exercises || []).filter(ex=>!ex.isArchived).map(ex=>normalizePlanExercise(ex, mg));
+  }
+  return getExercisesForType(plan.type).filter(ex=>String(ex.muscle) === String(name));
+}
+
+function scrollToTrainingTask(kind, id, name){
+  let target = null;
+  if(kind === 'daily') target = findRenderedByDataset('.daily-ex-card', 'dailyId', id);
+  if(kind === 'muscle') target = findRenderedByDataset('.cat-card[data-muscle-id]', 'muscleId', id)
+    || Array.from(document.querySelectorAll('#muscle-grid .cat-card')).find(el=>el.querySelector('.cat-name')?.textContent.trim() === name);
+  if(kind === 'exercise') target = findRenderedByDataset('.ex-card[data-exercise-id]', 'exerciseId', id);
+  flashScrollTarget(target || document.getElementById(kind === 'daily' ? 'daily-ex-section' : kind === 'muscle' ? 'muscle-grid' : 'exercise-list'));
+}
+
 function renderTimeTaskStructure(plan){
   const section = document.getElementById('time-task-section');
   const grid = document.getElementById('time-task-grid');
@@ -8761,7 +9059,7 @@ function renderTimeTaskStructure(plan){
             </div>
             <div class="time-task-items">
               ${items.map(item=>`
-                <div class="time-task-item" data-time-kind="${item.kind}" data-time-id="${escapeHtml(item.id)}">
+                <div class="time-task-item" data-time-kind="${item.kind}" data-time-id="${escapeHtml(item.id)}" data-time-name="${escapeHtml(item.name)}">
                   <div class="time-task-icon">${escapeHtml(item.icon)}</div>
                   <div>
                     <div class="time-task-name">${escapeHtml(item.name)}</div>
@@ -8793,8 +9091,8 @@ function renderTimeTaskStructure(plan){
         if(ex) toggleExerciseDone(ex);
       } else if(kind === 'muscle'){
         const row = btn.closest('.time-task-item');
-        const muscleName = row?.querySelector('.time-task-name')?.textContent || '';
-        const exs = getExercisesForType(plan.type).filter(ex=>String(ex.muscle) === String(muscleName));
+        const muscleName = row?.dataset.timeName || '';
+        const exs = getExercisesForTimeTaskMuscle(id, muscleName, plan);
         toggleMuscleExercisesDone(exs);
       }
     });
@@ -8804,12 +9102,8 @@ function renderTimeTaskStructure(plan){
       if(event.target.closest('[data-time-check]')) return;
       const kind = row.dataset.timeKind;
       const id = row.dataset.timeId;
-      if(kind === 'exercise'){
-        const ex = getExercisesForType(plan.type).find(item=>String(item.id) === String(id));
-        if(ex) navigate('exercise', ex);
-      } else if(kind === 'daily' || kind === 'muscle'){
-        openSelectedPlanDayEditor();
-      }
+      const name = row.dataset.timeName || row.querySelector('.time-task-name')?.textContent.trim() || '';
+      scrollToTrainingTask(kind, id, name);
     });
   });
   const editLink = document.getElementById('time-task-edit-link');
@@ -8840,7 +9134,6 @@ function renderMuscles(plan){
     const mSets = mExs.reduce((a,e)=>a+e.sets,0);
     const doneSets = mExs.filter(e=>isDone(e.id)).reduce((a,e)=>a+e.sets,0);
     const pct = mSets ? Math.round(doneSets/mSets*100) : 0;
-    const allDone = areAllExercisesDone(mExs);
     const timeMeta = timeOfDayMeta(mObj.timeOfDay || 'morning');
 
     const isLastOdd = (i === muscles.length-1) && (muscles.length % 2 === 1) && muscles.length>1;
@@ -8851,9 +9144,9 @@ function renderMuscles(plan){
 
     const el = document.createElement('div');
     el.className = 'cat-card premium-muscle';
+    el.dataset.muscleId = mObj.id || m;
     el.setAttribute('style', `${fullWidth ? 'grid-column:span 2;' : ''}--cat-color:${color};--cat-pct:${pct};`);
     el.innerHTML = `
-      ${mExs.length ? `<button class="cat-done-check${allDone?' done':''}" type="button" aria-label="${allDone?'Muskelgruppe offen setzen':'Muskelgruppe erledigt markieren'}">${allDone?'✓':''}</button>` : ''}
       <div class="cat-top">
         <div class="cat-icon-wrap" style="background:${color}22">${icon}</div>
         <div class="cat-progress-ring" data-pct="${pct}%"></div>
@@ -8862,11 +9155,6 @@ function renderMuscles(plan){
       <div class="cat-meta"><span class="time-chip">${timeMeta.icon} ${timeMeta.short}</span></div>
       <div class="cat-meta">${mExs.length} ${exLabel} · ${mSets} SÄTZE${suffix}</div>
       <div class="cat-prog" style="width:${pct}%;background:${color}"></div>`;
-    el.querySelector('.cat-done-check')?.addEventListener('click',event=>{
-      event.preventDefault();
-      event.stopPropagation();
-      toggleMuscleExercisesDone(mExs);
-    });
     el.onclick = ()=>{ if(mExs.length) navigate('exercise', mExs[0]); };
     let pT;
     el.addEventListener('touchstart',()=>{ pT = setTimeout(()=>{
@@ -8918,6 +9206,7 @@ function renderExerciseList(plan){
     const lastW = ex.history[ex.history.length-1]?.w;
     const el = document.createElement('div');
     el.className = 'ex-card' + (done?' done-card':'');
+    el.dataset.exerciseId = ex.id;
     el.innerHTML = `
       <div class="ex-num">${String(i+1).padStart(2,'0')}</div>
       <div class="ex-info">
@@ -11852,7 +12141,7 @@ function collectNotificationSettingsFromUI(){
 function setAuthStatus(message='', type=''){
   const gate = document.getElementById('gate-auth-status');
   if(gate){
-    gate.textContent = message;
+    gate.textContent = typeof translatePhrase === 'function' ? translatePhrase(message) : message;
     gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '');
   }
 }
