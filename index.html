@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-premium3';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n1';
 </script>
 <style>
 :root {
@@ -3642,6 +3642,134 @@ body.splash-done #splash{display:none;}
 }
 @media(max-width:360px){.run-form-grid,.run-stat-row{grid-template-columns:1fr;}}
 
+/* -- Time-of-day planning / premium daily structure -- */
+.language-switch{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px;border:1px solid rgba(255,255,255,.1);
+  border-radius:999px;background:rgba(255,255,255,.055);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.auth-language-switch{position:absolute;top:18px;right:18px;z-index:7;}
+.language-switch button{
+  border:0;border-radius:999px;background:transparent;color:rgba(255,255,255,.48);
+  min-width:38px;height:30px;padding:0 8px;font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;font-weight:900;letter-spacing:.08em;cursor:pointer;
+  transition:all .18s var(--ease);touch-action:manipulation;
+}
+.language-switch button.active{
+  color:#fff;background:linear-gradient(135deg,rgba(255,149,0,.95),rgba(255,45,85,.88));
+  box-shadow:0 8px 18px rgba(255,80,0,.18);
+}
+.tp-time-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.tp-time-pill{
+  position:relative;border:1px solid rgba(255,255,255,.08);border-radius:14px;
+  padding:10px 5px;background:rgba(255,255,255,.04);text-align:center;
+  cursor:pointer;transition:all .18s var(--ease);overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+.tp-time-pill::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .18s var(--ease);
+  background:linear-gradient(135deg,rgba(255,202,40,.16),rgba(255,45,85,.08));
+}
+.tp-time-pill.active{border-color:rgba(255,149,0,.48);box-shadow:0 12px 24px rgba(255,80,0,.12);}
+.tp-time-pill.active::before{opacity:1;}
+.tp-time-ico,.tp-time-name{position:relative;display:block;}
+.tp-time-ico{font-size:1rem;margin-bottom:3px;}
+.tp-time-name{
+  font-family:'JetBrains Mono',monospace;font-size:.44rem;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.56);font-weight:900;
+}
+.tp-time-pill.active .tp-time-name{color:#ffca28;}
+.time-task-section{margin:2px 0 18px;}
+.time-task-grid{display:flex;flex-direction:column;gap:9px;}
+.time-task-card{
+  position:relative;overflow:hidden;border-radius:18px;padding:12px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.022));
+  border:1px solid rgba(255,255,255,.075);
+  box-shadow:0 14px 34px rgba(0,0,0,.20);
+}
+.time-task-card::before{
+  content:'';position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,var(--time-color,#ff9500),transparent);
+  opacity:.85;
+}
+.time-task-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.time-task-title{display:flex;align-items:center;gap:9px;font-weight:900;font-size:.88rem;}
+.time-task-title span:first-child{
+  width:30px;height:30px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb,var(--time-color,#ff9500) 16%,transparent);
+  border:1px solid color-mix(in srgb,var(--time-color,#ff9500) 24%,transparent);
+}
+.time-task-meta{
+  font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:.14em;
+  color:rgba(255,255,255,.34);text-transform:uppercase;
+}
+.time-task-items{display:flex;flex-direction:column;gap:7px;}
+.time-task-item{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;
+  border-radius:13px;padding:9px;background:rgba(5,4,12,.32);
+  border:1px solid rgba(255,255,255,.055);
+}
+.time-task-icon{
+  width:28px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.055);font-size:.9rem;
+}
+.time-task-name{font-weight:800;font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.time-task-sub{
+  margin-top:1px;font-family:'JetBrains Mono',monospace;font-size:.43rem;letter-spacing:.11em;
+  color:rgba(255,255,255,.3);text-transform:uppercase;
+}
+.time-task-check{
+  width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.055);color:rgba(255,255,255,.42);
+  display:flex;align-items:center;justify-content:center;font-weight:900;
+}
+.time-task-check.done{
+  color:#06170d;background:#26d47c;border-color:#26d47c;
+  box-shadow:0 0 18px rgba(38,212,124,.22);
+}
+.time-chip{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;
+  background:rgba(255,149,0,.10);border:1px solid rgba(255,149,0,.18);
+  color:#ffca28;font-family:'JetBrains Mono',monospace;font-size:.42rem;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:900;
+}
+.cat-card.premium-muscle{
+  min-height:116px;padding:12px;background:
+    linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.02)),
+    var(--bg-card);
+}
+.cat-card.premium-muscle::before{
+  content:'';position:absolute;right:-28px;top:-32px;width:92px;height:92px;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--cat-color,#ff9500) 28%,transparent),transparent 70%);
+  filter:blur(3px);opacity:.6;pointer-events:none;
+}
+.cat-card.premium-muscle .cat-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;position:relative;}
+.cat-card.premium-muscle .cat-icon-wrap{margin-bottom:0;}
+.cat-card.premium-muscle .cat-name{margin-top:10px;position:relative;}
+.cat-card.premium-muscle .cat-meta{position:relative;margin-top:4px;}
+.cat-progress-ring{
+  width:34px;height:34px;border-radius:50%;
+  background:conic-gradient(var(--cat-color,#ff9500) calc(var(--cat-pct,0)*1%),rgba(255,255,255,.08) 0);
+  display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.cat-progress-ring::after{
+  content:attr(data-pct);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:#0f0d1a;color:rgba(255,255,255,.66);font-family:'JetBrains Mono',monospace;
+  font-size:.42rem;font-weight:900;
+}
+.notify-auto-time{
+  justify-self:end;max-width:118px;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:.46rem;line-height:1.35;
+  letter-spacing:.08em;text-transform:uppercase;color:#ffca28;
+}
+.native-push-note{
+  border:1px solid rgba(255,149,0,.14);border-radius:16px;padding:11px;
+  background:linear-gradient(135deg,rgba(255,149,0,.07),rgba(110,99,242,.045));
+  font-size:.72rem;line-height:1.45;color:rgba(255,255,255,.5);
+}
+.native-push-note strong{display:block;color:rgba(255,255,255,.82);margin-bottom:3px;}
+
 </style>
 </head>
 <body class="auth-locked">
@@ -3676,13 +3804,17 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-premium3 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
 
 <section id="auth-gate" class="forge-auth-page" aria-label="KASAI Login">
   <div class="forge-auth-inner">
+    <div class="language-switch auth-language-switch" id="auth-language-switch" aria-label="Sprache wählen">
+      <button type="button" data-lang-choice="de">🇩🇪 DE</button>
+      <button type="button" data-lang-choice="en">🇬🇧 EN</button>
+    </div>
     <div class="logo-block">
       <div class="logo-mark" aria-label="KASAI">
         <span class="logo-ring" aria-hidden="true"></span>
@@ -3928,7 +4060,7 @@ body.splash-done #splash{display:none;}
 </section>
 <script>
 window.kasaiSetAuthMode = function(mode){
-  ['welcome','login','signup','pending','profile'].forEach(function(name){
+  ['welcome','login','signup','pending','profile','new-password','reset'].forEach(function(name){
     var panel = document.getElementById('auth-' + name + '-panel');
     if(panel) panel.classList.toggle('active', name === mode);
   });
@@ -4148,6 +4280,14 @@ document.addEventListener('click', async function(e){
           </div>
         </div>
         <button class="cta-btn" id="start-workout-btn">Training starten →</button>
+      </div>
+
+      <div class="time-task-section" id="time-task-section">
+        <div class="section-row">
+          <div class="section-row-title">Deine Tagesstruktur</div>
+          <span class="section-row-link" id="time-task-edit-link">plan öffnen →</span>
+        </div>
+        <div class="time-task-grid" id="time-task-grid"></div>
       </div>
 
       <div class="daily-ex-section" id="daily-ex-section">
@@ -4528,6 +4668,15 @@ document.addEventListener('click', async function(e){
         <span class="tp-color-dot" data-color="#6B7280" style="background:#6B7280"></span>
       </div>
     </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Tageszeit</div>
+      <div class="tp-time-picker" id="tp-mg-time">
+        <span class="tp-time-pill active" data-time="morning"><span class="tp-time-ico">☀</span><span class="tp-time-name">Morgens</span></span>
+        <span class="tp-time-pill" data-time="midday"><span class="tp-time-ico">◐</span><span class="tp-time-name">Mittags</span></span>
+        <span class="tp-time-pill" data-time="evening"><span class="tp-time-ico">◒</span><span class="tp-time-name">Abends</span></span>
+        <span class="tp-time-pill" data-time="night"><span class="tp-time-ico">☾</span><span class="tp-time-name">Nachts</span></span>
+      </div>
+    </div>
     <button class="tp-cta" id="tp-mg-save">Muskelgruppe anlegen</button>
   </div>
 
@@ -4561,6 +4710,16 @@ document.addEventListener('click', async function(e){
       <div class="tp-type-pills" id="tp-ex-type">
         <span class="tp-type-pill" data-val="Compound">Compound</span>
         <span class="tp-type-pill" data-val="Isolation">Isolation</span>
+      </div>
+    </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Tageszeit</div>
+      <div class="tp-time-picker" id="tp-ex-time">
+        <span class="tp-time-pill active" data-time="inherit"><span class="tp-time-ico">↳</span><span class="tp-time-name">Gruppe</span></span>
+        <span class="tp-time-pill" data-time="morning"><span class="tp-time-ico">☀</span><span class="tp-time-name">Morgen</span></span>
+        <span class="tp-time-pill" data-time="midday"><span class="tp-time-ico">◐</span><span class="tp-time-name">Mittag</span></span>
+        <span class="tp-time-pill" data-time="evening"><span class="tp-time-ico">◒</span><span class="tp-time-name">Abend</span></span>
+        <span class="tp-time-pill" data-time="night"><span class="tp-time-ico">☾</span><span class="tp-time-name">Nacht</span></span>
       </div>
     </div>
     <div class="tp-field">
@@ -4638,6 +4797,15 @@ document.addEventListener('click', async function(e){
         <span class="tp-emoji-pick" data-icon="🤸">🤸</span>
         <span class="tp-emoji-pick" data-icon="👊">👊</span>
         <span class="tp-emoji-pick" data-icon="⭐">⭐</span>
+      </div>
+    </div>
+    <div class="tp-field">
+      <div class="tp-field-lbl">// Tageszeit</div>
+      <div class="tp-time-picker" id="tp-daily-time">
+        <span class="tp-time-pill active" data-time="morning"><span class="tp-time-ico">☀</span><span class="tp-time-name">Morgen</span></span>
+        <span class="tp-time-pill" data-time="midday"><span class="tp-time-ico">◐</span><span class="tp-time-name">Mittag</span></span>
+        <span class="tp-time-pill" data-time="evening"><span class="tp-time-ico">◒</span><span class="tp-time-name">Abend</span></span>
+        <span class="tp-time-pill" data-time="night"><span class="tp-time-ico">☾</span><span class="tp-time-name">Nacht</span></span>
       </div>
     </div>
     <div class="tp-field">
@@ -5006,6 +5174,13 @@ document.addEventListener('click', async function(e){
               <div class="settings-v2-tile-sub">Push Notifications</div>
             </div>
           </button>
+          <button class="settings-v2-menu-tile settings-v2-tile-green" data-settings-sheet="settings-sheet-language" type="button">
+            <div class="settings-v2-tile-icon">🌐</div>
+            <div>
+              <div class="settings-v2-tile-name">Sprache</div>
+              <div class="settings-v2-tile-sub">Deutsch / English</div>
+            </div>
+          </button>
           <button class="settings-v2-menu-tile settings-v2-tile-purple" data-settings-sheet="settings-sheet-system" type="button">
             <div class="settings-v2-tile-icon">⚙</div>
             <div>
@@ -5023,7 +5198,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-premium3</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n1</div>
       </div>
     </div>
 
@@ -5095,8 +5270,9 @@ document.addEventListener('click', async function(e){
       <div class="settings-v2-sheet-body notification-settings settings-v2-notification-settings">
         <div class="notify-row settings-v2-notify-row si-1">
           <input id="notify-training-enabled" type="checkbox" aria-label="Training Reminder aktivieren">
-          <div class="notify-main"><div class="notify-title">Training Reminder</div><div class="notify-sub">Heute ist Pull / Woche B</div></div>
-          <input id="notify-training-time" type="time">
+          <div class="notify-main"><div class="notify-title">Training Reminder</div><div class="notify-sub">Automatisch nach Tageszeit deines Plans</div></div>
+          <div class="notify-auto-time">06:30 · 11:30 · 17:30 · 20:30</div>
+          <input id="notify-training-time" type="hidden">
         </div>
         <div class="notify-row settings-v2-notify-row si-2">
           <input id="notify-water-enabled" type="checkbox" aria-label="Wasser Reminder aktivieren">
@@ -5114,11 +5290,36 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="notify-row settings-v2-notify-row si-4">
           <input id="notify-plan-enabled" type="checkbox" aria-label="Plan-Start Reminder aktivieren">
-          <div class="notify-main"><div class="notify-title">Plan-Start</div><div class="notify-sub">Rotation & Startdatum</div></div>
-          <input id="notify-plan-time" type="time">
+          <div class="notify-main"><div class="notify-title">Plan-Start</div><div class="notify-sub">Automatisch morgens, wenn ein Zyklus startet</div></div>
+          <div class="notify-auto-time">07:45</div>
+          <input id="notify-plan-time" type="hidden">
         </div>
-        <button class="btn-sheet-action notify-permission si-5" id="notify-permission" type="button">Benachrichtigungen erlauben</button>
-        <button class="btn-sheet-test notify-test-btn si-6" id="notify-test" type="button">Test anzeigen</button>
+        <div class="native-push-note si-5">
+          <strong>Native Push</strong>
+          Erinnerungen erscheinen systemweit, sobald Browser/PWA Push erlaubt ist. Für echte Pushes bei geschlossener App ist der Service Worker vorbereitet.
+        </div>
+        <button class="btn-sheet-action notify-permission si-6" id="notify-permission" type="button">Benachrichtigungen erlauben</button>
+        <button class="btn-sheet-test notify-test-btn si-7" id="notify-test" type="button">Test anzeigen</button>
+      </div>
+    </div>
+
+    <div class="settings-v2-sheet" id="settings-sheet-language" aria-label="Sprache">
+      <div class="settings-v2-sheet-grab"></div>
+      <div class="settings-v2-sheet-head">
+        <div class="settings-v2-sheet-title"><span class="settings-v2-sheet-title-icon">🌐</span>Sprache</div>
+        <button class="settings-v2-sheet-close" data-settings-sheet-close type="button">×</button>
+      </div>
+      <div class="settings-v2-sheet-body">
+        <div class="settings-v2-input-card si-1">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">🇩🇪</span> Deutsch</div>
+          <button class="btn-sheet-action" data-lang-choice="de" type="button">Deutsch aktivieren</button>
+          <div class="settings-v2-helper">Alle sichtbaren App-Texte wechseln sofort auf Deutsch.</div>
+        </div>
+        <div class="settings-v2-input-card si-2">
+          <div class="settings-v2-label"><span class="settings-v2-label-icon">🇬🇧</span> English</div>
+          <button class="btn-sheet-action" data-lang-choice="en" type="button">Use English</button>
+          <div class="settings-v2-helper">All visible app labels switch immediately without restart.</div>
+        </div>
       </div>
     </div>
 
@@ -5146,7 +5347,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-premium3</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n1</div>
         </div>
       </div>
     </div>
@@ -5423,7 +5624,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-premium3';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -6397,7 +6598,8 @@ function applySettingsRecord(settings){
   if(!settings) return;
   S.settings = Object.assign({}, S.settings || {}, {
     theme: settings.theme || S.settings?.theme || 'dark',
-    notificationsEnabled: settings.notifications_enabled ?? S.settings?.notificationsEnabled ?? true
+    notificationsEnabled: settings.notifications_enabled ?? S.settings?.notificationsEnabled ?? true,
+    language: settings.language || S.settings?.language || 'de'
   });
   const prefs = settings.preferences && typeof settings.preferences === 'object' ? settings.preferences : {};
   if(prefs.profile) S.profile = Object.assign({}, S.profile || {}, prefs.profile);
@@ -6408,10 +6610,10 @@ function applySettingsRecord(settings){
 function defaultNotificationSettings(){
   return {
     permissionAsked: false,
-    training: {enabled:true, time:'08:00'},
+    training: {enabled:true, mode:'auto'},
     water: {enabled:true, intervalMinutes:90, start:'09:00', end:'21:00'},
     habits: {enabled:true, time:'20:30'},
-    planStart: {enabled:true, time:'07:45'}
+    planStart: {enabled:true, time:'07:45', mode:'auto'}
   };
 }
 
@@ -6616,6 +6818,7 @@ function hasMeaningfulUserState(state){
   const settings = state.settings || {};
   if(settings.theme && settings.theme !== 'dark') return true;
   if(settings.notificationsEnabled === false) return true;
+  if(settings.language && settings.language !== 'de') return true;
   if(settings.notifications){
     try{
       if(JSON.stringify(settings.notifications) !== JSON.stringify(defaultNotificationSettings())) return true;
@@ -6858,7 +7061,9 @@ function normalizeState(){
     reminder: Object.assign({enabled:false,time:'20:30'}, h.reminder || {})
   }));
   if(!S.settings) S.settings = {};
-  S.settings = Object.assign({theme:'dark', notificationsEnabled:true}, S.settings || {});
+  S.settings = Object.assign({theme:'dark', notificationsEnabled:true, language:_storedLanguage || 'de'}, S.settings || {});
+  if(S.settings.language !== 'en') S.settings.language = 'de';
+  try{ localStorage.setItem('kasai.language', S.settings.language); }catch(_){}
   normalizeNotificationSettings();
   if(!S.muscles) S.muscles = {};
   if(!S.exercises) S.exercises = {};
@@ -7405,6 +7610,38 @@ window.addEventListener('beforeunload',()=>{
   if(authSession?.user) flushPendingState({keepalive:true});
 });
 
+const TIME_OF_DAY = {
+  morning: {label:'Morgens', short:'Morgen', en:'Morning', icon:'☀', color:'#ffca28', notifyTime:'06:30', headline:'Was steht morgens an?'},
+  midday:  {label:'Mittags', short:'Mittag', en:'Midday',  icon:'◐', color:'#26c6da', notifyTime:'11:30', headline:'Was steht mittags an?'},
+  evening: {label:'Abends',  short:'Abend',  en:'Evening', icon:'◒', color:'#ff9500', notifyTime:'17:30', headline:'Was steht abends an?'},
+  night:   {label:'Nachts',  short:'Nacht',  en:'Night',   icon:'☾', color:'#8a80f8', notifyTime:'20:30', headline:'Was steht nachts an?'}
+};
+const TIME_OF_DAY_ORDER = ['morning','midday','evening','night'];
+function normalizeTimeOfDay(value, fallback='morning'){
+  return TIME_OF_DAY[value] ? value : fallback;
+}
+function timeOfDayMeta(value){
+  const base = TIME_OF_DAY[normalizeTimeOfDay(value)] || TIME_OF_DAY.morning;
+  if(typeof currentLanguage === 'function' && currentLanguage() === 'en'){
+    return Object.assign({}, base, {
+      label: base.en || base.label,
+      short: base.en || base.short,
+      headline: (typeof KASAI_I18N !== 'undefined' && KASAI_I18N[base.headline]) || base.headline
+    });
+  }
+  return base;
+}
+function selectTimePicker(id, value, fallback='morning'){
+  const wrap = document.getElementById(id);
+  if(!wrap) return;
+  const safe = value === 'inherit' ? 'inherit' : normalizeTimeOfDay(value, fallback);
+  wrap.querySelectorAll('.tp-time-pill').forEach(p=>p.classList.toggle('active', p.dataset.time === safe));
+}
+function readTimePicker(id, fallback='morning'){
+  const value = document.querySelector(`#${id} .tp-time-pill.active`)?.dataset.time || fallback;
+  return value === 'inherit' ? 'inherit' : normalizeTimeOfDay(value, fallback);
+}
+
 let S = loadState();
 try{ localStorage.removeItem('forge_state'); }catch(_){}
 
@@ -7461,7 +7698,14 @@ S.userHabits = S.userHabits.map(h=>Object.assign({scope:'daily', activeDates:[],
   reminder: Object.assign({enabled:false,time:'20:30'}, h.reminder || {})
 }));
 if(!S.settings)             S.settings = {};
-S.settings = Object.assign({theme:'dark', notificationsEnabled:true}, S.settings || {});
+let _storedLanguage = 'de';
+try{
+  const stored = localStorage.getItem('kasai.language');
+  _storedLanguage = stored === 'en' || stored === 'de'
+    ? stored
+    : ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'de');
+}catch(_){}
+S.settings = Object.assign({theme:'dark', notificationsEnabled:true, language:_storedLanguage}, S.settings || {});
 normalizeNotificationSettings();
 if(!S.muscles)              S.muscles = {};
 if(!S.exercises)            S.exercises = {};
@@ -7498,6 +7742,179 @@ syncPlanConfigFromTrainingPlan();
 const DE_DAYS = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const DE_DAYS_FULL = ['sonntag','montag','dienstag','mittwoch','donnerstag','freitag','samstag'];
 const DE_MONTHS = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const KASAI_I18N = {
+  'Deine Tagesstruktur':'Your Day Structure',
+  'plan öffnen →':'open plan →',
+  'Über den Tag':'Throughout the Day',
+  'bearbeiten →':'edit →',
+  'Muskelgruppen heute':'Muscle Groups Today',
+  'Übungen':'Exercises',
+  '+ hinzufügen':'+ add',
+  'Training starten →':'Start Workout →',
+  '＋ Muskelgruppen anlegen':'＋ Create muscle groups',
+  '＋ Übungen hinzufügen':'＋ Add exercises',
+  'Muskelgruppe hinzufügen':'Add Muscle Group',
+  'Muskelgruppe anlegen':'Create Muscle Group',
+  'Übung hinzufügen':'Add Exercise',
+  'Tagesübung hinzufügen':'Add Daily Exercise',
+  'Tagesübung speichern':'Save Daily Exercise',
+  'Neues Passwort setzen':'Set New Password',
+  'Einloggen':'Log In',
+  'Registrieren':'Sign Up',
+  'E-Mail erneut senden':'Resend Email',
+  'Benachrichtigungen':'Notifications',
+  'Benachrichtigungen erlauben':'Allow Notifications',
+  'Benachrichtigungen aktiv':'Notifications active',
+  'Test anzeigen':'Show Test',
+  'Automatisch nach Tageszeit deines Plans':'Automatic by your plan time of day',
+  'Automatisch morgens, wenn ein Zyklus startet':'Automatic in the morning when a cycle starts',
+  'Training Reminder':'Training Reminder',
+  'Wasser Reminder':'Water Reminder',
+  'Habit Reminder':'Habit Reminder',
+  'Offene Gewohnheiten':'Open habits',
+  'Plan-Start':'Plan start',
+  'Sprache':'Language',
+  'Deutsch aktivieren':'Use German',
+  'Use English':'Use English',
+  'Alle sichtbaren App-Texte wechseln sofort auf Deutsch.':'All visible app labels switch immediately to German.',
+  'All visible app labels switch immediately without restart.':'All visible app labels switch immediately without restart.',
+  'Einstellungen':'Settings',
+  'Profil & Wochenplan':'Profile & Weekly Plan',
+  'Woche A/B, Plan und persönliche Daten':'Week A/B, plan and personal data',
+  'Trainingsplan bearbeiten':'Edit Training Plan',
+  'Tage, Muskelgruppen und Übungen':'Days, muscle groups and exercises',
+  'Persönliche Daten':'Personal Data',
+  'Name, Gewicht':'Name, weight',
+  'Tagesziele':'Daily Goals',
+  'Schritte, Kalorien, Wasser':'Steps, calories, water',
+  'System':'System',
+  'Sync, Debug, Version':'Sync, debug, version',
+  'Abmelden':'Log Out',
+  'Anmelden / Account erstellen':'Log in / Create account',
+  'Startdatum':'Start date',
+  'Plan-Name':'Plan name',
+  'Wochen-Modus':'Week mode',
+  'Einzelwoche':'Single week',
+  'Eigene-':'Custom',
+  'Fortlaufend':'Rolling',
+  'Tages-Bezeichnung':'Day label',
+  'Ruhetag':'Rest day',
+  'Morgens':'Morning',
+  'Mittags':'Midday',
+  'Abends':'Evening',
+  'Nachts':'Night',
+  'Morgen':'Morning',
+  'Mittag':'Midday',
+  'Abend':'Evening',
+  'Nacht':'Night',
+  'Gruppe':'Group',
+  'Was steht morgens an?':'What is planned for the morning?',
+  'Was steht mittags an?':'What is planned for midday?',
+  'Was steht abends an?':'What is planned for the evening?',
+  'Was steht nachts an?':'What is planned for night?',
+  'Noch keine Tagesstruktur':'No day structure yet',
+  'lege Muskelgruppen oder Tagesübungen mit Tageszeit an':'create muscle groups or daily exercises with a time of day',
+  'Native Push':'Native Push',
+  'Erinnerungen erscheinen systemweit, sobald Browser/PWA Push erlaubt ist. Für echte Pushes bei geschlossener App ist der Service Worker vorbereitet.':'Reminders appear system-wide once browser/PWA push is allowed. The service worker is ready for real pushes while the app is closed.',
+  'Heute ist':'Today is',
+  'Woche':'Week',
+  'Tag':'Day',
+  'Aufgabe':'task',
+  'Aufgaben':'tasks',
+  'Übung':'exercise',
+  'Übungen':'exercises',
+  'Sätze':'sets',
+  'erledigt':'done',
+  'offen':'open',
+  'Ziel':'Goal',
+  'anzeigename':'display name'
+};
+const KASAI_I18N_REVERSE = Object.fromEntries(Object.entries(KASAI_I18N).map(([de,en])=>[en,de]));
+let _i18nApplying = false;
+let _i18nTimer = null;
+
+function currentLanguage(){
+  return S?.settings?.language === 'en' ? 'en' : 'de';
+}
+
+function translatePhrase(text, lang=currentLanguage()){
+  if(!text) return text;
+  const trimmed = text.trim();
+  const lead = text.slice(0, text.indexOf(trimmed));
+  const trail = text.slice(text.indexOf(trimmed) + trimmed.length);
+  const dict = lang === 'en' ? KASAI_I18N : KASAI_I18N_REVERSE;
+  let out = dict[trimmed] || trimmed;
+  if(lang === 'en'){
+    out = out
+      .replace(/\bÜbung(en)?\b/g, (_, plural)=>plural ? 'exercises' : 'exercise')
+      .replace(/\bMuskelgruppe(n)?\b/g, (_, plural)=>plural ? 'muscle groups' : 'muscle group')
+      .replace(/\bSätze\b/g, 'sets')
+      .replace(/\bWoche\b/g, 'Week')
+      .replace(/\bHeute\b/g, 'Today')
+      .replace(/\bTage\b/g, 'days')
+      .replace(/\bDauer\b/g, 'Duration')
+      .replace(/\bReadiness\b/g, 'Readiness');
+  } else {
+    out = out
+      .replace(/\bexercises\b/g, 'Übungen')
+      .replace(/\bexercise\b/g, 'Übung')
+      .replace(/\bmuscle groups\b/g, 'Muskelgruppen')
+      .replace(/\bmuscle group\b/g, 'Muskelgruppe')
+      .replace(/\bsets\b/g, 'Sätze')
+      .replace(/\bWeek\b/g, 'Woche')
+      .replace(/\bToday\b/g, 'Heute')
+      .replace(/\bdays\b/g, 'Tage')
+      .replace(/\bDuration\b/g, 'Dauer');
+  }
+  return lead + out + trail;
+}
+
+function applyI18n(root=document.body){
+  if(_i18nApplying || !root) return;
+  _i18nApplying = true;
+  const lang = currentLanguage();
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-lang-choice]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.langChoice === lang);
+  });
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const parent = node.parentElement;
+      if(!parent || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      if(parent.closest('script,style,textarea,select,svg,[data-no-i18n]')) return NodeFilter.FILTER_REJECT;
+      if(parent.closest('input')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes = [];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    const next = translatePhrase(node.nodeValue, lang);
+    if(next !== node.nodeValue) node.nodeValue = next;
+  });
+  document.querySelectorAll('[placeholder],[aria-label],title').forEach(el=>{
+    ['placeholder','aria-label','title'].forEach(attr=>{
+      const value = el.getAttribute(attr);
+      if(value) el.setAttribute(attr, translatePhrase(value, lang));
+    });
+  });
+  _i18nApplying = false;
+}
+
+function scheduleI18n(){
+  if(_i18nTimer) cancelAnimationFrame(_i18nTimer);
+  _i18nTimer = requestAnimationFrame(()=>applyI18n());
+}
+
+function setLanguage(lang, persist=true){
+  const safe = lang === 'en' ? 'en' : 'de';
+  if(!S.settings) S.settings = {};
+  S.settings.language = safe;
+  try{ localStorage.setItem('kasai.language', safe); }catch(_){}
+  if(persist) saveState(S, 'settings');
+  renderAll();
+  scheduleI18n();
+}
 
 function dateKey(date){
   const y = date.getFullYear();
@@ -7748,6 +8165,14 @@ function getSelectedTrainingPlanDay(){
   return tpDay(week, tpIndex);
 }
 
+function getTrainingPlanDayForDate(date=today){
+  const rolling = rollingInfoForDate(date);
+  if(rolling) return rolling.day;
+  const {week, dow} = getPlanForDate(date);
+  const tpIndex = dow === 0 ? 6 : dow - 1;
+  return tpDay(week, tpIndex);
+}
+
 function getDailyExercisesForSelectedDay(){
   const day = getSelectedTrainingPlanDay();
   if(!day || day.isRest) return [];
@@ -7780,6 +8205,7 @@ function getTrainingPlanMusclesForSelectedDay(){
       name: mg.name,
       icon: mg.icon,
       color: mg.color,
+      timeOfDay: normalizeTimeOfDay(mg.timeOfDay || 'morning', 'morning'),
       sortOrder: mg.sortOrder ?? index
     }));
 }
@@ -7795,6 +8221,7 @@ function normalizePlanExercise(ex, mg){
     rMin: ex.repsMin || ex.rMin || 8,
     rMax: ex.repsMax || ex.rMax || 12,
     rest: ex.restSeconds || ex.rest || 90,
+    timeOfDay: ex.timeOfDay === 'inherit' ? normalizeTimeOfDay(mg.timeOfDay || 'morning') : normalizeTimeOfDay(ex.timeOfDay || mg.timeOfDay || 'morning'),
     notes: ex.notes || '',
     history: ex.history || [],
     pr: ex.pr || null,
@@ -8053,6 +8480,7 @@ function renderAll(){
   if(currentScreen === 'training-plan') renderTrainingPlanScreen();
   if(currentScreen === 'day-detail')    renderDayDetailScreen();
   scheduleEncodingRepair();
+  scheduleI18n();
 }
 
 // Global nav listeners
@@ -8060,6 +8488,21 @@ KDOM.onAll('[data-screen]', 'click', event=>{
   const s = event.currentTarget?.dataset?.screen;
   if(s) navigate(s);
 });
+
+document.addEventListener('click', event=>{
+  const btn = event.target.closest?.('[data-lang-choice]');
+  if(!btn) return;
+  event.preventDefault();
+  setLanguage(btn.dataset.langChoice || 'de');
+});
+
+try{
+  new MutationObserver(()=>scheduleI18n()).observe(document.body, {
+    subtree:true,
+    childList:true,
+    characterData:false
+  });
+}catch(_){}
 
 KDOM.setClick('back-btn', ()=>{
   navigate(prevScreen);
@@ -8084,6 +8527,7 @@ function renderTraining(){
   renderCalendar(dow);
   renderDailyQuote(selectedDate);
   renderTodayCard(plan, week, planInfo);
+  renderTimeTaskStructure(plan);
   renderDailyExerciseTrackers();
   renderMuscles(plan);
   renderExerciseList(plan);
@@ -8204,7 +8648,7 @@ function renderDailyExerciseTrackers(){
           <div class="daily-ex-icon">${escapeHtml(cleanUiIcon(ex.icon, '💪'))}</div>
           <div class="daily-ex-main">
             <div class="daily-ex-name">${escapeHtml(ex.name)}</div>
-            <div class="daily-ex-sub">Ziel ${target} ${escapeHtml(ex.unit)} · +${step}</div>
+            <div class="daily-ex-sub">${timeOfDayMeta(ex.timeOfDay).icon} ${timeOfDayMeta(ex.timeOfDay).label} · Ziel ${target} ${escapeHtml(ex.unit)} · +${step}</div>
           </div>
           <div class="daily-ex-count">${count}</div>
         </div>
@@ -8229,6 +8673,147 @@ function renderDailyExerciseTrackers(){
   });
   const editLink = document.getElementById('daily-ex-edit-link');
   if(editLink) editLink.onclick = ()=>openSelectedPlanDayEditor();
+}
+
+function getTimeTaskBucketsForSelectedDay(plan){
+  const buckets = Object.fromEntries(TIME_OF_DAY_ORDER.map(key=>[key, []]));
+  const day = getSelectedTrainingPlanDay();
+  if(day && !day.isRest){
+    ensureDailyExercisesForDay(day)
+      .filter(ex=>!ex.isArchived)
+      .forEach(ex=>{
+        buckets[normalizeTimeOfDay(ex.timeOfDay)].push({
+          kind:'daily',
+          id: ex.id,
+          icon: cleanUiIcon(ex.icon, '💪'),
+          name: ex.name,
+          sub: `Ziel ${Math.max(1, parseInt(ex.target)||1)} ${ex.unit || 'Wdh'} · ${getDailyExerciseCount(ex.id)}/${Math.max(1, parseInt(ex.target)||1)}`,
+          done: getDailyExerciseCount(ex.id) >= Math.max(1, parseInt(ex.target)||1),
+          payload: ex
+        });
+      });
+    (day.muscleGroups || []).filter(mg=>!mg.isArchived).forEach(mg=>{
+      const mgTime = normalizeTimeOfDay(mg.timeOfDay || 'morning');
+      const exs = (mg.exercises || []).filter(ex=>!ex.isArchived).map(ex=>normalizePlanExercise(ex, mg));
+      buckets[mgTime].push({
+        kind:'muscle',
+        id: mg.id,
+        icon: cleanUiIcon(mg.icon, '💪'),
+        name: mg.name,
+        sub: `${exs.length} Übung${exs.length === 1 ? '' : 'en'} · ${areAllExercisesDone(exs) ? 'erledigt' : 'offen'}`,
+        done: areAllExercisesDone(exs),
+        payload: exs
+      });
+      exs.forEach(ex=>{
+        const exTime = normalizeTimeOfDay(ex.timeOfDay || mgTime, mgTime);
+        if(exTime === mgTime) return;
+        buckets[exTime].push({
+          kind:'exercise',
+          id: ex.id,
+          icon: '•',
+          name: ex.name,
+          sub: `${mg.name} · ${ex.sets}×${ex.rMin}-${ex.rMax}`,
+          done: isDone(ex.id),
+          payload: ex
+        });
+      });
+    });
+  } else {
+    getMusclesForType(plan.type).forEach(mg=>{
+      const timeKey = normalizeTimeOfDay(mg.timeOfDay || 'morning');
+      buckets[timeKey].push({
+        kind:'muscle',
+        id: mg.id || mg.name,
+        icon: cleanUiIcon(mg.icon, '💪'),
+        name: mg.name,
+        sub: 'Muskelgruppe',
+        done: false,
+        payload: []
+      });
+    });
+  }
+  return buckets;
+}
+
+function renderTimeTaskStructure(plan){
+  const section = document.getElementById('time-task-section');
+  const grid = document.getElementById('time-task-grid');
+  if(!section || !grid) return;
+  const buckets = getTimeTaskBucketsForSelectedDay(plan);
+  const hasAny = TIME_OF_DAY_ORDER.some(key=>buckets[key]?.length);
+  if(!hasAny){
+    section.style.display = plan.type === 'rest' ? 'none' : 'block';
+    grid.innerHTML = plan.type === 'rest'
+      ? ''
+      : '<div class="time-task-card"><div class="time-task-head"><div class="time-task-title"><span>＋</span><div>Noch keine Tagesstruktur</div></div></div><div class="time-task-meta">lege Muskelgruppen oder Tagesübungen mit Tageszeit an</div></div>';
+  } else {
+    section.style.display = 'block';
+    grid.innerHTML = TIME_OF_DAY_ORDER
+      .filter(key=>buckets[key]?.length)
+      .map(key=>{
+        const meta = timeOfDayMeta(key);
+        const items = buckets[key];
+        return `
+          <div class="time-task-card" style="--time-color:${meta.color}">
+            <div class="time-task-head">
+              <div class="time-task-title"><span>${meta.icon}</span><div>${meta.headline}</div></div>
+              <div class="time-task-meta">${items.length} Aufgabe${items.length === 1 ? '' : 'n'}</div>
+            </div>
+            <div class="time-task-items">
+              ${items.map(item=>`
+                <div class="time-task-item" data-time-kind="${item.kind}" data-time-id="${escapeHtml(item.id)}">
+                  <div class="time-task-icon">${escapeHtml(item.icon)}</div>
+                  <div>
+                    <div class="time-task-name">${escapeHtml(item.name)}</div>
+                    <div class="time-task-sub">${escapeHtml(item.sub)}</div>
+                  </div>
+                  <button class="time-task-check${item.done?' done':''}" type="button" data-time-check="${item.kind}" data-time-id="${escapeHtml(item.id)}">${item.done?'✓':''}</button>
+                </div>`).join('')}
+            </div>
+          </div>`;
+      }).join('');
+  }
+  grid.querySelectorAll('[data-time-check]').forEach(btn=>{
+    btn.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      const kind = btn.dataset.timeCheck;
+      const id = btn.dataset.timeId;
+      if(kind === 'daily'){
+        const ex = findDailyExerciseForSelectedDay(id);
+        if(ex){
+          const target = Math.max(1, parseInt(ex.target)||1);
+          const isComplete = getDailyExerciseCount(id) >= target;
+          setDailyExerciseCount(id, isComplete ? 0 : target);
+          saveState(S);
+          renderTraining();
+        }
+      } else if(kind === 'exercise'){
+        const ex = getExercisesForType(plan.type).find(item=>String(item.id) === String(id));
+        if(ex) toggleExerciseDone(ex);
+      } else if(kind === 'muscle'){
+        const row = btn.closest('.time-task-item');
+        const muscleName = row?.querySelector('.time-task-name')?.textContent || '';
+        const exs = getExercisesForType(plan.type).filter(ex=>String(ex.muscle) === String(muscleName));
+        toggleMuscleExercisesDone(exs);
+      }
+    });
+  });
+  grid.querySelectorAll('.time-task-item').forEach(row=>{
+    row.addEventListener('click',event=>{
+      if(event.target.closest('[data-time-check]')) return;
+      const kind = row.dataset.timeKind;
+      const id = row.dataset.timeId;
+      if(kind === 'exercise'){
+        const ex = getExercisesForType(plan.type).find(item=>String(item.id) === String(id));
+        if(ex) navigate('exercise', ex);
+      } else if(kind === 'daily' || kind === 'muscle'){
+        openSelectedPlanDayEditor();
+      }
+    });
+  });
+  const editLink = document.getElementById('time-task-edit-link');
+  if(editLink) editLink.onclick = openSelectedPlanDayEditor;
 }
 
 function renderMuscles(plan){
@@ -8256,6 +8841,7 @@ function renderMuscles(plan){
     const doneSets = mExs.filter(e=>isDone(e.id)).reduce((a,e)=>a+e.sets,0);
     const pct = mSets ? Math.round(doneSets/mSets*100) : 0;
     const allDone = areAllExercisesDone(mExs);
+    const timeMeta = timeOfDayMeta(mObj.timeOfDay || 'morning');
 
     const isLastOdd = (i === muscles.length-1) && (muscles.length % 2 === 1) && muscles.length>1;
     const isSingle  = muscles.length === 1;
@@ -8264,12 +8850,16 @@ function renderMuscles(plan){
     const exLabel   = mExs.length === 1 ? 'ÜBUNG' : 'ÜBUNGEN';
 
     const el = document.createElement('div');
-    el.className = 'cat-card';
-    if(fullWidth) el.setAttribute('style','grid-column:span 2');
+    el.className = 'cat-card premium-muscle';
+    el.setAttribute('style', `${fullWidth ? 'grid-column:span 2;' : ''}--cat-color:${color};--cat-pct:${pct};`);
     el.innerHTML = `
       ${mExs.length ? `<button class="cat-done-check${allDone?' done':''}" type="button" aria-label="${allDone?'Muskelgruppe offen setzen':'Muskelgruppe erledigt markieren'}">${allDone?'✓':''}</button>` : ''}
-      <div class="cat-icon-wrap" style="background:${color}22">${icon}</div>
+      <div class="cat-top">
+        <div class="cat-icon-wrap" style="background:${color}22">${icon}</div>
+        <div class="cat-progress-ring" data-pct="${pct}%"></div>
+      </div>
       <div class="cat-name">${m}</div>
+      <div class="cat-meta"><span class="time-chip">${timeMeta.icon} ${timeMeta.short}</span></div>
       <div class="cat-meta">${mExs.length} ${exLabel} · ${mSets} SÄTZE${suffix}</div>
       <div class="cat-prog" style="width:${pct}%;background:${color}"></div>`;
     el.querySelector('.cat-done-check')?.addEventListener('click',event=>{
@@ -8981,6 +9571,7 @@ function normalizeDailyExercise(ex={}, index=0){
     id: ex.id || genId(),
     name: String(ex.name || 'Tagesübung').trim() || 'Tagesübung',
     icon: cleanUiIcon(ex.icon, '💪'),
+    timeOfDay: normalizeTimeOfDay(ex.timeOfDay || ex.time || 'morning', 'morning'),
     target: Math.max(1, parseInt(ex.target ?? ex.goal ?? 50) || 50),
     step: Math.max(1, parseInt(ex.step ?? ex.increment ?? 5) || 5),
     unit: String(ex.unit || 'Wdh').trim() || 'Wdh',
@@ -9015,6 +9606,7 @@ function normalizeTrainingPlanDay(day){
     mg.name = String(mg.name || 'Muskelgruppe').trim() || 'Muskelgruppe';
     mg.icon = cleanUiIcon(mg.icon, '💪');
     mg.color = mg.color || '#FF6B00';
+    mg.timeOfDay = normalizeTimeOfDay(mg.timeOfDay || mg.time || 'morning', 'morning');
     mg.sortOrder = mg.sortOrder ?? index;
     mg.isArchived = !!mg.isArchived;
     if(!Array.isArray(mg.exercises)) mg.exercises = [];
@@ -9035,6 +9627,7 @@ function normalizeTrainingPlanDay(day){
       ex.repsMin = Math.max(1, parseInt(ex.repsMin ?? ex.rMin ?? 8) || 8);
       ex.repsMax = Math.max(ex.repsMin, parseInt(ex.repsMax ?? ex.rMax ?? 12) || 12);
       ex.restSeconds = Math.max(15, parseInt(ex.restSeconds ?? ex.rest ?? 90) || 90);
+      ex.timeOfDay = ex.timeOfDay === 'inherit' ? 'inherit' : normalizeTimeOfDay(ex.timeOfDay || ex.time || 'inherit', mg.timeOfDay);
       ex.sortOrder = ex.sortOrder ?? exIndex;
       ex.isArchived = !!ex.isArchived;
     });
@@ -9716,7 +10309,7 @@ function renderDayDetailDailyExercises(body, day){
     <div class="daily-plan-row" data-daily-edit="${escapeHtml(ex.id)}">
       <span class="daily-plan-icon">${escapeHtml(cleanUiIcon(ex.icon, '💪'))}</span>
       <span class="daily-plan-name">${escapeHtml(ex.name)}</span>
-      <span class="daily-plan-meta">${Math.max(1, parseInt(ex.target)||1)} ${escapeHtml(ex.unit)} · +${Math.max(1, parseInt(ex.step)||1)}</span>
+      <span class="daily-plan-meta">${timeOfDayMeta(ex.timeOfDay).icon} ${timeOfDayMeta(ex.timeOfDay).label} · ${Math.max(1, parseInt(ex.target)||1)} ${escapeHtml(ex.unit)} · +${Math.max(1, parseInt(ex.step)||1)}</span>
       <span class="daily-plan-del" data-daily-del="${escapeHtml(ex.id)}">×</span>
     </div>`).join('');
   sec.innerHTML = `
@@ -9825,7 +10418,7 @@ function renderDayDetailScreen(){
       <span class="mg-drag-h">::</span>
       <span class="mg-icon-h">${mg.icon||'💪'}</span>
       <span class="mg-name-h">${mg.name}</span>
-      <span class="mg-count-h">${exs.length} Übung${exs.length!==1?'en':''}</span>
+      <span class="mg-count-h">${timeOfDayMeta(mg.timeOfDay).icon} ${timeOfDayMeta(mg.timeOfDay).short} · ${exs.length} Übung${exs.length!==1?'en':''}</span>
       <span class="mg-del-h" data-mgid="${mg.id}">×</span>
     `;
     hdr.querySelector('.mg-del-h').addEventListener('click',e=>{
@@ -9853,7 +10446,7 @@ function renderDayDetailScreen(){
       exRow.innerHTML = `
         <span class="ex-drag-h">::</span>
         <span class="ex-name-h">${ex.name}</span>
-        <span class="ex-sets-h">${ex.targetSets}×${ex.repsMin}-${ex.repsMax}</span>
+        <span class="ex-sets-h">${ex.timeOfDay && ex.timeOfDay !== 'inherit' ? timeOfDayMeta(ex.timeOfDay).icon + ' ' + timeOfDayMeta(ex.timeOfDay).short + ' · ' : ''}${ex.targetSets}×${ex.repsMin}-${ex.repsMax}</span>
         <span class="ex-rest-h">${ex.restSeconds}s</span>
         <span class="ex-del-h" data-exid="${ex.id}" data-mgid="${mg.id}">×</span>
       `;
@@ -9908,6 +10501,7 @@ function openTpMgModal(mgId=null){
   document.getElementById('tp-mg-title').textContent = isEdit ? 'Muskelgruppe bearbeiten' : 'Muskelgruppe hinzufügen';
   document.getElementById('tp-mg-save').textContent  = isEdit ? 'Änderungen speichern' : 'Muskelgruppe anlegen';
   document.getElementById('tp-mg-name').value = mg?.name||'';
+  selectTimePicker('tp-mg-time', mg?.timeOfDay || 'morning', 'morning');
 
   // Reset pickers
   document.querySelectorAll('#tp-mg-emojis .tp-emoji-pick').forEach(e=>{
@@ -9935,10 +10529,10 @@ function saveTpMgModal(){
   if(!day) return;
   if(_tpMgEditId){
     const mg = getDayDetailMuscle(_tpMgEditId);
-    if(mg){ mg.name=name; mg.icon=icon; mg.color=color; }
+    if(mg){ mg.name=name; mg.icon=icon; mg.color=color; mg.timeOfDay = readTimePicker('tp-mg-time', 'morning'); }
   } else {
     if(!day.muscleGroups) day.muscleGroups=[];
-    day.muscleGroups.push({ id:genId(), name, icon, color, sortOrder:day.muscleGroups.length, exercises:[], isArchived:false });
+    day.muscleGroups.push({ id:genId(), name, icon, color, timeOfDay:readTimePicker('tp-mg-time', 'morning'), sortOrder:day.muscleGroups.length, exercises:[], isArchived:false });
   }
   saveState(S);
   closeTpMgModal();
@@ -9962,6 +10556,7 @@ function openTpDailyModal(exId=null){
   document.getElementById('tp-daily-target').value = ex?.target || 50;
   document.getElementById('tp-daily-step').value = ex?.step || 5;
   document.getElementById('tp-daily-unit').value = ex?.unit || 'Wdh';
+  selectTimePicker('tp-daily-time', ex?.timeOfDay || 'morning', 'morning');
   document.querySelectorAll('#tp-daily-icons .tp-emoji-pick').forEach(pick=>{
     pick.classList.toggle('active', pick.dataset.icon === (ex?.icon || '💪'));
   });
@@ -9982,6 +10577,7 @@ function saveTpDailyModal(){
   const data = {
     name,
     icon: document.querySelector('#tp-daily-icons .tp-emoji-pick.active')?.dataset.icon || '💪',
+    timeOfDay: readTimePicker('tp-daily-time', 'morning'),
     target: Math.max(1, parseInt(document.getElementById('tp-daily-target').value) || 50),
     step: Math.max(1, parseInt(document.getElementById('tp-daily-step').value) || 5),
     unit: document.getElementById('tp-daily-unit').value.trim() || 'Wdh'
@@ -10023,6 +10619,7 @@ function openTpExModal(mgId, exId=null){
   document.getElementById('tp-ex-notes').value = ex?.notes||'';
   document.getElementById('tp-ex-notes-ctr').textContent = (ex?.notes||'').length;
   document.getElementById('tp-ex-ac').style.display='none';
+  selectTimePicker('tp-ex-time', ex?.timeOfDay || 'inherit', 'inherit');
 
   _tpExState = {
     sets: ex?.targetSets||4,
@@ -10067,11 +10664,11 @@ function saveTpExModal(){
         if(!S.exerciseRenameHistory[ex.id]) S.exerciseRenameHistory[ex.id]=[];
         S.exerciseRenameHistory[ex.id].push({from:ex.name,to:name,at:todayStr});
       }
-      Object.assign(ex,{name,equipment:eq,type,targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes});
+      Object.assign(ex,{name,equipment:eq,type,timeOfDay:readTimePicker('tp-ex-time','inherit'),targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes});
     }
   } else {
     if(!mg.exercises) mg.exercises=[];
-    mg.exercises.push({id:genId(),name,equipment:eq,type,targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes,sortOrder:mg.exercises.length,isArchived:false});
+    mg.exercises.push({id:genId(),name,equipment:eq,type,timeOfDay:readTimePicker('tp-ex-time','inherit'),targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes,sortOrder:mg.exercises.length,isArchived:false});
   }
   saveState(S);
   closeTpExModal();
@@ -10117,6 +10714,12 @@ function initTpListeners(){
   });
   document.querySelectorAll('#tp-mg-colors .tp-color-dot').forEach(d=>{
     d.addEventListener('click',()=>{ document.querySelectorAll('#tp-mg-colors .tp-color-dot').forEach(x=>x.classList.remove('active')); d.classList.add('active'); });
+  });
+  document.querySelectorAll('.tp-time-picker .tp-time-pill').forEach(p=>{
+    p.addEventListener('click',()=>{
+      p.parentElement?.querySelectorAll('.tp-time-pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+    });
   });
   document.querySelectorAll('#tp-mg-name-chips .mg-name-chip').forEach(c=>{
     c.addEventListener('click',()=>{ document.getElementById('tp-mg-name').value=c.dataset.val; });
@@ -10823,6 +11426,7 @@ function hideOverlay(id){
   }
 }
 const notificationTimers = [];
+const KASAI_WEB_PUSH_PUBLIC_KEY = window.KASAI_WEB_PUSH_PUBLIC_KEY || '';
 
 function clearNotificationTimers(){
   while(notificationTimers.length) clearTimeout(notificationTimers.pop());
@@ -10832,6 +11436,41 @@ function notificationPermission(){
   return 'Notification' in window ? Notification.permission : 'unsupported';
 }
 
+function supportsNativeWebPush(){
+  return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+}
+
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map(char=>char.charCodeAt(0)));
+}
+
+async function ensureNativePushSubscription(){
+  if(!supportsNativeWebPush()){
+    if(S.settings) S.settings.webPushStatus = 'unsupported';
+    return null;
+  }
+  if(!KASAI_WEB_PUSH_PUBLIC_KEY){
+    if(S.settings) S.settings.webPushStatus = 'missing_vapid_key';
+    return null;
+  }
+  const reg = await navigator.serviceWorker.ready;
+  let subscription = await reg.pushManager.getSubscription();
+  if(!subscription){
+    subscription = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(KASAI_WEB_PUSH_PUBLIC_KEY)
+    });
+  }
+  if(S.settings){
+    S.settings.webPushStatus = 'subscribed';
+    S.settings.webPushSubscription = subscription.toJSON();
+  }
+  return subscription;
+}
+
 async function requestNotificationPermission(){
   if(!('Notification' in window)){
     setAuthStatus('Benachrichtigungen werden auf diesem Gerät nicht unterstützt.', 'error');
@@ -10839,6 +11478,9 @@ async function requestNotificationPermission(){
   }
   const result = await Notification.requestPermission();
   normalizeNotificationSettings().permissionAsked = true;
+  if(result === 'granted'){
+    try{ await ensureNativePushSubscription(); }catch(error){ console.warn('Native web push subscription skipped', error); }
+  }
   saveState(S);
   updateNotificationPermissionButton();
   scheduleNotifications();
@@ -11069,6 +11711,36 @@ function planReminderText(){
   return `Heute ist ${plan?.label || 'Trainingstag'} · ${suffix}`;
 }
 
+function planReminderTextForTime(timeKey, items=[]){
+  const meta = timeOfDayMeta(timeKey);
+  const names = items.map(item=>item.name).filter(Boolean).slice(0, 3).join(', ');
+  const more = items.length > 3 ? ` +${items.length - 3}` : '';
+  return `${meta.label}: ${names || planReminderText()}${more}`;
+}
+
+function getTrainingNotificationBuckets(date=new Date()){
+  const buckets = Object.fromEntries(TIME_OF_DAY_ORDER.map(key=>[key, []]));
+  const day = getTrainingPlanDayForDate(date);
+  if(!day || day.isRest) return buckets;
+  ensureDailyExercisesForDay(day)
+    .filter(ex=>!ex.isArchived)
+    .forEach(ex=>{
+      const timeKey = normalizeTimeOfDay(ex.timeOfDay || 'morning');
+      buckets[timeKey].push({kind:'daily', name:ex.name});
+    });
+  (day.muscleGroups || []).filter(mg=>!mg.isArchived).forEach(mg=>{
+    const mgTime = normalizeTimeOfDay(mg.timeOfDay || 'morning');
+    const activeExercises = (mg.exercises || []).filter(ex=>!ex.isArchived);
+    buckets[mgTime].push({kind:'muscle', name:mg.name});
+    activeExercises.forEach(ex=>{
+      const explicit = ex.timeOfDay && ex.timeOfDay !== 'inherit';
+      const exTime = explicit ? normalizeTimeOfDay(ex.timeOfDay, mgTime) : mgTime;
+      if(exTime !== mgTime) buckets[exTime].push({kind:'exercise', name:ex.name});
+    });
+  });
+  return buckets;
+}
+
 function openHabitCount(){
   ensureDailyState(todayStr);
   return getActiveHabitsForDate(todayStr).filter(h=>!S.habits[todayStr]?.[h.id]).length;
@@ -11080,12 +11752,17 @@ function scheduleNotifications(){
   if(!authSession?.user || !S.settings.notificationsEnabled) return;
   if(notificationPermission() !== 'granted' && !canShowKasaiInAppNotification()) return;
   if(n.training.enabled){
-    scheduleAt(nextDateForTime(n.training.time), ()=>{
-      showKasaiNotification('KASAI Training', planReminderText(), 'kasai-training');
+    const buckets = getTrainingNotificationBuckets(new Date());
+    TIME_OF_DAY_ORDER.forEach(timeKey=>{
+      const items = buckets[timeKey] || [];
+      if(!items.length) return;
+      scheduleAt(nextDateForTime(timeOfDayMeta(timeKey).notifyTime), ()=>{
+        showKasaiNotification('KASAI Training', planReminderTextForTime(timeKey, items), `kasai-training-${timeKey}`);
+      });
     });
   }
   if(n.planStart.enabled){
-    scheduleAt(nextDateForTime(n.planStart.time), ()=>{
+    scheduleAt(nextDateForTime('07:45'), ()=>{
       const start = S.trainingPlan?.startDate || S.planConfig?.startDate || todayStr;
       const prefix = start === todayStr ? 'Dein Plan startet heute.' : `Plan-Start: ${formatDateShort(parseDateKey(start))}`;
       showKasaiNotification('KASAI Plan', `${prefix} ${planReminderText()}`, 'kasai-plan');
@@ -11190,6 +11867,7 @@ function bootstrapAuthenticatedSession(session){
 }
 function setGateMode(mode){
   if(window.kasaiSetAuthMode) window.kasaiSetAuthMode(mode);
+  scheduleI18n();
 }
 function updatePasswordStrength(){
   const value = document.getElementById('gate-signup-password')?.value || '';
@@ -11311,6 +11989,7 @@ function updateAuthUI(){
     if(!hasActiveAuthPanel) setGateMode('welcome');
   }
   renderSyncDebug();
+  scheduleI18n();
 }
 function openSettings(){
   const p = S.profile;
@@ -11328,6 +12007,7 @@ function openSettings(){
   updateAuthUI();
   renderSyncDebug();
   showOverlay('settings-overlay');
+  scheduleI18n();
 }
 
 function collectSettingsFormIntoState(){

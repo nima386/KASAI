@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-premium3';
+const CACHE = 'kasai-v43-timepush-i18n1';
 const ASSETS = [
   './',
   './index.html',
@@ -113,6 +113,27 @@ self.addEventListener('fetch', e => {
 
 self.addEventListener('message', e => {
   if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+self.addEventListener('push', e => {
+  let payload = {};
+  try {
+    payload = e.data ? e.data.json() : {};
+  } catch (_) {
+    payload = { title: 'KASAI', body: e.data ? e.data.text() : '' };
+  }
+  const title = payload.title || 'KASAI Training';
+  const options = {
+    body: payload.body || 'Dein Training wartet auf dich.',
+    tag: payload.tag || 'kasai-training',
+    badge: './icons/icon-192.png',
+    icon: './icons/icon-192.png',
+    data: {
+      url: payload.url || './index.html',
+      type: payload.type || 'training'
+    }
+  };
+  e.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', e => {
