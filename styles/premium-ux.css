@@ -31,6 +31,7 @@
   transform:translate(-50%, 0) scale(1);
 }
 body.auth-locked .kasai-save-pulse{display:none;}
+body:not(.kasai-debug-ui) .kasai-save-pulse{display:none!important;}
 .kasai-save-dot{
   width:7px;
   height:7px;

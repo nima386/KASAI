@@ -57,7 +57,7 @@
 
   function setSaveStatus(state, label){
     const clean = String(label || '').replace(/^\/\/\s*/, '').trim();
-    if(!isDebugUiEnabled() && state !== 'error'){
+    if(!isDebugUiEnabled()){
       const el = document.getElementById('kasai-save-pulse');
       if(el) el.classList.remove('show');
       return;
@@ -135,6 +135,7 @@
   }
 
   function bootstrap(){
+    document.body.classList.toggle('kasai-debug-ui', isDebugUiEnabled());
     ensureSavePulse();
     bindPressFeedback();
     upgradeEmptyStates();
