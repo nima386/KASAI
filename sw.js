@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-runfix2';
+const CACHE = 'kasai-v43-runfix3';
 const ASSETS = [
   './',
   './index.html',

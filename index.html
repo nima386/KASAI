@@ -25,7 +25,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-const KASAI_APP_VERSION = 'kasai-v43-runfix2';
+const KASAI_APP_VERSION = 'kasai-v43-runfix3';
 </script>
 <style>
 :root {
@@ -3529,13 +3529,17 @@ body.splash-done #splash{display:none;}
 .run-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 9px;}
 .run-form label{min-width:0;}
 .run-form label span,.run-pr-toggle span{display:block;font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:.16em;color:rgba(255,255,255,.28);text-transform:uppercase;margin-bottom:5px;}
-.run-form input,.run-form select{width:100%;min-width:0;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 11px;color:rgba(255,255,255,.86);font-family:'JetBrains Mono',monospace;font-size:16px;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 24px rgba(0,0,0,.13);transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease),transform .18s var(--ease);}
+.run-form input,.run-form select{width:100%;min-width:0;max-width:100%;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 11px;color:rgba(255,255,255,.86);font-family:'JetBrains Mono',monospace;font-size:16px;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 24px rgba(0,0,0,.13);transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease),transform .18s var(--ease);}
 .run-form input:focus,.run-form select:focus{background:rgba(255,255,255,.075);border-color:rgba(255,149,0,.38);box-shadow:0 0 0 2px rgba(255,149,0,.08);}
 .run-form input.invalid{border-color:rgba(255,95,110,.72);box-shadow:0 0 0 1px rgba(255,95,110,.18);}
 .run-form select{appearance:none;-webkit-appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,rgba(255,202,40,.72) 50%),linear-gradient(135deg,rgba(255,202,40,.72) 50%,transparent 50%),linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.04));background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%,0 0;background-size:5px 5px,5px 5px,100% 100%;background-repeat:no-repeat;}
-.run-field-date input,.run-field-type select{text-align:center;font-weight:800;letter-spacing:.01em;}
+.run-field-date input,.run-field-type select{height:46px;text-align:center;font-size:14px;font-weight:800;letter-spacing:0;border-radius:13px;padding-top:8px;padding-bottom:8px;}
 .run-field-type select{text-align-last:center;}
-.run-field-date,.run-field-type{position:relative;}
+.run-field-date,.run-field-type{position:relative;overflow:hidden;}
+.run-field-date input{appearance:none;-webkit-appearance:none;padding-left:9px;padding-right:9px;}
+.run-field-date input::-webkit-date-and-time-value{text-align:center;}
+.run-field-date input::-webkit-calendar-picker-indicator{width:14px;height:14px;margin-left:-4px;opacity:.55;filter:invert(1) sepia(1) saturate(3) hue-rotate(350deg);}
+.run-field-type select{padding-left:8px;padding-right:24px;background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%,0 0;}
 .run-pr-toggle{display:flex!important;align-items:center;gap:8px;margin-top:10px;}
 .run-pr-toggle input{width:auto;}
 .run-pr-toggle span{margin:0;}
@@ -3549,7 +3553,7 @@ body.splash-done #splash{display:none;}
 .run-proof-preview{min-height:38px;margin-top:7px;border:1px dashed rgba(255,149,0,.18);border-radius:12px;padding:7px;display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none;background:rgba(255,149,0,.035);}
 .run-proof-preview::-webkit-scrollbar{display:none;}
 .run-proof-empty{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;color:rgba(255,255,255,.24);text-transform:uppercase;}
-.run-proof-thumb{width:46px;height:46px;border-radius:11px;object-fit:cover;flex-shrink:0;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 18px rgba(0,0,0,.24);animation:runProofPop .26s cubic-bezier(.34,1.56,.64,1) both;}
+.run-proof-thumb{width:46px;height:46px;border-radius:11px;object-fit:contain;background:rgba(5,4,12,.62);flex-shrink:0;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 18px rgba(0,0,0,.24);animation:runProofPop .26s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes runProofPop{from{opacity:0;transform:scale(.82) translateY(6px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .run-form-error{min-height:16px;margin-top:8px;color:#ff8fa0;font-size:.72rem;}
 .run-form-actions{display:flex;gap:8px;margin-top:8px;}
@@ -3566,8 +3570,8 @@ body.splash-done #splash{display:none;}
 .run-detail-stat{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:10px;text-align:center;}
 .run-detail-stat strong{display:block;font-size:1rem;color:rgba(255,255,255,.86);}
 .run-detail-stat span{font-family:'JetBrains Mono',monospace;font-size:.44rem;color:rgba(255,255,255,.28);letter-spacing:.12em;text-transform:uppercase;}
-.run-proof-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:10px;}
-.run-proof-gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 14px 28px rgba(0,0,0,.25);animation:runProofPop .28s cubic-bezier(.34,1.56,.64,1) both;}
+.run-proof-gallery{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px;}
+.run-proof-gallery img{width:100%;max-height:min(68vh,620px);aspect-ratio:9/16;object-fit:contain;background:linear-gradient(160deg,rgba(255,149,0,.08),rgba(5,4,12,.82));border-radius:16px;border:1px solid rgba(255,255,255,.1);box-shadow:0 14px 28px rgba(0,0,0,.25);animation:runProofPop .28s cubic-bezier(.34,1.56,.64,1) both;}
 .run-proof-none{padding:12px;border:1px dashed rgba(255,149,0,.18);border-radius:14px;color:rgba(255,255,255,.32);font-size:.78rem;text-align:center;}
 .run-detail-proof-uploader{margin-top:12px;border:1px solid rgba(255,149,0,.16);border-radius:16px;padding:11px;background:linear-gradient(135deg,rgba(255,149,0,.07),rgba(255,45,85,.035));}
 .run-detail-proof-uploader label{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;}
@@ -3577,6 +3581,10 @@ body.splash-done #splash{display:none;}
 .run-detail-proof-copy span{display:block;margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);}
 .run-detail-proof-action{flex-shrink:0;border-radius:999px;padding:8px 10px;background:rgba(255,149,0,.14);border:1px solid rgba(255,149,0,.24);color:#ffca28;font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;font-weight:900;}
 .run-detail-proof-status{min-height:15px;margin-top:7px;font-size:.68rem;color:rgba(255,255,255,.36);}
+@media(max-width:520px){
+  .run-field-date,.run-field-type{grid-column:1/-1;}
+  .run-field-date input,.run-field-type select{height:44px;font-size:13.5px;padding-top:7px;padding-bottom:7px;}
+}
 @media(max-width:360px){.run-form-grid,.run-stat-row{grid-template-columns:1fr;}}
 
 </style>
@@ -3613,7 +3621,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-runfix2 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-runfix3 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4911,7 +4919,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-runfix2</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-runfix3</div>
       </div>
     </div>
 
@@ -5034,7 +5042,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-runfix2</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-runfix3</div>
         </div>
       </div>
     </div>
@@ -5311,7 +5319,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-runfix2';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-runfix3';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
