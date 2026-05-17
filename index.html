@@ -1469,6 +1469,35 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
   position:relative;z-index:3;pointer-events:auto;touch-action:manipulation;
 }
+.btn-social.auth-provider{
+  justify-content:flex-start;
+  padding:13px 14px;
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.provider-icon{
+  width:26px;height:26px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+  font-weight:900;
+}
+.provider-copy{display:flex;flex-direction:column;align-items:flex-start;line-height:1.12;min-width:0;}
+.provider-copy strong{font-size:.78rem;color:var(--text-primary);font-weight:800;}
+.provider-copy span{font-family:'JetBrains Mono',monospace;font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-top:3px;}
+.auth-note-card{
+  border:1px solid rgba(255,149,0,.18);
+  border-radius:18px;
+  padding:14px;
+  background:linear-gradient(145deg,rgba(255,149,0,.075),rgba(110,99,242,.035));
+  color:var(--text-secondary);
+  font-size:.8rem;
+  line-height:1.45;
+  margin:0 0 16px;
+}
+.auth-note-card strong{display:block;color:var(--text-primary);font-size:.9rem;margin-bottom:4px;}
 .auth-footer{margin-top:auto;padding-bottom:1rem;text-align:center;font-size:.82rem;color:var(--text-secondary);}
 .auth-footer button{background:transparent;border:none;color:var(--purple-300);font-weight:600;margin-left:4px;}
 .pw-strength{display:flex;gap:4px;margin-top:8px;}
@@ -3739,14 +3768,37 @@ body.splash-done #splash{display:none;}
           </div>
         </div>
       </div>
-      <div class="forgot-row"><button class="forgot-link" id="gate-reset-password">// passwort vergessen?</button></div>
+      <div class="forgot-row"><button class="forgot-link" id="gate-reset-open" data-auth-mode="reset">// passwort vergessen?</button></div>
       <button class="btn-primary" id="gate-login-btn">Anmelden →</button>
       <div class="divider"><span>// oder schnell mit</span></div>
       <div class="social-row">
-        <button class="btn-social" id="gate-apple-login">Apple</button>
-        <button class="btn-social" id="gate-google-login">G Google</button>
+        <button class="btn-social auth-provider" id="gate-apple-login" type="button"><span class="provider-icon"></span><span class="provider-copy"><strong>Apple</strong><span>einloggen</span></span></button>
+        <button class="btn-social auth-provider" id="gate-google-login" type="button"><span class="provider-icon">G</span><span class="provider-copy"><strong>Google</strong><span>einloggen</span></span></button>
       </div>
       <div class="auth-footer">Noch kein Account? <button data-auth-mode="signup">Jetzt registrieren</button></div>
+    </div>
+
+    <div id="auth-reset-panel" class="auth-gate-panel">
+      <div class="auth-header">
+        <div class="auth-kicker">// reset</div>
+        <div class="auth-title">Passwort vergessen?</div>
+        <div class="auth-sub">Gib deine E-Mail ein. Wir schicken dir einen sicheren Link zum Zurücksetzen.</div>
+      </div>
+      <div class="auth-note-card">
+        <strong>Kein Stress.</strong>
+        Der Link öffnet KASAI wieder und zeigt dir direkt die Seite für dein neues Passwort.
+      </div>
+      <div class="field-group">
+        <div>
+          <label class="field-label">E-Mail</label>
+          <div class="field-wrap">
+            <span class="field-icon">✉</span>
+            <input type="email" class="field" id="gate-reset-email" placeholder="du@beispiel.com" autocomplete="email">
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" id="gate-reset-send">Reset-Link senden →</button>
+      <div class="auth-footer">Wieder eingefallen? <button data-auth-mode="login">Zurück zum Login</button></div>
     </div>
 
     <div id="auth-signup-panel" class="auth-gate-panel">
@@ -3789,8 +3841,8 @@ body.splash-done #splash{display:none;}
       <button class="btn-primary" id="gate-signup-btn">Konto erstellen →</button>
       <div class="divider"><span>// oder</span></div>
       <div class="social-row">
-        <button class="btn-social" id="gate-apple-signup">Apple</button>
-        <button class="btn-social" id="gate-google-signup">G Google</button>
+        <button class="btn-social auth-provider" id="gate-apple-signup" type="button"><span class="provider-icon"></span><span class="provider-copy"><strong>Apple</strong><span>registrieren</span></span></button>
+        <button class="btn-social auth-provider" id="gate-google-signup" type="button"><span class="provider-icon">G</span><span class="provider-copy"><strong>Google</strong><span>registrieren</span></span></button>
       </div>
       <div class="auth-footer">Schon dabei? <button data-auth-mode="login">Jetzt einloggen</button></div>
     </div>
@@ -3823,6 +3875,32 @@ body.splash-done #splash{display:none;}
       <button class="btn-primary" id="gate-confirmed-email-btn">Ich habe bestätigt -</button>
       <button class="btn-social" id="gate-resend-confirmation" style="padding:14px;margin-top:10px;">E-Mail erneut senden</button>
       <div class="auth-footer">Falsche E-Mail? <button data-auth-mode="signup">Zurück</button></div>
+    </div>
+
+    <div id="auth-new-password-panel" class="auth-gate-panel">
+      <div class="auth-header">
+        <div class="auth-kicker">// neuer zugang</div>
+        <div class="auth-title">Neues Passwort setzen</div>
+        <div class="auth-sub">Dein Reset-Link wurde erkannt. Wähle jetzt ein neues sicheres Passwort.</div>
+      </div>
+      <div class="field-group">
+        <div>
+          <label class="field-label">Neues Passwort</label>
+          <div class="field-wrap">
+            <span class="field-icon">🔒</span>
+            <input type="password" class="field" id="gate-new-password" placeholder="Mind. 8 Zeichen" autocomplete="new-password">
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Wiederholen</label>
+          <div class="field-wrap">
+            <span class="field-icon">✓</span>
+            <input type="password" class="field" id="gate-new-password-confirm" placeholder="Noch einmal eingeben" autocomplete="new-password">
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" id="gate-update-password-btn">Passwort speichern →</button>
+      <div class="auth-footer">Nicht dein Link? <button data-auth-mode="login">Zurück zum Login</button></div>
     </div>
 
     <div id="auth-profile-panel" class="auth-gate-panel">
