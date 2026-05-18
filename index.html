@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n3';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n4';
 </script>
 <style>
 :root {
@@ -3867,7 +3867,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n3 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n4 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4776,16 +4776,6 @@ document.addEventListener('click', async function(e){
       </div>
     </div>
     <div class="tp-field">
-      <div class="tp-field-lbl">// Tageszeit</div>
-      <div class="tp-time-picker" id="tp-ex-time">
-        <span class="tp-time-pill active" data-time="inherit"><span class="tp-time-ico">↳</span><span class="tp-time-name">Gruppe</span></span>
-        <span class="tp-time-pill" data-time="morning"><span class="tp-time-ico">☀</span><span class="tp-time-name">Morgen</span></span>
-        <span class="tp-time-pill" data-time="midday"><span class="tp-time-ico">◐</span><span class="tp-time-name">Mittag</span></span>
-        <span class="tp-time-pill" data-time="evening"><span class="tp-time-ico">◒</span><span class="tp-time-name">Abend</span></span>
-        <span class="tp-time-pill" data-time="night"><span class="tp-time-ico">☾</span><span class="tp-time-name">Nacht</span></span>
-      </div>
-    </div>
-    <div class="tp-field">
       <div class="tp-field-lbl">// Sätze</div>
       <div class="tp-stepper" id="tp-ex-sets-stepper">
         <button class="tp-step-btn" data-action="dec" data-target="sets">-</button>
@@ -5261,7 +5251,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n3</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n4</div>
       </div>
     </div>
 
@@ -5419,7 +5409,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n3</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n4</div>
         </div>
       </div>
     </div>
@@ -5696,7 +5686,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n3';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n4';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -8054,34 +8044,86 @@ const KASAI_I18N = {
   'Bitte maximal 99 Pausen eintragen.':'Please enter at most 99 breaks.',
   'Beweisbilder gespeichert.':'Proof images saved.',
   'Bild konnte nicht geladen werden.':'Image could not be loaded.',
-  'Bilder werden komprimiert ...':'Compressing images ...'
+  'Bilder werden komprimiert ...':'Compressing images ...',
+  'Gültigkeit':'Validity',
+  'Jeden Tag':'Every day',
+  'Nur dieser Tag':'Only this day',
+  'Für diesen Habit erinnern':'Remind me about this habit',
+  'Nur wenn er an dem Tag noch offen ist':'Only if it is still open that day',
+  'Gewohnheit löschen':'Delete habit',
+  'Anzeigename':'Display name',
+  'Gewicht (kg)':'Weight (kg)',
+  'Wird für Protein-Berechnung genutzt':'Used for protein calculation',
+  'Protein-Multiplikator (Min / Max)':'Protein multiplier (min / max)',
+  'Schrittziel':'Step goal',
+  'Kalorienziel (kcal)':'Calorie goal (kcal)',
+  'Wasserziel (ml)':'Water goal (ml)',
+  'Empfehlung: 8.000 - 12.000 Schritte':'Recommendation: 8,000 - 12,000 steps',
+  'Empfehlung: 2.500 - 3.500 ml':'Recommendation: 2,500 - 3,500 ml',
+  'Tägliches Kalorienbudget':'Daily calorie budget',
+  'Tagsüber wiederholen':'Repeat throughout the day',
+  'Deutsch':'German',
+  'Alle App-Texte, Hinweise und Buttons auf Deutsch.':'All app labels, hints and buttons in German.',
+  'Die Sprache wird sofort übernommen - ohne Neustart.':'Language applies instantly - no restart needed.',
+  'Zur App':'Open app',
+  'Muskelgruppe bearbeiten':'Edit Muscle Group',
+  'Änderungen speichern':'Save Changes',
+  'Übungsname':'Exercise name',
+  'Equipment':'Equipment',
+  'Typ':'Type',
+  'Langhantel':'Barbell',
+  'Kurzhantel':'Dumbbell',
+  'Maschine':'Machine',
+  'Kabelzug':'Cable',
+  'Körpergewicht':'Bodyweight',
+  'Körpergew.':'Bodyweight',
+  'Wiederholungen Min - Max':'Reps min - max',
+  'Pause zwischen Sätzen':'Rest between sets',
+  'Empfohlen für Hypertrophie':'Recommended for hypertrophy',
+  'Notizen (optional)':'Notes (optional)',
+  'Muskelgruppe löschen?':'Delete muscle group?',
+  'Übung archivieren?':'Archive exercise?',
+  'Löschen':'Delete',
+  'Archivieren':'Archive',
+  'Plan':'Plan',
+  'Plan öffnen':'Open plan',
+  'Tag-Detail':'Day detail',
+  'Tagesübung bearbeiten':'Edit Daily Exercise',
+  'Ziel & Plus-Schritt':'Goal & plus step',
+  'Einheit':'Unit',
+  'Wiederholungen':'Reps',
+  'Noch keine Tagesübungen':'No daily exercises yet'
 };
 const KASAI_I18N_REVERSE = Object.fromEntries(Object.entries(KASAI_I18N).map(([de,en])=>[en,de]));
 const KASAI_TERM_TRANSLATIONS = {
   en: [
     ['Run Tracker','Run Tracker'], ['Meine Runs','My Runs'], ['Lauf eintragen','Add Run'], ['Neuen Lauf eintragen','Add New Run'],
-    ['Ernährung','Nutrition'], ['Gewohnheiten','Habits'], ['Profil','Profile'], ['Einstellungen','Settings'], ['Gesundheit','Health'], ['Konto','Account'],
+    ['Ernährung','Nutrition'], ['Gewohnheiten','Habits'], ['Profil','Profile'], ['Einstellungen','Settings'], ['Konfiguration','Configuration'],
+    ['Gesundheit','Health'], ['Konto','Account'], ['Daten','Data'], ['Ziele','Goals'], ['Ziel','Goal'], ['Hinweise','Hints'], ['Buttons','Buttons'],
     ['Kohlenhydrate','Carbs'], ['Fett','Fat'], ['Kalorien','Calories'], ['Wasser','Water'], ['Schritte','Steps'], ['Makros','Macros'],
     ['Muskelgruppen','muscle groups'], ['Muskelgruppe','muscle group'], ['Tagesübungen','daily exercises'], ['Tagesübung','daily exercise'],
     ['Übungen','exercises'], ['Übung','exercise'], ['Sätze','sets'], ['Satz','set'], ['Woche','Week'], ['Wochen','Weeks'],
     ['Tage','days'], ['Tag','Day'], ['Heute','Today'], ['heute','today'], ['Morgens','Morning'], ['Mittags','Midday'],
     ['Abends','Evening'], ['Nachts','Night'], ['Morgen','Morning'], ['Mittag','Midday'], ['Abend','Evening'], ['Nacht','Night'],
-    ['Ruhetag','Rest day'], ['Trainingstag','Training day'], ['Dauer','Duration'], ['Distanz','Distance'], ['Pausen','Breaks'],
+    ['Ruhetag','Rest day'], ['Trainingstag','Training day'], ['Dauer','Duration'], ['Distanz','Distance'], ['Pausen','Breaks'], ['Gewicht','Weight'],
+    ['Wiederholungen','Reps'], ['Notizen','Notes'], ['Pause','Rest'], ['Empfehlung','Recommendation'], ['Erinnerungen','Reminders'],
     ['BEINE','LEGS'], ['Beine','Legs'], ['EIGEN','CUSTOM'], ['Eigen','Custom'], ['VERLAUF','HISTORY'], ['Verlauf','History'], ['GESUNDHEIT','HEALTH'],
-    ['Ziel','Goal'], ['offen','open'], ['erledigt','done'], ['Hinzufügen','Add'], ['hinzufügen','add'], ['Bearbeiten','Edit'], ['bearbeiten','edit'],
-    ['Zurück','Back'], ['zurück','back'], ['Speichern','Save'], ['Abbrechen','Cancel'], ['Locker Lauf','Easy Run'], ['Langer Lauf','Long Run'],
+    ['offen','open'], ['erledigt','done'], ['Hinzufügen','Add'], ['hinzufügen','add'], ['Bearbeiten','Edit'], ['bearbeiten','edit'],
+    ['Zurück','Back'], ['zurück','back'], ['Speichern','Save'], ['speichern','save'], ['Abbrechen','Cancel'], ['Locker Lauf','Easy Run'], ['Langer Lauf','Long Run'],
     ['Läufe','Runs'], ['Laufen','Run'], ['Lauf','Run']
   ],
   de: [
     ['Daily Habits','Tägliche Gewohnheiten'], ['Run Tracker','Lauf Tracker'], ['My Runs','Meine Läufe'], ['Add New Run','Neuen Lauf eintragen'],
-    ['Add Run','Lauf eintragen'], ['Nutrition','Ernährung'], ['Habits','Gewohnheiten'], ['Profile','Profil'], ['Settings','Einstellungen'], ['Health','Gesundheit'], ['Account','Konto'],
+    ['Add Run','Lauf eintragen'], ['Nutrition','Ernährung'], ['Habits','Gewohnheiten'], ['Profile','Profil'], ['Settings','Einstellungen'], ['Configuration','Konfiguration'],
+    ['Health','Gesundheit'], ['Account','Konto'], ['Data','Daten'], ['Goals','Ziele'], ['Goal','Ziel'], ['Hints','Hinweise'], ['Buttons','Buttons'],
     ['Carbs','Kohlenhydrate'], ['Fat','Fett'], ['Calories','Kalorien'], ['Water','Wasser'], ['Steps','Schritte'], ['Macros','Makros'],
     ['muscle groups','Muskelgruppen'], ['muscle group','Muskelgruppe'], ['daily exercises','Tagesübungen'], ['daily exercise','Tagesübung'],
     ['Exercises','Übungen'], ['exercises','Übungen'], ['Exercise','Übung'], ['exercise','Übung'], ['sets','Sätze'], ['set','Satz'],
     ['Weeks','Wochen'], ['Week','Woche'], ['days','Tage'], ['Day','Tag'], ['Today','Heute'], ['today','heute'],
     ['Morning','Morgens'], ['Midday','Mittags'], ['Evening','Abends'], ['Night','Nachts'], ['Rest day','Ruhetag'], ['Training day','Trainingstag'],
-    ['Duration','Dauer'], ['Distance','Distanz'], ['Breaks','Pausen'], ['LEGS','BEINE'], ['Legs','Beine'], ['CUSTOM','EIGEN'], ['Custom','Eigen'],
-    ['HISTORY','VERLAUF'], ['History','Verlauf'], ['HEALTH','GESUNDHEIT'], ['Goal','Ziel'], ['open','offen'], ['done','erledigt'],
+    ['Duration','Dauer'], ['Distance','Distanz'], ['Breaks','Pausen'], ['Weight','Gewicht'], ['Reps','Wiederholungen'], ['Notes','Notizen'],
+    ['Rest','Pause'], ['Recommendation','Empfehlung'], ['Reminders','Erinnerungen'], ['LEGS','BEINE'], ['Legs','Beine'], ['CUSTOM','EIGEN'], ['Custom','Eigen'],
+    ['HISTORY','VERLAUF'], ['History','Verlauf'], ['HEALTH','GESUNDHEIT'], ['open','offen'], ['done','erledigt'],
     ['Add','Hinzufügen'], ['add','hinzufügen'], ['Edit','Bearbeiten'], ['edit','bearbeiten'], ['Back','Zurück'], ['back','zurück'],
     ['Save','Speichern'], ['Cancel','Abbrechen'], ['Easy Run','Locker Lauf'], ['Long Run','Langer Lauf'], ['Runs','Läufe'], ['Run','Laufen']
   ]
@@ -8107,6 +8149,11 @@ function translatePhrase(text, lang=currentLanguage()){
 }
 
 function localizeStaticControls(lang=currentLanguage()){
+  const heroTitle = document.querySelector('.settings-v2-hero-title');
+  if(heroTitle) heroTitle.innerHTML = lang === 'en' ? '<span>Set</span>tings' : '<span>Ein</span>stellungen';
+  document.querySelectorAll('.logo-tagline').forEach(el=>{
+    el.textContent = lang === 'en' ? '火 · train like fire' : '火 · trainiere wie Feuer';
+  });
   const navLabels = {
     training: lang === 'en' ? 'Training' : 'Training',
     run: lang === 'en' ? 'Run' : 'Laufen',
@@ -8475,6 +8522,7 @@ function getTrainingPlanMusclesForSelectedDay(){
 }
 
 function normalizePlanExercise(ex, mg){
+  const groupTime = normalizeTimeOfDay(mg.timeOfDay || 'morning', 'morning');
   return {
     id: ex.id,
     name: ex.name || 'Übung',
@@ -8485,7 +8533,7 @@ function normalizePlanExercise(ex, mg){
     rMin: ex.repsMin || ex.rMin || 8,
     rMax: ex.repsMax || ex.rMax || 12,
     rest: ex.restSeconds || ex.rest || 90,
-    timeOfDay: ex.timeOfDay === 'inherit' ? normalizeTimeOfDay(mg.timeOfDay || 'morning') : normalizeTimeOfDay(ex.timeOfDay || mg.timeOfDay || 'morning'),
+    timeOfDay: groupTime,
     notes: ex.notes || '',
     history: ex.history || [],
     pr: ex.pr || null,
@@ -9001,7 +9049,22 @@ function getTimeTaskBucketsForSelectedDay(plan){
 
 function flashScrollTarget(el){
   if(!el) return;
-  el.scrollIntoView({behavior:'smooth', block:'center'});
+  const body = el.closest('.screen-body') || document.querySelector('#screen-training .screen-body');
+  if(body){
+    const bodyRect = body.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const current = body.scrollTop;
+    const targetTop = current + (elRect.top - bodyRect.top) - Math.max(18, (body.clientHeight - elRect.height) * 0.42);
+    const maxTop = Math.max(0, body.scrollHeight - body.clientHeight);
+    const nextTop = Math.min(maxTop, Math.max(0, targetTop));
+    if(typeof body.scrollTo === 'function') body.scrollTo({top:nextTop, behavior:'smooth'});
+    else body.scrollTop = nextTop;
+    requestAnimationFrame(()=>{
+      const scroller = document.scrollingElement || document.documentElement;
+      if(scroller && scroller.scrollTop) scroller.scrollTop = 0;
+      if(document.body?.scrollTop) document.body.scrollTop = 0;
+    });
+  }
   el.classList.remove('scroll-focus');
   void el.offsetWidth;
   el.classList.add('scroll-focus');
@@ -9916,7 +9979,7 @@ function normalizeTrainingPlanDay(day){
       ex.repsMin = Math.max(1, parseInt(ex.repsMin ?? ex.rMin ?? 8) || 8);
       ex.repsMax = Math.max(ex.repsMin, parseInt(ex.repsMax ?? ex.rMax ?? 12) || 12);
       ex.restSeconds = Math.max(15, parseInt(ex.restSeconds ?? ex.rest ?? 90) || 90);
-      ex.timeOfDay = ex.timeOfDay === 'inherit' ? 'inherit' : normalizeTimeOfDay(ex.timeOfDay || ex.time || 'inherit', mg.timeOfDay);
+      ex.timeOfDay = 'inherit';
       ex.sortOrder = ex.sortOrder ?? exIndex;
       ex.isArchived = !!ex.isArchived;
     });
@@ -10735,7 +10798,7 @@ function renderDayDetailScreen(){
       exRow.innerHTML = `
         <span class="ex-drag-h">::</span>
         <span class="ex-name-h">${ex.name}</span>
-        <span class="ex-sets-h">${ex.timeOfDay && ex.timeOfDay !== 'inherit' ? timeOfDayMeta(ex.timeOfDay).icon + ' ' + timeOfDayMeta(ex.timeOfDay).short + ' · ' : ''}${ex.targetSets}×${ex.repsMin}-${ex.repsMax}</span>
+        <span class="ex-sets-h">${ex.targetSets}×${ex.repsMin}-${ex.repsMax}</span>
         <span class="ex-rest-h">${ex.restSeconds}s</span>
         <span class="ex-del-h" data-exid="${ex.id}" data-mgid="${mg.id}">×</span>
       `;
@@ -10908,7 +10971,6 @@ function openTpExModal(mgId, exId=null){
   document.getElementById('tp-ex-notes').value = ex?.notes||'';
   document.getElementById('tp-ex-notes-ctr').textContent = (ex?.notes||'').length;
   document.getElementById('tp-ex-ac').style.display='none';
-  selectTimePicker('tp-ex-time', ex?.timeOfDay || 'inherit', 'inherit');
 
   _tpExState = {
     sets: ex?.targetSets||4,
@@ -10953,11 +11015,11 @@ function saveTpExModal(){
         if(!S.exerciseRenameHistory[ex.id]) S.exerciseRenameHistory[ex.id]=[];
         S.exerciseRenameHistory[ex.id].push({from:ex.name,to:name,at:todayStr});
       }
-      Object.assign(ex,{name,equipment:eq,type,timeOfDay:readTimePicker('tp-ex-time','inherit'),targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes});
+      Object.assign(ex,{name,equipment:eq,type,timeOfDay:'inherit',targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes});
     }
   } else {
     if(!mg.exercises) mg.exercises=[];
-    mg.exercises.push({id:genId(),name,equipment:eq,type,timeOfDay:readTimePicker('tp-ex-time','inherit'),targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes,sortOrder:mg.exercises.length,isArchived:false});
+    mg.exercises.push({id:genId(),name,equipment:eq,type,timeOfDay:'inherit',targetSets:_tpExState.sets,repsMin:_tpExState.rmin,repsMax:_tpExState.rmax,restSeconds:_tpExState.rest,notes,sortOrder:mg.exercises.length,isArchived:false});
   }
   saveState(S);
   closeTpExModal();
