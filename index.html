@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n7';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6';
 </script>
 <style>
 :root {
@@ -899,18 +899,7 @@ body{
     inset 0 1px 0 rgba(255,255,255,0.12);
 }
 #app::after{
-  content:'';
-  position:fixed;
-  left:0;right:0;bottom:0;
-  height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 48px);
-  z-index:6;
-  pointer-events:none;
-  background:
-    radial-gradient(260px 86px at 50% 62%,rgba(255,107,0,.13),transparent 72%),
-    radial-gradient(300px 92px at 50% 42%,rgba(110,99,242,.09),transparent 76%),
-    linear-gradient(180deg,rgba(7,5,16,0) 0%,rgba(7,5,16,.78) 32%,rgba(7,5,16,.98) 68%,#070510 100%);
-  backdrop-filter:blur(16px) saturate(1.18);
-  -webkit-backdrop-filter:blur(16px) saturate(1.18);
+  content:none;
 }
 .nav-item{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
@@ -1548,11 +1537,6 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   color:var(--text-muted);text-transform:uppercase;margin-top:6px;font-weight:600;
 }
 .auth-status.auth-gate-status{margin-top:12px;}
-.auth-status.auth-gate-status.passive{
-  display:none!important;
-  min-height:0!important;
-  margin:0!important;
-}
 .auth-gate-panel{display:none;flex:1;min-height:0;overflow:hidden;flex-direction:column;}
 .auth-gate-panel.active{display:flex;}
 .email-pending-hero{
@@ -3991,7 +3975,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n7 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -5376,7 +5360,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n7</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6</div>
       </div>
     </div>
 
@@ -5534,7 +5518,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n7</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6</div>
         </div>
       </div>
     </div>
@@ -5811,7 +5795,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n7';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -12457,11 +12441,8 @@ function collectNotificationSettingsFromUI(){
 function setAuthStatus(message='', type=''){
   const gate = document.getElementById('gate-auth-status');
   if(gate){
-    const raw = String(message || '');
-    const passive = !type && /^(Session wird geprüft|Checking session)/i.test(raw.trim());
-    gate.textContent = passive ? '' : (typeof translatePhrase === 'function' ? translatePhrase(message) : message);
-    gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '') + (passive ? ' passive' : '');
-    gate.setAttribute('aria-live', passive ? 'off' : 'polite');
+    gate.textContent = typeof translatePhrase === 'function' ? translatePhrase(message) : message;
+    gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '');
   }
 }
 function bootstrapAuthenticatedSession(session){
