@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n4';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n5';
 </script>
 <style>
 :root {
@@ -318,6 +318,22 @@ body{
   border-radius:var(--r-md);
   padding:12px;
   position:relative;overflow:hidden;
+  transition:background .28s var(--ease),border-color .28s var(--ease),box-shadow .28s var(--ease),transform .18s var(--ease);
+}
+.daily-ex-card.complete{
+  background:linear-gradient(135deg,rgba(38,212,124,.18),rgba(29,233,182,.08)),var(--bg-card);
+  border-color:rgba(38,212,124,.34);
+  box-shadow:0 14px 34px rgba(38,212,124,.10),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.daily-ex-card.complete::after{
+  content:'';position:absolute;inset:auto 12px 0 12px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(38,212,124,.72),transparent);
+  animation:dailyCompleteGlow 1.5s ease both;
+}
+@keyframes dailyCompleteGlow{
+  0%{opacity:0;transform:scaleX(.2);}
+  35%{opacity:1;transform:scaleX(1);}
+  100%{opacity:.55;transform:scaleX(.92);}
 }
 .daily-ex-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
 .daily-ex-icon{
@@ -325,12 +341,15 @@ body{
   display:flex;align-items:center;justify-content:center;
   background:rgba(255,107,0,.13);font-size:1.05rem;flex-shrink:0;
 }
+.daily-ex-card.complete .daily-ex-icon{background:rgba(38,212,124,.15);}
 .daily-ex-main{flex:1;min-width:0;}
 .daily-ex-name{font-weight:800;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .daily-ex-sub{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;}
 .daily-ex-count{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:900;color:#ffca28;}
+.daily-ex-card.complete .daily-ex-count{color:#26d47c;text-shadow:0 0 18px rgba(38,212,124,.2);}
 .daily-ex-bar{height:5px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-bottom:10px;}
 .daily-ex-fill{height:100%;width:0;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:inherit;transition:width .25s var(--ease);}
+.daily-ex-card.complete .daily-ex-fill{background:linear-gradient(90deg,#26d47c,#1de9b6);}
 .daily-ex-actions{display:flex;gap:8px;}
 .daily-ex-plus,.daily-ex-menu{
   border:none;border-radius:999px;cursor:pointer;touch-action:manipulation;
@@ -340,6 +359,10 @@ body{
   flex:1;padding:9px 12px;color:#fff;
   background:linear-gradient(135deg,#ff9500,#ff2d55);
   box-shadow:0 10px 22px rgba(255,80,0,.18);
+}
+.daily-ex-card.complete .daily-ex-plus{
+  background:linear-gradient(135deg,#21c76d,#1de9b6);
+  box-shadow:0 10px 22px rgba(38,212,124,.16);
 }
 .daily-ex-menu{
   width:42px;color:var(--text-secondary);background:rgba(255,255,255,.07);
@@ -3522,9 +3545,19 @@ body.splash-done #splash{display:none;}
 .run-stat-card,.run-chart-card,.run-calendar-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:16px;position:relative;overflow:hidden;}
 .run-stat-card{padding:12px 13px;}
 .run-stat-card.primary{background:linear-gradient(135deg,rgba(255,100,0,.14),rgba(255,45,85,.08));border-color:rgba(255,107,0,.24);}
+.run-stat-row.is-selected .run-stat-card.primary{
+  background:linear-gradient(135deg,rgba(255,149,0,.20),rgba(38,212,124,.08));
+  border-color:rgba(255,149,0,.34);
+  box-shadow:0 16px 34px rgba(255,107,0,.10),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.run-stat-row.is-selected .run-stat-card:not(.primary){
+  border-color:rgba(38,212,124,.18);
+  background:linear-gradient(145deg,rgba(38,212,124,.08),rgba(255,255,255,.02));
+}
 .run-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.18em;color:rgba(255,255,255,.28);text-transform:uppercase;margin-bottom:5px;}
 .run-stat-val{font-size:1.52rem;font-weight:900;line-height:1;color:rgba(255,255,255,.78);}
 .run-stat-val.fire{background:linear-gradient(135deg,#ffca28,#ff6b00,#ff2d55);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.run-stat-row.is-selected .run-stat-val.fire{background:linear-gradient(135deg,#ffca28,#ff9500,#26d47c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .run-stat-val span{font-size:.72rem;font-weight:500;margin-left:2px;color:rgba(255,255,255,.34);-webkit-text-fill-color:rgba(255,255,255,.34);}
 .run-stat-sub,.run-stat-trend{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.28);margin-top:4px;}
 .run-stat-trend.up{color:rgba(100,220,130,.76);}
@@ -3569,7 +3602,7 @@ body.splash-done #splash{display:none;}
 .run-weekdays,.run-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
 .run-weekdays{margin:12px 0 5px;}
 .run-weekdays span{font-family:'JetBrains Mono',monospace;font-size:.44rem;letter-spacing:.05em;text-align:center;color:rgba(255,255,255,.18);text-transform:uppercase;}
-.run-cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.52rem;position:relative;color:rgba(255,255,255,.24);}
+.run-cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.52rem;position:relative;color:rgba(255,255,255,.24);cursor:pointer;transition:transform .18s var(--ease),box-shadow .18s var(--ease),outline-color .18s var(--ease),background .18s var(--ease);}
 .run-cal-cell.empty{background:transparent;}
 .run-cal-cell.rest{background:rgba(255,255,255,.045);}
 .run-cal-cell.light{background:rgba(255,107,0,.15);color:rgba(255,180,60,.72);}
@@ -3577,6 +3610,12 @@ body.splash-done #splash{display:none;}
 .run-cal-cell.heavy{background:linear-gradient(135deg,rgba(255,149,0,.42),rgba(255,45,85,.32));color:#ffca28;font-weight:900;}
 .run-cal-cell.future{background:transparent;color:rgba(255,255,255,.08);}
 .run-cal-cell.today{outline:1.5px solid rgba(255,107,0,.55);outline-offset:1px;}
+.run-cal-cell.selected{
+  transform:translateY(-1px) scale(1.03);
+  outline:1.5px solid rgba(38,212,124,.82);
+  outline-offset:2px;
+  box-shadow:0 0 0 1px rgba(38,212,124,.10),0 10px 22px rgba(38,212,124,.12);
+}
 .run-cal-dot{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:#ff6b00;}
 .run-legend{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:9px;}
 .run-legend span{font-family:'JetBrains Mono',monospace;font-size:.44rem;color:rgba(255,255,255,.2);letter-spacing:.12em;text-transform:uppercase;}
@@ -3745,6 +3784,12 @@ body.splash-done #splash{display:none;}
   background:linear-gradient(90deg,var(--time-color,#ff9500),transparent);
   opacity:.85;
 }
+.time-task-card.time-unassigned{
+  --time-color:#8a80f8;
+  background:linear-gradient(145deg,rgba(138,128,248,.08),rgba(255,255,255,.022));
+}
+.time-task-card.time-unassigned::before{opacity:.38;}
+.time-task-card.time-unassigned .time-task-head{display:none;}
 .time-task-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
 .time-task-title{display:flex;align-items:center;gap:9px;font-weight:900;font-size:.88rem;}
 .time-task-title span:first-child{
@@ -3867,7 +3912,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n4 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n5 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4734,6 +4779,7 @@ document.addEventListener('click', async function(e){
     <div class="tp-field">
       <div class="tp-field-lbl">// Tageszeit</div>
       <div class="tp-time-picker" id="tp-mg-time">
+        <span class="tp-time-pill" data-time="none"><span class="tp-time-ico">–</span><span class="tp-time-name">Keine</span></span>
         <span class="tp-time-pill active" data-time="morning"><span class="tp-time-ico">☀</span><span class="tp-time-name">Morgens</span></span>
         <span class="tp-time-pill" data-time="midday"><span class="tp-time-ico">◐</span><span class="tp-time-name">Mittags</span></span>
         <span class="tp-time-pill" data-time="evening"><span class="tp-time-ico">◒</span><span class="tp-time-name">Abends</span></span>
@@ -5251,7 +5297,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n4</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n5</div>
       </div>
     </div>
 
@@ -5409,7 +5455,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n4</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n5</div>
         </div>
       </div>
     </div>
@@ -5686,7 +5732,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n4';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n5';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -7673,13 +7719,15 @@ window.addEventListener('beforeunload',()=>{
 });
 
 const TIME_OF_DAY = {
+  none:    {label:'',        short:'',       en:'',        icon:'',  color:'#8a80f8', notifyTime:null, headline:''},
   morning: {label:'Morgens', short:'Morgen', en:'Morning', icon:'☀', color:'#ffca28', notifyTime:'06:30', headline:'Morgens'},
   midday:  {label:'Mittags', short:'Mittag', en:'Midday',  icon:'◐', color:'#26c6da', notifyTime:'11:30', headline:'Mittags'},
   evening: {label:'Abends',  short:'Abend',  en:'Evening', icon:'◒', color:'#ff9500', notifyTime:'17:30', headline:'Abends'},
   night:   {label:'Nachts',  short:'Nacht',  en:'Night',   icon:'☾', color:'#8a80f8', notifyTime:'20:30', headline:'Nachts'}
 };
-const TIME_OF_DAY_ORDER = ['morning','midday','evening','night'];
+const TIME_OF_DAY_ORDER = ['none','morning','midday','evening','night'];
 function normalizeTimeOfDay(value, fallback='morning'){
+  if(value === 'none' || value === '') return 'none';
   return TIME_OF_DAY[value] ? value : fallback;
 }
 function timeOfDayMeta(value){
@@ -7692,6 +7740,12 @@ function timeOfDayMeta(value){
     });
   }
   return base;
+}
+function timeOfDayChip(value, mode='short'){
+  const key = normalizeTimeOfDay(value, 'morning');
+  if(key === 'none') return '';
+  const meta = timeOfDayMeta(key);
+  return `${meta.icon ? meta.icon + ' ' : ''}${mode === 'label' ? meta.label : meta.short}`.trim();
 }
 function selectTimePicker(id, value, fallback='morning'){
   const wrap = document.getElementById(id);
@@ -7869,6 +7923,7 @@ const KASAI_I18N = {
   'Mittag':'Midday',
   'Abend':'Evening',
   'Nacht':'Night',
+  'Keine':'None',
   'Gruppe':'Group',
   'Was steht morgens an?':'What is planned for the morning?',
   'Was steht mittags an?':'What is planned for midday?',
@@ -7963,6 +8018,9 @@ const KASAI_I18N = {
   'Zurück':'Back',
   'zurück':'back',
   'Lauf Tracker':'Run Tracker',
+  'Gesamt km':'Total km',
+  'Lauftage':'Run days',
+  'Gewählter Lauf':'Selected Run',
   'Meine Runs':'My Runs',
   'Lauf eintragen':'Add Run',
   '+ Lauf eintragen':'+ Add Run',
@@ -8110,7 +8168,7 @@ const KASAI_TERM_TRANSLATIONS = {
     ['BEINE','LEGS'], ['Beine','Legs'], ['EIGEN','CUSTOM'], ['Eigen','Custom'], ['VERLAUF','HISTORY'], ['Verlauf','History'], ['GESUNDHEIT','HEALTH'],
     ['offen','open'], ['erledigt','done'], ['Hinzufügen','Add'], ['hinzufügen','add'], ['Bearbeiten','Edit'], ['bearbeiten','edit'],
     ['Zurück','Back'], ['zurück','back'], ['Speichern','Save'], ['speichern','save'], ['Abbrechen','Cancel'], ['Locker Lauf','Easy Run'], ['Langer Lauf','Long Run'],
-    ['Läufe','Runs'], ['Laufen','Run'], ['Lauf','Run']
+    ['Lauftag','run day'], ['letzten Monat','last month'], ['Läufe','Runs'], ['Laufen','Run'], ['Lauf','Run']
   ],
   de: [
     ['Daily Habits','Tägliche Gewohnheiten'], ['Run Tracker','Lauf Tracker'], ['My Runs','Meine Läufe'], ['Add New Run','Neuen Lauf eintragen'],
@@ -8135,6 +8193,18 @@ function currentLanguage(){
   return S?.settings?.language === 'en' ? 'en' : 'de';
 }
 
+function escapeI18nRegExp(value){
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function replaceI18nTerm(input, from, to){
+  if(!from || from === to || !input) return input;
+  const hasWordChars = /[\p{L}\p{N}_]/u.test(from);
+  if(!hasWordChars) return String(input).split(from).join(to);
+  const re = new RegExp(`(^|[^\\p{L}\\p{N}_])(${escapeI18nRegExp(from)})(?=$|[^\\p{L}\\p{N}_])`, 'gu');
+  return String(input).replace(re, `$1${to}`);
+}
+
 function translatePhrase(text, lang=currentLanguage()){
   if(!text) return text;
   const trimmed = text.trim();
@@ -8143,7 +8213,7 @@ function translatePhrase(text, lang=currentLanguage()){
   const dict = lang === 'en' ? KASAI_I18N : KASAI_I18N_REVERSE;
   let out = dict[trimmed] || trimmed;
   (KASAI_TERM_TRANSLATIONS[lang] || []).forEach(([from,to])=>{
-    out = out.split(from).join(to);
+    out = replaceI18nTerm(out, from, to);
   });
   return lead + out + trail;
 }
@@ -8343,6 +8413,38 @@ function getDayOfYear(date=today){
   return Math.floor((date - start) / 86400000);
 }
 
+const KASAI_EN_QUOTES = [
+  {main:'Small reps become proof.', accent:'Show up today.'},
+  {main:'No one sees the setup.', accent:'Everyone sees the result.'},
+  {main:'Discipline is a quiet flex.', accent:'Keep building.'},
+  {main:'Your next set is your vote.', accent:'Choose the stronger version.'},
+  {main:'Progress likes boring consistency.', accent:'Repeat the basics.'},
+  {main:'Energy follows action.', accent:'Start before you feel ready.'},
+  {main:'The plan works when you do.', accent:'One task at a time.'},
+  {main:'Strong days are earned early.', accent:'Own the first move.'},
+  {main:'The mirror is late.', accent:'The work already counts.'},
+  {main:'Pressure turns into structure.', accent:'Use the plan.'},
+  {main:'Do the simple thing well.', accent:'Then do it again.'},
+  {main:'Your standard is built today.', accent:'Make it visible.'},
+  {main:'A clean rep beats a loud excuse.', accent:'Quality first.'},
+  {main:'Momentum does not ask for permission.', accent:'Move now.'},
+  {main:'Train the body, calm the mind.', accent:'Stay precise.'},
+  {main:'The win is in the follow-through.', accent:'Finish the set.'},
+  {main:'You do not need perfect energy.', accent:'You need a clean start.'},
+  {main:'Consistency is a premium habit.', accent:'Protect it.'},
+  {main:'Every logged rep is evidence.', accent:'Build your case.'},
+  {main:'Today does not need drama.', accent:'It needs execution.'},
+  {main:'Your future self reads your data.', accent:'Give them proof.'},
+  {main:'Training is a promise kept in public.', accent:'Even when no one watches.'},
+  {main:'Make the next minute useful.', accent:'That is enough to begin.'},
+  {main:'The strongest version is scheduled.', accent:'Meet them there.'}
+];
+
+function quoteForLanguage(quote, index){
+  if(currentLanguage() !== 'en') return quote;
+  return KASAI_EN_QUOTES[index % KASAI_EN_QUOTES.length] || quote;
+}
+
 function renderDailyQuote(date=today){
   const quotes = (window.FORGE_QUOTES_365 || []).slice(0, 365);
   const textEl = document.getElementById('daily-quote-text');
@@ -8350,9 +8452,11 @@ function renderDailyQuote(date=today){
   if(!quotes.length || !textEl || !dayEl) return;
 
   const index = (getDayOfYear(date) - 1 + quotes.length) % quotes.length;
-  const quote = quotes[index];
+  const quote = quoteForLanguage(quotes[index], index);
   textEl.innerHTML = `<strong>${escapeHtml(quote.main)}</strong><br><em>${escapeHtml(quote.accent)}</em>`;
-  dayEl.textContent = `tag ${index + 1} von ${quotes.length}`;
+  dayEl.textContent = currentLanguage() === 'en'
+    ? `day ${index + 1} of ${quotes.length}`
+    : `tag ${index + 1} von ${quotes.length}`;
 }
 
 function getPlanWeekIds(){
@@ -8954,8 +9058,9 @@ function renderDailyExerciseTrackers(){
     const target = Math.max(1, parseInt(ex.target) || 1);
     const pct = Math.min(100, Math.round(count / target * 100));
     const step = Math.max(1, parseInt(ex.step) || 1);
+    const complete = count >= target;
     return `
-      <div class="daily-ex-card" data-daily-id="${escapeHtml(ex.id)}">
+      <div class="daily-ex-card${complete ? ' complete' : ''}" data-daily-id="${escapeHtml(ex.id)}">
         <div class="daily-ex-head">
           <div class="daily-ex-icon">${escapeHtml(cleanUiIcon(ex.icon, '💪'))}</div>
           <div class="daily-ex-main">
@@ -9114,12 +9219,14 @@ function renderTimeTaskStructure(plan){
       .map(key=>{
         const meta = timeOfDayMeta(key);
         const items = buckets[key];
+        const isUnassigned = key === 'none';
         return `
-          <div class="time-task-card" style="--time-color:${meta.color}">
-            <div class="time-task-head">
-              <div class="time-task-title"><span>${meta.icon}</span><div>${meta.headline}</div></div>
-              <div class="time-task-meta">${items.length} Aufgabe${items.length === 1 ? '' : 'n'}</div>
-            </div>
+          <div class="time-task-card${isUnassigned ? ' time-unassigned' : ''}" style="--time-color:${meta.color}">
+            ${isUnassigned ? '' : `
+              <div class="time-task-head">
+                <div class="time-task-title"><span>${meta.icon}</span><div>${meta.headline}</div></div>
+                <div class="time-task-meta">${items.length} Aufgabe${items.length === 1 ? '' : 'n'}</div>
+              </div>`}
             <div class="time-task-items">
               ${items.map(item=>`
                 <div class="time-task-item" data-time-kind="${item.kind}" data-time-id="${escapeHtml(item.id)}" data-time-name="${escapeHtml(item.name)}">
@@ -9197,7 +9304,7 @@ function renderMuscles(plan){
     const mSets = mExs.reduce((a,e)=>a+e.sets,0);
     const doneSets = mExs.filter(e=>isDone(e.id)).reduce((a,e)=>a+e.sets,0);
     const pct = mSets ? Math.round(doneSets/mSets*100) : 0;
-    const timeMeta = timeOfDayMeta(mObj.timeOfDay || 'morning');
+    const timeChip = timeOfDayChip(mObj.timeOfDay || 'morning');
 
     const isLastOdd = (i === muscles.length-1) && (muscles.length % 2 === 1) && muscles.length>1;
     const isSingle  = muscles.length === 1;
@@ -9215,7 +9322,7 @@ function renderMuscles(plan){
         <div class="cat-progress-ring" data-pct="${pct}%"></div>
       </div>
       <div class="cat-name">${m}</div>
-      <div class="cat-meta"><span class="time-chip">${timeMeta.icon} ${timeMeta.short}</span></div>
+      ${timeChip ? `<div class="cat-meta"><span class="time-chip">${timeChip}</span></div>` : ''}
       <div class="cat-meta">${mExs.length} ${exLabel} · ${mSets} SÄTZE${suffix}</div>
       <div class="cat-prog" style="width:${pct}%;background:${color}"></div>`;
     el.onclick = ()=>{ if(mExs.length) navigate('exercise', mExs[0]); };
@@ -9299,6 +9406,7 @@ const RUN_PROOF_LIMIT = 3;
 const _runWeekAnimatedSignatures = new Set();
 let _pendingRunProofImages = [];
 let _runFormViewportGuardReady = false;
+let _runSelectedDate = null;
 
 function normalizeRunProofImages(images=[]){
   if(!Array.isArray(images)) return [];
@@ -9409,28 +9517,84 @@ function sumRunsByDate(runs){
 }
 function formatRunMonth(monthDate){ return `${DE_MONTHS[monthDate.getMonth()]} ${monthDate.getFullYear()}`; }
 
+function aggregateRunDay(runs=[]){
+  return runs.reduce((acc, run)=>{
+    acc.km += Number(run.km || 0);
+    acc.min += Number(run.min || 0);
+    acc.pauses += Math.max(0, parseInt(run.pauses || 0) || 0);
+    acc.count += 1;
+    if(run.type && !acc.types.includes(run.type)) acc.types.push(run.type);
+    return acc;
+  }, {km:0, min:0, pauses:0, count:0, types:[]});
+}
+
+function formatRunPace(km, min){
+  return km ? (Number(min || 0) / Number(km || 1)).toFixed(1) : '-';
+}
+
+function formatRunDateLabel(key){
+  const d = parseDateKey(key);
+  return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+
+function renderRunTopStats(monthDate, monthRuns, prevMonthRuns){
+  const row = document.querySelector('#screen-run .run-stat-row');
+  const labels = row?.querySelectorAll('.run-stat-lbl') || [];
+  const totalEl = document.getElementById('run-total-km');
+  const daysEl = document.getElementById('run-days-count');
+  const subEl = document.getElementById('run-avg-km');
+  const trend = document.getElementById('run-km-trend');
+  if(!row || !totalEl || !daysEl || !subEl || !trend) return;
+
+  const monthKey = runMonthKey(monthDate);
+  const selectedRuns = _runSelectedDate && String(_runSelectedDate).startsWith(monthKey)
+    ? monthRuns.filter(run=>run.date === _runSelectedDate)
+    : [];
+
+  if(selectedRuns.length){
+    const agg = aggregateRunDay(selectedRuns);
+    const pace = formatRunPace(agg.km, agg.min);
+    const typeText = agg.count > 1 ? `${agg.count} Läufe` : (agg.types[0] || 'Run');
+    const pauseText = `${agg.pauses} Pause${agg.pauses === 1 ? '' : 'n'}`;
+    row.classList.add('is-selected');
+    if(labels[0]) labels[0].textContent = 'Gewählter Lauf';
+    if(labels[1]) labels[1].textContent = 'Pace';
+    totalEl.innerHTML = `${agg.km.toFixed(1)}<span>km</span>`;
+    daysEl.innerHTML = `${pace}<span>/km</span>`;
+    subEl.textContent = `${Math.round(agg.min)} min · ${pauseText}`;
+    trend.textContent = `${formatRunDateLabel(_runSelectedDate)} · ${typeText}`;
+    trend.className = 'run-stat-trend up';
+    return;
+  }
+
+  row.classList.remove('is-selected');
+  if(labels[0]) labels[0].textContent = 'Gesamt km';
+  if(labels[1]) labels[1].textContent = 'Lauftage';
+  const totalKm = monthRuns.reduce((sum, run)=>sum + Number(run.km || 0), 0);
+  const prevKm = prevMonthRuns.reduce((sum, run)=>sum + Number(run.km || 0), 0);
+  const runDays = Object.keys(sumRunsByDate(monthRuns)).length;
+  const diff = totalKm - prevKm;
+  totalEl.innerHTML = `${totalKm.toFixed(1)}<span>km</span>`;
+  daysEl.innerHTML = `${runDays}<span>Tage</span>`;
+  subEl.textContent = runDays ? `Ø ${(totalKm/runDays).toFixed(1)} km pro Lauftag` : 'Noch keine Läufe';
+  trend.textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)} km vs. letzten Monat`;
+  trend.className = 'run-stat-trend ' + (diff >= 0 ? 'up' : 'down');
+}
+
 function renderRunTracker(){
   moveRunSectionToScreen();
   if(!S.runTracker) S.runTracker = {chartMode:'km', monthOffset:0, formOpen:false};
   const monthDate = runMonthDate();
   const monthRuns = runsForMonth(monthDate);
   const prevMonthRuns = runsForMonth(new Date(monthDate.getFullYear(), monthDate.getMonth()-1, 1));
-  const totalKm = monthRuns.reduce((sum, run)=>sum + Number(run.km || 0), 0);
-  const prevKm = prevMonthRuns.reduce((sum, run)=>sum + Number(run.km || 0), 0);
-  const runDays = Object.keys(sumRunsByDate(monthRuns)).length;
-  const diff = totalKm - prevKm;
-  const trend = document.getElementById('run-km-trend');
   document.getElementById('run-month-badge').textContent = `${DE_MONTHS[monthDate.getMonth()].slice(0,3)} ${monthDate.getFullYear()}`;
-  document.getElementById('run-total-km').innerHTML = `${totalKm.toFixed(1)}<span>km</span>`;
-  document.getElementById('run-days-count').innerHTML = `${runDays}<span>Tage</span>`;
-  document.getElementById('run-avg-km').textContent = runDays ? `Ø ${(totalKm/runDays).toFixed(1)} km pro Lauftag` : 'Noch keine Läufe';
-  trend.textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(1)} km vs. letzten Monat`;
-  trend.className = 'run-stat-trend ' + (diff >= 0 ? 'up' : 'down');
+  renderRunTopStats(monthDate, monthRuns, prevMonthRuns);
   document.querySelectorAll('.run-mode-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.runMode === (S.runTracker.chartMode || 'km')));
   renderRunWeekBars();
   renderRunCalendar(monthDate, monthRuns);
   renderRunList();
   renderRunFormState();
+  scheduleI18n();
 }
 
 function moveRunSectionToScreen(){
@@ -9506,6 +9670,7 @@ function renderRunCalendar(monthDate, monthRuns){
   for(let i=0;i<firstDow;i++){
     const empty = document.createElement('div');
     empty.className = 'run-cal-cell empty';
+    empty.addEventListener('click',()=>{ _runSelectedDate = null; renderRunTracker(); });
     grid.appendChild(empty);
   }
   for(let day=1; day<=daysInMonth; day++){
@@ -9520,9 +9685,13 @@ function renderRunCalendar(monthDate, monthRuns){
     else if(km >= 6 && km < 10) level = 'medium';
     else if(km >= 10) level = 'heavy';
     const cell = document.createElement('div');
-    cell.className = `run-cal-cell ${level} ${isToday ? 'today' : ''}`;
+    cell.className = `run-cal-cell ${level} ${isToday ? 'today' : ''} ${_runSelectedDate === key && km && !isFuture ? 'selected' : ''}`;
     cell.title = km ? `${km.toFixed(1)} km` : '';
     cell.innerHTML = `${day}${km && !isFuture ? '<span class="run-cal-dot"></span>' : ''}`;
+    cell.addEventListener('click',()=>{
+      _runSelectedDate = km && !isFuture ? key : null;
+      renderRunTracker();
+    });
     grid.appendChild(cell);
   }
 }
@@ -10760,6 +10929,7 @@ function renderDayDetailScreen(){
 
   mgs.forEach(mg=>{
     const exs = (mg.exercises||[]).filter(e=>!e.isArchived);
+    const mgTimeChip = timeOfDayChip(mg.timeOfDay);
     const block = document.createElement('div');
     block.className = 'mg-block';
 
@@ -10770,7 +10940,7 @@ function renderDayDetailScreen(){
       <span class="mg-drag-h">::</span>
       <span class="mg-icon-h">${mg.icon||'💪'}</span>
       <span class="mg-name-h">${mg.name}</span>
-      <span class="mg-count-h">${timeOfDayMeta(mg.timeOfDay).icon} ${timeOfDayMeta(mg.timeOfDay).short} · ${exs.length} Übung${exs.length!==1?'en':''}</span>
+      <span class="mg-count-h">${mgTimeChip ? `${mgTimeChip} · ` : ''}${exs.length} Übung${exs.length!==1?'en':''}</span>
       <span class="mg-del-h" data-mgid="${mg.id}">×</span>
     `;
     hdr.querySelector('.mg-del-h').addEventListener('click',e=>{
@@ -12107,7 +12277,9 @@ function scheduleNotifications(){
     TIME_OF_DAY_ORDER.forEach(timeKey=>{
       const items = buckets[timeKey] || [];
       if(!items.length) return;
-      scheduleAt(nextDateForTime(timeOfDayMeta(timeKey).notifyTime), ()=>{
+      const notifyTime = timeOfDayMeta(timeKey).notifyTime;
+      if(!notifyTime) return;
+      scheduleAt(nextDateForTime(notifyTime), ()=>{
         showKasaiNotification('KASAI Training', planReminderTextForTime(timeKey, items), `kasai-training-${timeKey}`);
       });
     });
