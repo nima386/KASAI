@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux3';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux4';
 </script>
 <style>
 :root {
@@ -115,15 +115,14 @@ body{
   display:flex;flex-direction:column;
   opacity:0;pointer-events:none;
   visibility:hidden;
-  transform:translate3d(0,0,0) scale(.986);
+  transform:none;
   transition:
-    opacity .18s cubic-bezier(.22,1,.36,1),
-    visibility 0s linear .2s,
-    transform .2s cubic-bezier(.22,1,.36,1);
+    opacity .14s cubic-bezier(.22,1,.36,1),
+    visibility 0s linear .16s;
   z-index:1;
   overflow:hidden;
   filter:none;
-  will-change:opacity,transform;
+  will-change:opacity;
   backface-visibility:hidden;
   transform-origin:50% 52%;
 }
@@ -133,7 +132,7 @@ body{
 .screen.active{
   opacity:1;pointer-events:all;
   visibility:visible;
-  transform:scale(1);
+  transform:none;
   filter:none;
   z-index:2;
   transition-delay:0s;
@@ -141,7 +140,7 @@ body{
 .screen.active.slide-left{
   opacity:1!important;
   pointer-events:all!important;
-  transform:scale(1)!important;
+  transform:none!important;
 }
 .screen.slide-left{
   transform:none;opacity:0;pointer-events:none;visibility:hidden;
@@ -3466,36 +3465,34 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 .nav-icon{font-size:1rem;}
 .nav-label{font-size:.42rem;letter-spacing:.16em;}
 @keyframes kasaiScreenInForward{
-  0%{opacity:0;transform:translate3d(0,0,0) scale(.982);}
-  62%{opacity:1;transform:translate3d(0,0,0) scale(1.003);}
-  100%{opacity:1;transform:translate3d(0,0,0) scale(1);}
+  0%{opacity:0;}
+  100%{opacity:1;}
 }
 @keyframes kasaiScreenInBack{
-  0%{opacity:0;transform:translate3d(0,0,0) scale(.982);}
-  62%{opacity:1;transform:translate3d(0,0,0) scale(1.003);}
-  100%{opacity:1;transform:translate3d(0,0,0) scale(1);}
+  0%{opacity:0;}
+  100%{opacity:1;}
 }
 @keyframes kasaiScreenOutForward{
-  0%{opacity:1;transform:translate3d(0,0,0) scale(1);}
-  100%{opacity:0;transform:translate3d(0,0,0) scale(.996);}
+  0%{opacity:1;}
+  100%{opacity:0;}
 }
 @keyframes kasaiScreenOutBack{
-  0%{opacity:1;transform:translate3d(0,0,0) scale(1);}
-  100%{opacity:0;transform:translate3d(0,0,0) scale(.996);}
+  0%{opacity:1;}
+  100%{opacity:0;}
 }
 .screen.screen-entering{
   visibility:visible!important;
   pointer-events:auto;
 }
-.screen.screen-enter-forward{animation:kasaiScreenInForward .2s cubic-bezier(.22,1,.36,1) both;}
-.screen.screen-enter-back{animation:kasaiScreenInBack .2s cubic-bezier(.22,1,.36,1) both;}
+.screen.screen-enter-forward{animation:kasaiScreenInForward .14s cubic-bezier(.22,1,.36,1) both;}
+.screen.screen-enter-back{animation:kasaiScreenInBack .14s cubic-bezier(.22,1,.36,1) both;}
 .screen.screen-leaving{
   visibility:visible!important;
   pointer-events:none!important;
   z-index:1;
 }
-.screen.screen-leave-forward{animation:kasaiScreenOutForward .16s cubic-bezier(.4,0,.2,1) both;}
-.screen.screen-leave-back{animation:kasaiScreenOutBack .16s cubic-bezier(.4,0,.2,1) both;}
+.screen.screen-leave-forward{animation:kasaiScreenOutForward .1s cubic-bezier(.4,0,.2,1) both;}
+.screen.screen-leave-back{animation:kasaiScreenOutBack .1s cubic-bezier(.4,0,.2,1) both;}
 @media (prefers-reduced-motion: reduce){
   .screen.screen-enter-forward,
   .screen.screen-enter-back,
@@ -4228,7 +4225,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux3 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux4 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -5639,7 +5636,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux3</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux4</div>
       </div>
     </div>
 
@@ -5797,7 +5794,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux3</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux4</div>
         </div>
       </div>
     </div>
@@ -6074,7 +6071,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux3';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux4';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
