@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux5';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux6';
 </script>
 <style>
 :root {
@@ -1822,6 +1822,58 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 .settings-list button.setting-row{width:100%;text-align:left;border:none;font:inherit;color:inherit;}
 .habit-specific-reminder{grid-template-columns:auto 1fr auto;}
 .habit-specific-reminder input[type="time"]{width:94px;}
+.habit-weekdays-box{
+  margin-top:10px;
+  padding:12px;
+  border:1px solid rgba(255,149,0,.16);
+  border-radius:18px;
+  background:
+    radial-gradient(220px 120px at 50% 0%,rgba(255,149,0,.12),transparent 70%),
+    linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+  display:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.habit-weekdays-box.show{display:block;}
+.habit-weekdays-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:10px;
+}
+.habit-weekdays-title{
+  font-size:.82rem;font-weight:800;letter-spacing:-.01em;
+}
+.habit-weekdays-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.1em;
+  color:var(--text-muted);text-transform:uppercase;margin-top:2px;
+}
+.habit-weekdays-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
+}
+.habit-weekday-btn{
+  min-width:0;border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:10px 0;
+  background:rgba(255,255,255,.045);
+  color:var(--text-secondary);
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:900;
+  letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .18s cubic-bezier(.16,1,.3,1),background .22s var(--ease),border-color .22s var(--ease),box-shadow .22s var(--ease),color .22s var(--ease);
+}
+.habit-weekday-btn:active{transform:scale(.96);}
+.habit-weekday-btn.active{
+  color:#fff;
+  border-color:rgba(255,149,0,.45);
+  background:linear-gradient(135deg,rgba(255,149,0,.92),rgba(255,45,85,.88));
+  box-shadow:0 10px 24px rgba(255,80,0,.18),0 0 0 1px rgba(255,255,255,.06) inset;
+}
+.habit-schedule-chip{
+  display:inline-flex;align-items:center;width:max-content;max-width:100%;
+  margin-top:5px;padding:4px 8px;border-radius:999px;
+  font-family:'JetBrains Mono',monospace;font-size:.5rem;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,202,40,.92);
+  background:rgba(255,149,0,.085);
+  border:1px solid rgba(255,149,0,.16);
+}
 .setting-row{
   background:var(--bg-card);border:1px solid var(--border-default);border-radius:var(--r-md);
   padding:13px 14px;display:flex;align-items:center;gap:12px;
@@ -4242,7 +4294,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux5 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux6 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -5524,6 +5576,24 @@ document.addEventListener('click', async function(e){
         <div class="pill-picker" id="habit-scope">
           <span class="pill-pick" data-val="daily">Jeden Tag</span>
           <span class="pill-pick" data-val="today">Nur dieser Tag</span>
+          <span class="pill-pick" data-val="weekdays">Wochentage</span>
+        </div>
+        <div class="habit-weekdays-box" id="habit-weekdays-box">
+          <div class="habit-weekdays-head">
+            <div>
+              <div class="habit-weekdays-title">Bestimmte Tage</div>
+              <div class="habit-weekdays-sub">ein oder mehrere Wochentage</div>
+            </div>
+          </div>
+          <div class="habit-weekdays-grid" id="habit-weekdays">
+            <button class="habit-weekday-btn" type="button" data-weekday="1">Mo</button>
+            <button class="habit-weekday-btn" type="button" data-weekday="2">Di</button>
+            <button class="habit-weekday-btn" type="button" data-weekday="3">Mi</button>
+            <button class="habit-weekday-btn" type="button" data-weekday="4">Do</button>
+            <button class="habit-weekday-btn" type="button" data-weekday="5">Fr</button>
+            <button class="habit-weekday-btn" type="button" data-weekday="6">Sa</button>
+            <button class="habit-weekday-btn" type="button" data-weekday="0">So</button>
+          </div>
         </div>
       </div>
       <div class="set-group habit-reminder-box">
@@ -5653,7 +5723,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux5</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux6</div>
       </div>
     </div>
 
@@ -5811,7 +5881,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux5</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux6</div>
         </div>
       </div>
     </div>
@@ -6088,7 +6158,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux5';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux6';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -7113,6 +7183,7 @@ function applyHabitRecords(rows=[]){
     icon: cleanUiIcon(row.icon, '+'),
     scope: row.scope || 'daily',
     activeDates: Array.isArray(row.active_dates) ? row.active_dates : [],
+    activeWeekdays: normalizeHabitWeekdays(row.active_weekdays || row.activeWeekdays, row.scope === 'weekdays' ? [weekdayForDateKey(todayStr)] : []),
     streak: Number(row.streak || 0),
     reminder: {
       enabled: !!row.reminder_enabled,
@@ -7525,6 +7596,7 @@ function normalizeState(){
   S.runTracker = Object.assign({chartMode:'km', monthOffset:0, formOpen:false}, S.runTracker || {});
   if(!S.userHabits) S.userHabits = [];
   S.userHabits = S.userHabits.map(h=>Object.assign({scope:'daily', activeDates:[], reminder:{enabled:false,time:'20:30'}}, h, {
+    activeWeekdays: normalizeHabitWeekdays(h.activeWeekdays, h.scope === 'weekdays' ? [weekdayForDateKey(todayStr)] : []),
     reminder: Object.assign({enabled:false,time:'20:30'}, h.reminder || {})
   }));
   if(!S.settings) S.settings = {};
@@ -8170,6 +8242,7 @@ if(!S.runTracker)           S.runTracker = {};
 S.runTracker = Object.assign({chartMode:'km', monthOffset:0, formOpen:false}, S.runTracker || {});
 if(!S.userHabits)           S.userHabits = [];
 S.userHabits = S.userHabits.map(h=>Object.assign({scope:'daily', activeDates:[], reminder:{enabled:false,time:'20:30'}}, h, {
+  activeWeekdays: normalizeHabitWeekdays(h.activeWeekdays, h.scope === 'weekdays' ? [weekdayForDateKey(todayStr)] : []),
   reminder: Object.assign({enabled:false,time:'20:30'}, h.reminder || {})
 }));
 if(!S.settings)             S.settings = {};
@@ -8465,6 +8538,9 @@ const KASAI_I18N = {
   'Gültigkeit':'Validity',
   'Jeden Tag':'Every day',
   'Nur dieser Tag':'Only this day',
+  'Wochentage':'Weekdays',
+  'Bestimmte Tage':'Specific days',
+  'ein oder mehrere Wochentage':'one or more weekdays',
   'Für diesen Habit erinnern':'Remind me about this habit',
   'Nur wenn er an dem Tag noch offen ist':'Only if it is still open that day',
   'Gewohnheit löschen':'Delete habit',
@@ -12220,11 +12296,55 @@ KDOM.setClick('hydration-btn', ()=>{
 // ---------------------------------------------------
 // RENDER: HABITS
 // ---------------------------------------------------
+const HABIT_WEEKDAY_ORDER = [1,2,3,4,5,6,0];
+const HABIT_WEEKDAY_LABELS_DE = {1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa',0:'So'};
+const HABIT_WEEKDAY_LABELS_EN = {1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',0:'Sun'};
+
+function normalizeHabitWeekdays(value, fallback=[]){
+  const source = Array.isArray(value) ? value : [];
+  const days = source
+    .map(v=>parseInt(v, 10))
+    .filter(v=>Number.isInteger(v) && v >= 0 && v <= 6);
+  const unique = Array.from(new Set(days));
+  if(unique.length) return HABIT_WEEKDAY_ORDER.filter(day=>unique.includes(day));
+  const fallbackDays = Array.isArray(fallback) ? fallback : [fallback];
+  const cleanFallback = Array.from(new Set(fallbackDays.map(v=>parseInt(v, 10)).filter(v=>Number.isInteger(v) && v >= 0 && v <= 6)));
+  return HABIT_WEEKDAY_ORDER.filter(day=>cleanFallback.includes(day));
+}
+
+function weekdayForDateKey(dayKey=selectedDateStr){
+  return parseDateKey(dayKey).getDay();
+}
+
+function habitAppliesOnDate(habit, dayKey=selectedDateStr){
+  const scope = habit?.scope || 'daily';
+  if(scope === 'today') return (habit.activeDates || []).includes(dayKey);
+  if(scope === 'weekdays'){
+    const selected = normalizeHabitWeekdays(habit.activeWeekdays);
+    return selected.includes(weekdayForDateKey(dayKey));
+  }
+  return true;
+}
+
+function habitScheduleLabel(habit){
+  const lang = currentLanguage();
+  const scope = habit?.scope || 'daily';
+  if(scope === 'today') return lang === 'en' ? 'Only this day' : 'Nur dieser Tag';
+  if(scope === 'weekdays'){
+    const labels = lang === 'en' ? HABIT_WEEKDAY_LABELS_EN : HABIT_WEEKDAY_LABELS_DE;
+    const days = normalizeHabitWeekdays(habit.activeWeekdays);
+    if(days.length >= 7) return lang === 'en' ? 'Every day' : 'Jeden Tag';
+    return days.map(day=>labels[day]).join(' · ') || (lang === 'en' ? 'Weekdays' : 'Wochentage');
+  }
+  return lang === 'en' ? 'Every day' : 'Jeden Tag';
+}
+
 function getActiveHabits(dayKey=selectedDateStr){
-  return (S.userHabits || []).filter(h=>{
-    if((h.scope || 'daily') === 'today') return (h.activeDates || []).includes(dayKey);
-    return true;
-  });
+  return (S.userHabits || []).filter(h=>habitAppliesOnDate(h, dayKey));
+}
+
+function getActiveHabitsForDate(dayKey=selectedDateStr){
+  return getActiveHabits(dayKey);
 }
 
 function removeHabitFromAllDays(habitId){
@@ -12267,6 +12387,7 @@ function renderHabits(){
         <div style="flex:1">
           <div class="habit-name ${isDone?'done':''}">${cleanUiIcon(h.icon, '+')} ${h.name}</div>
           <div class="habit-streak">${streak>0?'SERIE '+streak+' TAGE':'streak: 0'}</div>
+          <div class="habit-schedule-chip">${escapeHtml(habitScheduleLabel(h))}</div>
         </div>`;
     const card = row.querySelector('.habit-card');
 
@@ -13683,6 +13804,29 @@ document.querySelectorAll('#screen-nutrition .section-row-link').forEach(a=>{
 // ---------------------------------------------------
 let _editingHabitId = null;
 
+function selectedHabitWeekdays(){
+  return normalizeHabitWeekdays(Array.from(document.querySelectorAll('#habit-weekdays .habit-weekday-btn.active')).map(btn=>btn.dataset.weekday));
+}
+
+function setHabitWeekdays(days){
+  const fallback = [weekdayForDateKey(selectedDateStr)];
+  const selected = normalizeHabitWeekdays(days, fallback);
+  document.querySelectorAll('#habit-weekdays .habit-weekday-btn').forEach(btn=>{
+    btn.classList.toggle('active', selected.includes(parseInt(btn.dataset.weekday, 10)));
+  });
+  return selected;
+}
+
+function updateHabitWeekdaysPanel(){
+  const scope = document.querySelector('#habit-scope .pill-pick.sel')?.dataset.val || 'daily';
+  const box = document.getElementById('habit-weekdays-box');
+  if(!box) return;
+  box.classList.toggle('show', scope === 'weekdays');
+  if(scope === 'weekdays' && !selectedHabitWeekdays().length){
+    setHabitWeekdays([weekdayForDateKey(selectedDateStr)]);
+  }
+}
+
 function openHabitEdit(habitId){
   _editingHabitId = habitId || null;
   const h = habitId ? S.userHabits.find(x=>x.id===habitId) : null;
@@ -13692,6 +13836,8 @@ function openHabitEdit(habitId){
   document.getElementById('habit-name').value = h?.name || '';
   selectIcon('habit-icons', cleanUiIcon(h?.icon, '+'));
   selectPill('habit-scope', h?.scope || 'daily');
+  setHabitWeekdays(h?.scope === 'weekdays' ? h.activeWeekdays : [weekdayForDateKey(selectedDateStr)]);
+  updateHabitWeekdaysPanel();
   document.getElementById('habit-reminder-enabled').checked = !!h?.reminder?.enabled;
   document.getElementById('habit-reminder-time').value = h?.reminder?.time || '20:30';
   showOverlay('habit-overlay');
@@ -13701,13 +13847,29 @@ document.querySelectorAll('#habit-icons .icon-pick').forEach(p=>{
   p.addEventListener('click',()=>selectIcon('habit-icons', p.dataset.icon));
 });
 document.querySelectorAll('#habit-scope .pill-pick').forEach(p=>{
-  p.addEventListener('click',()=>selectPill('habit-scope', p.dataset.val));
+  p.addEventListener('click',()=>{
+    selectPill('habit-scope', p.dataset.val);
+    if(p.dataset.val === 'weekdays' && !selectedHabitWeekdays().length) setHabitWeekdays([weekdayForDateKey(selectedDateStr)]);
+    updateHabitWeekdaysPanel();
+  });
+});
+document.querySelectorAll('#habit-weekdays .habit-weekday-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const active = selectedHabitWeekdays();
+    const day = parseInt(btn.dataset.weekday, 10);
+    if(btn.classList.contains('active') && active.length <= 1) return;
+    btn.classList.toggle('active');
+    updateHabitWeekdaysPanel();
+  });
 });
 
 KDOM.setClick('habit-save', ()=>{
   const icon = cleanUiIcon(document.querySelector('#habit-icons .icon-pick.sel')?.dataset.icon, '+');
   const name = document.getElementById('habit-name').value.trim() || 'Neue Gewohnheit';
   const scope = document.querySelector('#habit-scope .pill-pick.sel')?.dataset.val || 'daily';
+  const activeWeekdays = scope === 'weekdays'
+    ? normalizeHabitWeekdays(selectedHabitWeekdays(), [weekdayForDateKey(selectedDateStr)])
+    : [];
   const reminder = {
     enabled: document.getElementById('habit-reminder-enabled').checked,
     time: document.getElementById('habit-reminder-time').value || '20:30'
@@ -13719,11 +13881,12 @@ KDOM.setClick('habit-save', ()=>{
       icon,
       name,
       scope,
+      activeWeekdays,
       reminder,
       activeDates: scope === 'today' ? Array.from(new Set([...(S.userHabits[i].activeDates || []), selectedDateStr])) : []
     };
   } else {
-    S.userHabits.push({id:'h-'+Date.now(), icon, name, scope, reminder, activeDates: scope === 'today' ? [selectedDateStr] : [], streak:0});
+    S.userHabits.push({id:'h-'+Date.now(), icon, name, scope, activeWeekdays, reminder, activeDates: scope === 'today' ? [selectedDateStr] : [], streak:0});
   }
   saveState(S);
   hideOverlay('habit-overlay');

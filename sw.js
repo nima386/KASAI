@@ -1,4 +1,4 @@
-const CACHE = 'kasai-v43-timepush-i18n6-ux5';
+const CACHE = 'kasai-v43-timepush-i18n6-ux6';
 const ASSETS = [
   './',
   './index.html',
