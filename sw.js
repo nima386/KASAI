@@ -1,18 +1,18 @@
-const CACHE = 'kasai-v43-timepush-i18n6-ux6';
+const CACHE = 'kasai-v43-timepush-i18n6-ux7';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './styles/premium-ux.css',
   './icons/kasai-icon.svg',
-  './icons/app-logo-b5.svg',
+  './icons/app-logo-c7.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
-  './icons/icon-b5-192.png',
-  './icons/icon-b5-512.png',
-  './icons/icon-b5-maskable-512.png',
-  './icons/apple-touch-icon-b5.png',
+  './icons/icon-c7-192.png',
+  './icons/icon-c7-512.png',
+  './icons/icon-c7-maskable-512.png',
+  './icons/apple-touch-icon-c7.png',
   './splash/01-you-vs-you.html',
   './splash/02-dont-stop.html',
   './splash/03-discipline.html',
@@ -126,8 +126,8 @@ self.addEventListener('push', e => {
   const options = {
     body: payload.body || 'Dein Training wartet auf dich.',
     tag: payload.tag || 'kasai-training',
-    badge: './icons/icon-192.png',
-    icon: './icons/icon-192.png',
+    badge: './icons/icon-c7-192.png',
+    icon: './icons/icon-c7-192.png',
     data: {
       url: payload.url || './index.html',
       type: payload.type || 'training'
