@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux4';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux5';
 </script>
 <style>
 :root {
@@ -497,6 +497,10 @@ body{
   transition:transform .18s var(--ease),border-color .18s var(--ease),background .18s var(--ease);
 }
 .muscle-sheet-ex:active{transform:scale(.985);border-color:rgba(255,149,0,.28);}
+.muscle-sheet-ex.is-opening{
+  border-color:rgba(255,149,0,.34);
+  background:linear-gradient(145deg,rgba(255,149,0,.11),rgba(255,255,255,.02));
+}
 .muscle-sheet-num{
   width:30px;height:30px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
@@ -3516,21 +3520,34 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   pointer-events:none;
 }
 .kasai-nav-slider{
-  position:absolute;bottom:0;height:2px;left:0;width:0;
-  background:linear-gradient(90deg,transparent,#ff9500,#ff2d55,#ff9500,transparent);
-  box-shadow:0 0 10px rgba(255,100,0,0.8),0 0 20px rgba(255,45,85,0.4);
-  transition:left .28s cubic-bezier(.22,1,.36,1),width .28s cubic-bezier(.22,1,.36,1);
-  border-radius:1px;
+  position:absolute;bottom:4px;height:3px;left:0;width:var(--nav-slider-w,0px);
+  transform:translate3d(var(--nav-slider-x,0px),0,0);
+  background:linear-gradient(90deg,transparent 0%,rgba(255,202,40,.92) 18%,#ff9500 48%,#ff2d55 78%,transparent 100%);
+  box-shadow:0 0 10px rgba(255,149,0,0.58),0 0 22px rgba(255,45,85,0.28);
+  transition:
+    transform .46s cubic-bezier(.16,1,.3,1),
+    width .46s cubic-bezier(.16,1,.3,1),
+    opacity .22s ease;
+  border-radius:999px;
   z-index:1;
   pointer-events:none;
+  opacity:.96;
+  will-change:transform,width;
+}
+.kasai-nav-slider::before{
+  content:'';
+  position:absolute;left:12%;right:12%;top:-9px;height:20px;
+  background:radial-gradient(ellipse,rgba(255,107,0,.22),transparent 68%);
+  filter:blur(5px);
+  opacity:.85;
 }
 .kasai-nav-slider::after{
   content:'';
-  position:absolute;right:-2px;top:-3px;
-  width:8px;height:8px;border-radius:50%;
-  background:radial-gradient(circle,#fff8c0,rgba(255,200,60,0.4) 60%,transparent 100%);
-  box-shadow:0 0 6px #ffca28;
-  animation:spark-pulse .8s ease-in-out infinite;
+  position:absolute;right:-3px;top:-2px;
+  width:7px;height:7px;border-radius:50%;
+  background:radial-gradient(circle,#fff8c0,rgba(255,200,60,0.45) 58%,transparent 100%);
+  box-shadow:0 0 7px rgba(255,202,40,.86);
+  animation:spark-pulse 1.35s ease-in-out infinite;
 }
 @keyframes spark-pulse{
   0%,100%{transform:scale(1);opacity:1;}
@@ -3541,7 +3558,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .kasai-nav-particle{
   position:absolute;border-radius:50%;pointer-events:none;
-  animation:p-burst var(--pd,.48s) ease-out forwards;
+  animation:p-burst var(--pd,.58s) cubic-bezier(.16,1,.3,1) forwards;
 }
 @keyframes p-burst{
   0%{transform:translate(0,0) scale(1);opacity:.9;}
@@ -3556,28 +3573,28 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   background:transparent!important;
   box-shadow:none!important;
   cursor:pointer;position:relative;z-index:2;
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .22s cubic-bezier(.16,1,.3,1);
 }
-.bottom-nav .nav-item:active{transform:scale(.94);}
+.bottom-nav .nav-item:active{transform:scale(.975);}
 .bottom-nav .nav-icon{
   width:26px;height:26px;
   display:flex;align-items:center;justify-content:center;
   font-size:0;line-height:1;opacity:.22;
   filter:grayscale(.8);
-  transition:opacity .3s,filter .3s,transform .3s;
+  transition:opacity .38s cubic-bezier(.16,1,.3,1),filter .38s cubic-bezier(.16,1,.3,1),transform .42s cubic-bezier(.16,1,.3,1);
 }
 .bottom-nav .nav-icon:not([data-variant-d="1"]){
   opacity:0;color:transparent;
 }
 .bottom-nav .nav-icon svg{width:26px;height:26px;display:block;}
 .bottom-nav .nav-item.active .nav-icon{
-  opacity:1;transform:scale(1.1);
-  filter:drop-shadow(0 0 8px rgba(255,120,0,.85));
+  opacity:1;transform:translateY(-1px) scale(1.06);
+  filter:drop-shadow(0 0 9px rgba(255,120,0,.68));
 }
 .bottom-nav .nav-label{
   font-size:7px;letter-spacing:1.8px;text-transform:uppercase;
   color:rgba(255,255,255,.18);
-  transition:color .3s;
+  transition:color .38s cubic-bezier(.16,1,.3,1),opacity .38s cubic-bezier(.16,1,.3,1);
 }
 .bottom-nav .nav-item.active .nav-label{color:rgba(255,190,70,.9);}
 .bottom-nav .nav-item.morphing .nav-icon{animation:none;}
@@ -4225,7 +4242,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux4 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux5 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -5636,7 +5653,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux4</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux5</div>
       </div>
     </div>
 
@@ -5794,7 +5811,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux4</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux5</div>
         </div>
       </div>
     </div>
@@ -6071,7 +6088,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux4';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux5';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -9216,16 +9233,16 @@ function burstNeonNav(nav, item){
   const fr = field.getBoundingClientRect();
   const x = ir.left - fr.left + ir.width / 2;
   const y = ir.top - fr.top + ir.height / 2;
-  for(let i=0;i<10;i++){
+  for(let i=0;i<5;i++){
     const dot = document.createElement('span');
-    const size = Math.random() * 4 + 2;
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 20 + Math.random() * 30;
+    const size = Math.random() * 2.4 + 1.6;
+    const angle = (-Math.PI * .92) + Math.random() * (Math.PI * .84);
+    const dist = 12 + Math.random() * 20;
     const color = NAV_D_COLORS[Math.floor(Math.random() * NAV_D_COLORS.length)];
     dot.className = 'kasai-nav-particle';
-    dot.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;background:${color};--px:${(Math.cos(angle)*dist).toFixed(1)}px;--py:${(Math.sin(angle)*dist-8).toFixed(1)}px;--pd:${(.35+Math.random()*.25).toFixed(2)}s;box-shadow:0 0 ${size*2}px ${color};animation-delay:${(i*.025).toFixed(3)}s;`;
+    dot.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y + 18}px;background:${color};--px:${(Math.cos(angle)*dist).toFixed(1)}px;--py:${(Math.sin(angle)*dist-5).toFixed(1)}px;--pd:${(.48+Math.random()*.28).toFixed(2)}s;box-shadow:0 0 ${size*2.4}px ${color};animation-delay:${(i*.035).toFixed(3)}s;opacity:.78;`;
     field.appendChild(dot);
-    setTimeout(()=>dot.remove(), 760);
+    setTimeout(()=>dot.remove(), 920);
   }
 }
 
@@ -9235,8 +9252,17 @@ function moveNeonSlider(nav, shouldBurst=false){
   if(!slider || !active) return;
   const nr = nav.getBoundingClientRect();
   const ar = active.getBoundingClientRect();
-  slider.style.left = `${ar.left - nr.left + ar.width * 0.15}px`;
-  slider.style.width = `${ar.width * 0.7}px`;
+  const x = ar.left - nr.left + ar.width * 0.18;
+  const w = ar.width * 0.64;
+  slider.style.left = '0px';
+  slider.style.removeProperty('width');
+  slider.style.setProperty('--nav-slider-x', `${x.toFixed(2)}px`);
+  slider.style.setProperty('--nav-slider-w', `${w.toFixed(2)}px`);
+  if(slider.dataset.ready !== '1'){
+    slider.style.transition = 'none';
+    slider.dataset.ready = '1';
+    requestAnimationFrame(()=>{ slider.style.transition = ''; });
+  }
   if(shouldBurst) burstNeonNav(nav, active);
 }
 
@@ -9746,8 +9772,9 @@ function openMuscleExerciseSheet(muscleName, planType=getTodayPlan().plan.type){
     row.addEventListener('click',()=>{
       const ex = exs.find(item=>String(item.id) === String(row.dataset.sheetEx));
       if(!ex) return;
-      hideOverlay('muscle-exercises-overlay');
-      requestAnimationFrame(()=>navigate('exercise', ex));
+      row.classList.add('is-opening');
+      navigate('exercise', ex);
+      requestAnimationFrame(()=>hideOverlay('muscle-exercises-overlay'));
     });
   });
   if(addBtn){
