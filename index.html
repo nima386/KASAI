@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux1';
 </script>
 <style>
 :root {
@@ -452,6 +452,80 @@ body{
   background:var(--green);border-color:var(--green);
   color:#fff;box-shadow:0 0 12px rgba(38,212,124,.24);
 }
+#exercise-list-section,
+#exercise-list{
+  display:none!important;
+}
+
+/* -- MUSCLE EXERCISE SHEET -- */
+.muscle-exercises-card{
+  background:
+    radial-gradient(420px 240px at 50% -10%,rgba(255,149,0,.16),transparent 64%),
+    linear-gradient(180deg,rgba(22,16,34,.98),rgba(8,6,16,.995));
+  border-top:1px solid rgba(255,149,0,.16);
+  box-shadow:0 -30px 80px rgba(0,0,0,.55);
+}
+.muscle-sheet-hero{
+  display:flex;align-items:center;gap:12px;margin:2px 0 16px;
+}
+.muscle-sheet-icon{
+  width:50px;height:50px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 14px 32px rgba(0,0,0,.22);
+}
+.muscle-sheet-title{font-size:1.42rem;font-weight:900;line-height:1.05;letter-spacing:-.03em;}
+.muscle-sheet-sub{
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.16em;
+  color:var(--text-muted);text-transform:uppercase;margin-top:5px;
+}
+.muscle-sheet-list{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.muscle-sheet-ex{
+  width:100%;border:1px solid rgba(255,255,255,.075);
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border-radius:18px;padding:12px;
+  display:flex;align-items:center;gap:11px;color:inherit;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .18s var(--ease),border-color .18s var(--ease),background .18s var(--ease);
+}
+.muscle-sheet-ex:active{transform:scale(.985);border-color:rgba(255,149,0,.28);}
+.muscle-sheet-num{
+  width:30px;height:30px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:900;
+  background:rgba(110,99,242,.16);color:var(--purple-300);flex-shrink:0;
+}
+.muscle-sheet-info{flex:1;min-width:0;}
+.muscle-sheet-name{font-weight:900;font-size:.94rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.muscle-sheet-meta{
+  margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:.5rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.muscle-sheet-check{
+  width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.28);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:.85rem;font-weight:900;cursor:pointer;
+}
+.muscle-sheet-check.done{
+  background:linear-gradient(135deg,#26d47c,#1de9b6);border-color:transparent;
+  color:#06140d;box-shadow:0 0 22px rgba(38,212,124,.22);
+}
+.muscle-sheet-empty{
+  padding:18px;border-radius:18px;
+  border:1px dashed rgba(255,149,0,.2);
+  background:rgba(255,149,0,.045);
+  color:var(--text-secondary);font-size:.82rem;text-align:center;
+}
+.muscle-sheet-add{
+  width:100%;border:0;border-radius:999px;padding:13px 16px;
+  background:linear-gradient(135deg,#ff9500,#ff2d55);
+  color:#fff;font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:900;
+  box-shadow:0 16px 34px rgba(255,80,0,.2);
+}
 
 /* -- EXERCISE DETAIL -- */
 .ex-hero{
@@ -566,6 +640,107 @@ body{
   transition:all .2s var(--ease);touch-action:manipulation;flex-shrink:0;
 }
 .set-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+
+/* -- PREMIUM EXERCISE DETAIL PASS -- */
+#screen-exercise .app-header{
+  padding:calc(var(--safe-top) + 14px) 22px 10px;
+  align-items:center;
+}
+#screen-exercise .screen-body{
+  padding-inline:22px;
+}
+#screen-exercise #ex-kicker{
+  margin-top:4px;margin-bottom:7px;
+  color:rgba(162,155,254,.9);
+  letter-spacing:.24em;
+}
+#screen-exercise #ex-title{
+  font-size:clamp(1.55rem,7vw,2.12rem);
+  line-height:.98;
+  font-weight:950;
+  letter-spacing:-.05em;
+  margin-bottom:10px;
+  text-shadow:0 18px 42px rgba(0,0,0,.35);
+}
+#screen-exercise .tag-row{
+  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;
+}
+#screen-exercise .tag{
+  min-height:28px;display:inline-flex;align-items:center;
+  padding:5px 12px;border-radius:999px;
+  font-size:.58rem;font-weight:900;letter-spacing:.12em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+#screen-exercise .pr-card{
+  min-height:96px;
+  padding:17px 18px;
+  border-radius:22px;
+  background:
+    radial-gradient(220px 120px at 90% 12%,rgba(38,212,124,.18),transparent 68%),
+    linear-gradient(145deg,rgba(38,198,218,.12),rgba(38,212,124,.055)),
+    rgba(18,24,32,.72);
+  border:1px solid rgba(38,212,124,.28);
+  box-shadow:0 18px 42px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.055);
+}
+#screen-exercise .history-card,
+#screen-exercise .set-card,
+#screen-exercise .hint-banner{
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018)),var(--bg-card);
+  border:1px solid rgba(255,255,255,.075);
+  box-shadow:0 18px 45px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045);
+}
+#screen-exercise .history-card,
+#screen-exercise .set-card{
+  padding:17px;margin-bottom:14px;
+}
+#screen-exercise .history-card .section-row,
+#screen-exercise .set-card .section-row{
+  margin:0 0 14px;
+}
+#screen-exercise .history-chart{
+  min-height:94px;
+  display:flex;align-items:flex-end;gap:7px;
+  padding:16px 2px 24px;
+  color:var(--text-muted);
+}
+#screen-exercise .set-head{
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) minmax(0,1fr) 40px;
+  gap:9px;
+  align-items:center;
+  padding:0 0 8px;
+  margin-bottom:3px;
+  border-bottom:1px solid rgba(255,255,255,.055);
+}
+#screen-exercise .set-row{
+  grid-template-columns:36px minmax(0,1fr) minmax(0,1fr) 40px;
+  gap:9px;padding:9px 0;
+}
+#screen-exercise .set-num{
+  width:30px;height:30px;border-radius:13px;
+  background:rgba(110,99,242,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+#screen-exercise .set-input{
+  min-height:48px;border-radius:15px;
+  background:rgba(7,5,16,.58);
+  border-color:rgba(255,255,255,.075);
+  font-size:1.05rem;font-weight:900;
+}
+#screen-exercise .set-input:focus{
+  border-color:rgba(255,149,0,.42);
+  box-shadow:0 0 0 4px rgba(255,149,0,.08);
+}
+#screen-exercise .set-check{
+  width:38px;height:38px;
+  background:rgba(255,255,255,.055);
+}
+#screen-exercise .set-check.done{
+  background:linear-gradient(135deg,#26d47c,#1de9b6);
+  color:#06140d;border-color:transparent;
+  box-shadow:0 0 24px rgba(38,212,124,.24);
+}
 
 /* -- HINT BANNER -- */
 .hint-banner{
@@ -1537,6 +1712,11 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   color:var(--text-muted);text-transform:uppercase;margin-top:6px;font-weight:600;
 }
 .auth-status.auth-gate-status{margin-top:12px;}
+.auth-status.auth-gate-status.passive{
+  display:none!important;
+  min-height:0!important;
+  margin:0!important;
+}
 .auth-gate-panel{display:none;flex:1;min-height:0;overflow:hidden;flex-direction:column;}
 .auth-gate-panel.active{display:flex;}
 .email-pending-hero{
@@ -1632,7 +1812,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 
 @media(max-height:740px){
   .forge-auth-inner{padding:calc(env(safe-area-inset-top,0px) + 12px) 20px calc(env(safe-area-inset-bottom,0px) + 12px);}
-  .auth-language-switch{top:12px;right:12px;transform:scale(.92);transform-origin:top right;}
+  .auth-language-switch{top:calc(env(safe-area-inset-top,0px) + 8px);right:12px;transform:scale(.92);transform-origin:top right;}
   .logo-block{margin:.45rem 0 .55rem;}
   .logo-mark{width:50px;height:50px;border-radius:16px;margin-bottom:9px;}
   .logo-name{font-size:1.34rem;}
@@ -3803,7 +3983,7 @@ body.splash-done #splash{display:none;}
   border-radius:999px;background:rgba(255,255,255,.055);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.auth-language-switch{position:absolute;top:18px;right:18px;z-index:7;}
+.auth-language-switch{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:18px;z-index:7;}
 .language-switch button{
   border:0;border-radius:999px;background:transparent;color:rgba(255,255,255,.48);
   min-width:38px;height:30px;padding:0 8px;font-family:'JetBrains Mono',monospace;
@@ -3975,7 +4155,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux1 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -4239,8 +4419,11 @@ window.kasaiSetAuthMode = function(mode){
 window.kasaiAuthStatus = function(message, type){
   var gate = document.getElementById('gate-auth-status');
   if(!gate) return;
-  gate.textContent = message || '';
-  gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '');
+  var raw = String(message || '');
+  var passive = !type && /^(Session wird geprüft|Checking session)/i.test(raw.trim());
+  gate.textContent = passive ? '' : raw;
+  gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '') + (passive ? ' passive' : '');
+  gate.setAttribute('aria-live', passive ? 'off' : 'polite');
 };
 window.kasaiEarlySupabaseClient = async function(){
   var started = Date.now();
@@ -4475,7 +4658,7 @@ document.addEventListener('click', async function(e){
       </div>
       <div class="cat-grid" id="muscle-grid"></div>
 
-      <div class="section-row">
+      <div class="section-row" id="exercise-list-section">
         <div class="section-row-title">Übungen</div>
         <span class="section-row-link" id="exercise-add-link">+ hinzufügen</span>
       </div>
@@ -5020,6 +5203,29 @@ document.addEventListener('click', async function(e){
   <!-- KONFETTI STAGE -->
   <div id="konfetti-stage" class="konfetti-stage" aria-hidden="true"></div>
 
+  <!-- ------- OVERLAY: MUSCLE EXERCISES ------- -->
+  <div id="muscle-exercises-overlay" class="overlay">
+    <div class="overlay-card muscle-exercises-card">
+      <div class="overlay-grab"></div>
+      <div class="overlay-head">
+        <div>
+          <div class="kicker" id="muscle-sheet-kicker" style="margin-bottom:2px;">// heutige muskelgruppe</div>
+          <div class="overlay-title" id="muscle-sheet-heading">Übungen</div>
+        </div>
+        <button class="overlay-close" data-close="muscle-exercises-overlay">×</button>
+      </div>
+      <div class="muscle-sheet-hero">
+        <div class="muscle-sheet-icon" id="muscle-sheet-icon">💪</div>
+        <div>
+          <div class="muscle-sheet-title" id="muscle-sheet-title">Muskelgruppe</div>
+          <div class="muscle-sheet-sub" id="muscle-sheet-sub">0 Übungen · 0 Sätze</div>
+        </div>
+      </div>
+      <div class="muscle-sheet-list" id="muscle-sheet-list"></div>
+      <button class="muscle-sheet-add" id="muscle-sheet-add" type="button">＋ Übung hinzufügen</button>
+    </div>
+  </div>
+
   <!-- ------- OVERLAY: MEAL ------- -->
   <div id="meal-overlay" class="overlay">
     <div class="overlay-card">
@@ -5360,7 +5566,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux1</div>
       </div>
     </div>
 
@@ -5518,7 +5724,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux1</div>
         </div>
       </div>
     </div>
@@ -5795,7 +6001,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux1';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -9012,7 +9218,6 @@ function renderTraining(){
   renderTimeTaskStructure(plan);
   renderDailyExerciseTrackers();
   renderMuscles(plan);
-  renderExerciseList(plan);
 }
 
 function getISOWeek(date){
@@ -9261,9 +9466,16 @@ function getExercisesForTimeTaskMuscle(id, name, plan){
 function scrollToTrainingTask(kind, id, name){
   let target = null;
   if(kind === 'daily') target = findRenderedByDataset('.daily-ex-card', 'dailyId', id);
+  if(kind === 'exercise'){
+    const plan = getTodayPlan().plan;
+    const ex = getExercisesForType(plan.type).find(item=>String(item.id) === String(id));
+    if(ex){
+      navigate('exercise', ex);
+      return;
+    }
+  }
   if(kind === 'muscle') target = findRenderedByDataset('.cat-card[data-muscle-id]', 'muscleId', id)
     || Array.from(document.querySelectorAll('#muscle-grid .cat-card')).find(el=>el.querySelector('.cat-name')?.textContent.trim() === name);
-  if(kind === 'exercise') target = findRenderedByDataset('.ex-card[data-exercise-id]', 'exerciseId', id);
   flashScrollTarget(target || document.getElementById(kind === 'daily' ? 'daily-ex-section' : kind === 'muscle' ? 'muscle-grid' : 'exercise-list'));
 }
 
@@ -9339,11 +9551,95 @@ function renderTimeTaskStructure(plan){
       const kind = row.dataset.timeKind;
       const id = row.dataset.timeId;
       const name = row.dataset.timeName || row.querySelector('.time-task-name')?.textContent.trim() || '';
+      if(kind === 'muscle'){
+        openMuscleExerciseSheet(name, plan.type);
+        return;
+      }
+      if(kind === 'exercise'){
+        const ex = getExercisesForType(plan.type).find(item=>String(item.id) === String(id));
+        if(ex){ navigate('exercise', ex); return; }
+      }
       scrollToTrainingTask(kind, id, name);
     });
   });
   const editLink = document.getElementById('time-task-edit-link');
   if(editLink) editLink.onclick = openSelectedPlanDayEditor;
+}
+
+function openMuscleExerciseSheet(muscleName, planType=getTodayPlan().plan.type){
+  if(!muscleName || planType === 'rest') return;
+  const muscles = getMusclesForType(planType);
+  const muscle = muscles.find(item=>String(item.name) === String(muscleName)) || {name:muscleName};
+  const color = muscle.color || MUSCLE_META[muscleName]?.color || 'var(--purple-500)';
+  const icon = cleanUiIcon(muscle.icon || MUSCLE_META[muscleName]?.icon || '💪', '💪');
+  const exs = getExercisesForType(planType).filter(ex=>String(ex.muscle) === String(muscleName));
+  const totalSets = exs.reduce((sum, ex)=>sum + (parseInt(ex.sets) || 0), 0);
+  const doneCount = exs.filter(ex=>isDone(ex.id)).length;
+
+  const sheetIcon = document.getElementById('muscle-sheet-icon');
+  const sheetTitle = document.getElementById('muscle-sheet-title');
+  const sheetSub = document.getElementById('muscle-sheet-sub');
+  const sheetHeading = document.getElementById('muscle-sheet-heading');
+  const sheetKicker = document.getElementById('muscle-sheet-kicker');
+  const list = document.getElementById('muscle-sheet-list');
+  const addBtn = document.getElementById('muscle-sheet-add');
+  if(!list) return;
+
+  if(sheetIcon){
+    sheetIcon.textContent = icon;
+    sheetIcon.style.background = `${color}22`;
+  }
+  if(sheetTitle) sheetTitle.textContent = muscleName;
+  if(sheetHeading) sheetHeading.textContent = 'Übungen';
+  if(sheetKicker) sheetKicker.textContent = '// heutige muskelgruppe';
+  if(sheetSub) sheetSub.textContent = `${exs.length} Übung${exs.length === 1 ? '' : 'en'} · ${totalSets} Sätze · ${doneCount}/${exs.length || 0} erledigt`;
+
+  list.innerHTML = exs.length ? exs.map((ex,index)=>{
+    const done = isDone(ex.id);
+    const lastW = ex.history?.[ex.history.length - 1]?.w;
+    return `
+      <div class="muscle-sheet-ex" data-sheet-ex="${escapeHtml(ex.id)}">
+        <div class="muscle-sheet-num">${String(index + 1).padStart(2,'0')}</div>
+        <div class="muscle-sheet-info">
+          <div class="muscle-sheet-name">${escapeHtml(ex.name)}</div>
+          <div class="muscle-sheet-meta">${escapeHtml(ex.eq || 'Equipment')} · ${ex.sets} × ${ex.rMin}-${ex.rMax}${lastW ? ` · zuletzt ${lastW} kg` : ''}</div>
+        </div>
+        <button class="muscle-sheet-check${done ? ' done' : ''}" type="button" data-sheet-check="${escapeHtml(ex.id)}">${done ? '✓' : ''}</button>
+      </div>`;
+  }).join('') : '<div class="muscle-sheet-empty">Noch keine Übungen in dieser Muskelgruppe. Lege eine Übung an oder öffne den Plan-Editor.</div>';
+
+  list.querySelectorAll('[data-sheet-check]').forEach(btn=>{
+    btn.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      const ex = exs.find(item=>String(item.id) === String(btn.dataset.sheetCheck));
+      if(!ex) return;
+      toggleExerciseDone(ex);
+      openMuscleExerciseSheet(muscleName, planType);
+    });
+  });
+  list.querySelectorAll('[data-sheet-ex]').forEach(row=>{
+    row.addEventListener('click',()=>{
+      const ex = exs.find(item=>String(item.id) === String(row.dataset.sheetEx));
+      if(!ex) return;
+      hideOverlay('muscle-exercises-overlay');
+      requestAnimationFrame(()=>navigate('exercise', ex));
+    });
+  });
+  if(addBtn){
+    addBtn.onclick = ()=>{
+      hideOverlay('muscle-exercises-overlay');
+      if(getSelectedTrainingPlanDay()) openSelectedPlanDayEditor();
+      else {
+        openExerciseEdit(null, planType);
+        requestAnimationFrame(()=>{
+          const muscleSelect = document.getElementById('ex-edit-muscle');
+          if(muscleSelect) muscleSelect.value = muscleName;
+        });
+      }
+    };
+  }
+  showOverlay('muscle-exercises-overlay');
 }
 
 function renderMuscles(plan){
@@ -9391,7 +9687,7 @@ function renderMuscles(plan){
       ${timeChip ? `<div class="cat-meta"><span class="time-chip">${timeChip}</span></div>` : ''}
       <div class="cat-meta">${mExs.length} ${exLabel} · ${mSets} SÄTZE${suffix}</div>
       <div class="cat-prog" style="width:${pct}%;background:${color}"></div>`;
-    el.onclick = ()=>{ if(mExs.length) navigate('exercise', mExs[0]); };
+    el.onclick = ()=>openMuscleExerciseSheet(m, plan.type);
     let pT;
     el.addEventListener('touchstart',()=>{ pT = setTimeout(()=>{
       if(getSelectedTrainingPlanDay()) openSelectedPlanDayEditor();
@@ -11617,7 +11913,7 @@ function renderSetRows(ex){
       <div class="set-num">${i+1}</div>
       <input class="set-input" type="number" inputmode="decimal" placeholder="${lastW !== '' && lastW != null ? lastW : '-'}" value="${set.weight ?? ''}" data-set="${i}" data-field="weight">
       <input class="set-input" type="number" inputmode="numeric" placeholder="-" value="${set.reps ?? ''}" data-set="${i}" data-field="reps">
-      <div class="set-check ${set.done?'done':''}" data-set="${i}">${set.done?'-':''}</div>`;
+      <div class="set-check ${set.done?'done':''}" data-set="${i}">${set.done?'✓':''}</div>`;
     container.appendChild(row);
   });
 
@@ -11648,7 +11944,7 @@ function renderSetRows(ex){
       setData.done  = !wasDone;
 
       e.currentTarget.classList.toggle('done', setData.done);
-      e.currentTarget.textContent = setData.done ? '-' : '';
+      e.currentTarget.textContent = setData.done ? '✓' : '';
 
       if(setData.done && !wasDone){
         // Rest-Timer starten
@@ -12441,8 +12737,11 @@ function collectNotificationSettingsFromUI(){
 function setAuthStatus(message='', type=''){
   const gate = document.getElementById('gate-auth-status');
   if(gate){
-    gate.textContent = typeof translatePhrase === 'function' ? translatePhrase(message) : message;
-    gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '');
+    const raw = String(message || '');
+    const passive = !type && /^(Session wird geprüft|Checking session)/i.test(raw.trim());
+    gate.textContent = passive ? '' : (typeof translatePhrase === 'function' ? translatePhrase(message) : message);
+    gate.className = 'auth-status auth-gate-status' + (type ? ' ' + type : '') + (passive ? ' passive' : '');
+    gate.setAttribute('aria-live', passive ? 'off' : 'polite');
   }
 }
 function bootstrapAuthenticatedSession(session){
