@@ -27,7 +27,7 @@ body{min-height:100vh;min-height:100dvh;-webkit-text-size-adjust:100%;}
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles/premium-ux.css">
 <script>
-const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux1';
+const KASAI_APP_VERSION = window.KasaiVersion?.current || 'kasai-v43-timepush-i18n6-ux2';
 </script>
 <style>
 :root {
@@ -115,11 +115,18 @@ body{
   display:flex;flex-direction:column;
   opacity:0;pointer-events:none;
   visibility:hidden;
-  transform:scale(.985);
-  transition:opacity .26s var(--ease),visibility .26s var(--ease),transform .26s var(--ease),filter .26s var(--ease);
+  transform:translate3d(0,10px,0) scale(.992);
+  transition:
+    opacity .2s cubic-bezier(.22,1,.36,1),
+    visibility 0s linear .24s,
+    transform .24s cubic-bezier(.22,1,.36,1),
+    filter .24s cubic-bezier(.22,1,.36,1);
   z-index:1;
   overflow:hidden;
-  filter:blur(4px);
+  filter:blur(8px);
+  will-change:opacity,transform,filter;
+  backface-visibility:hidden;
+  transform-origin:50% 52%;
 }
 .screen::after{
   content:none;
@@ -130,6 +137,7 @@ body{
   transform:scale(1);
   filter:none;
   z-index:2;
+  transition-delay:0s;
 }
 .screen.active.slide-left{
   opacity:1!important;
@@ -3422,12 +3430,42 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
 }
 .nav-icon{font-size:1rem;}
 .nav-label{font-size:.42rem;letter-spacing:.16em;}
-@keyframes screenSoftIn{
-  0%{opacity:0;transform:scale(.975);filter:blur(7px);}
-  100%{opacity:1;transform:scale(1);filter:blur(0);}
+@keyframes kasaiScreenInForward{
+  0%{opacity:0;transform:translate3d(18px,8px,0) scale(.992);filter:blur(10px);}
+  68%{opacity:1;filter:blur(0);}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0);}
+}
+@keyframes kasaiScreenInBack{
+  0%{opacity:0;transform:translate3d(-18px,8px,0) scale(.992);filter:blur(10px);}
+  68%{opacity:1;filter:blur(0);}
+  100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0);}
+}
+@keyframes kasaiScreenOutForward{
+  0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0);}
+  100%{opacity:0;transform:translate3d(-12px,-3px,0) scale(.994);filter:blur(8px);}
+}
+@keyframes kasaiScreenOutBack{
+  0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0);}
+  100%{opacity:0;transform:translate3d(12px,-3px,0) scale(.994);filter:blur(8px);}
 }
 .screen.screen-entering{
-  animation:screenSoftIn .32s cubic-bezier(.22,1,.36,1);
+  visibility:visible!important;
+  pointer-events:auto;
+}
+.screen.screen-enter-forward{animation:kasaiScreenInForward .24s cubic-bezier(.22,1,.36,1) both;}
+.screen.screen-enter-back{animation:kasaiScreenInBack .24s cubic-bezier(.22,1,.36,1) both;}
+.screen.screen-leaving{
+  visibility:visible!important;
+  pointer-events:none!important;
+  z-index:1;
+}
+.screen.screen-leave-forward{animation:kasaiScreenOutForward .2s cubic-bezier(.4,0,.2,1) both;}
+.screen.screen-leave-back{animation:kasaiScreenOutBack .2s cubic-bezier(.4,0,.2,1) both;}
+@media (prefers-reduced-motion: reduce){
+  .screen.screen-enter-forward,
+  .screen.screen-enter-back,
+  .screen.screen-leave-forward,
+  .screen.screen-leave-back{animation:none!important;}
 }
 
 /* KASAI NAV VARIANT D - NEON SLASH UNDERLINE */
@@ -3449,7 +3487,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   position:absolute;bottom:0;height:2px;left:0;width:0;
   background:linear-gradient(90deg,transparent,#ff9500,#ff2d55,#ff9500,transparent);
   box-shadow:0 0 10px rgba(255,100,0,0.8),0 0 20px rgba(255,45,85,0.4);
-  transition:left .42s cubic-bezier(.34,1.3,.64,1),width .42s cubic-bezier(.34,1.3,.64,1);
+  transition:left .28s cubic-bezier(.22,1,.36,1),width .28s cubic-bezier(.22,1,.36,1);
   border-radius:1px;
   z-index:1;
   pointer-events:none;
@@ -3488,7 +3526,7 @@ body.auth-locked .dumbbell-part.right{animation:dumbbell-build .52s cubic-bezier
   cursor:pointer;position:relative;z-index:2;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1);
 }
-.bottom-nav .nav-item:active{transform:scale(.88);}
+.bottom-nav .nav-item:active{transform:scale(.94);}
 .bottom-nav .nav-icon{
   width:26px;height:26px;
   display:flex;align-items:center;justify-content:center;
@@ -4155,7 +4193,7 @@ body.splash-done #splash{display:none;}
     <div class="loader-track"><div class="loader-fill" id="loaderFill" style="position:relative;"></div></div>
     <div class="loader-lbl" id="loaderLbl">Igniting...</div>
   </div>
-  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux1 · KASAI</div>
+  <div class="version-tag" id="versionTag">kasai-v43-timepush-i18n6-ux2 · KASAI</div>
   <div class="variant-badge" id="variantBadge"></div>
   <div class="exit-overlay" id="exitOverlay"></div>
 </div>
@@ -5566,7 +5604,7 @@ document.addEventListener('click', async function(e){
             <button class="cta-btn" id="settings-go-login" type="button" style="margin-top:10px;">🔒 Anmelden / Account erstellen</button>
           </div>
         </div>
-        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux1</div>
+        <div class="settings-v2-version" id="settings-version-tag">kasai-v43-timepush-i18n6-ux2</div>
       </div>
     </div>
 
@@ -5724,7 +5762,7 @@ document.addEventListener('click', async function(e){
         </div>
         <div class="settings-v2-system-row si-2">
           <div class="settings-v2-label" style="margin:0;"><span class="settings-v2-label-icon">📦</span> Version</div>
-          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux1</div>
+          <div class="settings-v2-version-pill" id="settings-system-version">kasai-v43-timepush-i18n6-ux2</div>
         </div>
       </div>
     </div>
@@ -6001,7 +6039,7 @@ const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function easeOut(t) { return 1 - Math.pow(1-t,3); }
 function getSplashVersionLabel(){
-  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux1';
+  const version = typeof KASAI_APP_VERSION !== 'undefined' ? KASAI_APP_VERSION : 'kasai-v43-timepush-i18n6-ux2';
   return `${version} · KASAI`;
 }
 function updateSplashVersionTag(){
@@ -9023,15 +9061,39 @@ const TRAINING_HEADER_LINES = [
   'Control The Controllable','All In','Make Yourself Proud','Burn Brighter','Just Begin'
 ];
 const trainingHeaderLine = TRAINING_HEADER_LINES[Math.floor(Math.random() * TRAINING_HEADER_LINES.length)];
+const SCREEN_ORDER = ['training','run','nutrition','habits','profile','training-plan','day-detail','exercise'];
+let _screenTransitionToken = 0;
 
-function resetScreenGeometry(){
+function screenTransitionDirection(from, to){
+  if(from === to) return 'forward';
+  const fromIdx = SCREEN_ORDER.indexOf(from);
+  const toIdx = SCREEN_ORDER.indexOf(to);
+  if(from === 'exercise' && to !== 'exercise') return 'back';
+  if(fromIdx < 0 || toIdx < 0) return 'forward';
+  return toIdx >= fromIdx ? 'forward' : 'back';
+}
+
+function clearScreenMotionClasses(el){
+  if(!el) return;
+  el.classList.remove(
+    'slide-left',
+    'screen-entering','screen-leaving',
+    'screen-enter-forward','screen-enter-back',
+    'screen-leave-forward','screen-leave-back'
+  );
+}
+
+function resetScreenGeometry(keepEls=[]){
+  const keep = new Set((keepEls || []).filter(Boolean));
   document.documentElement.scrollLeft = 0;
   document.body.scrollLeft = 0;
   window.scrollTo(0, window.scrollY || 0);
   const app = document.getElementById('app');
   if(app) app.scrollLeft = 0;
   document.querySelectorAll('.screen').forEach(el=>{
-    el.classList.remove('active','slide-left');
+    if(keep.has(el)) return;
+    el.classList.remove('active');
+    clearScreenMotionClasses(el);
     el.style.transform = '';
     el.style.opacity = '';
     el.style.pointerEvents = '';
@@ -9040,18 +9102,42 @@ function resetScreenGeometry(){
   });
 }
 
-function activateScreen(screen){
-  resetScreenGeometry();
+function activateScreen(screen, direction=null){
   const toEl = document.getElementById('screen-'+screen);
   if(!toEl) return null;
-  toEl.classList.add('active');
-  toEl.classList.remove('slide-left');
+  const fromEl = document.getElementById('screen-'+currentScreen);
+  const dir = direction || screenTransitionDirection(currentScreen, screen);
+  const token = ++_screenTransitionToken;
+  resetScreenGeometry([toEl, fromEl]);
+
+  if(fromEl && fromEl !== toEl && fromEl.classList.contains('active')){
+    clearScreenMotionClasses(fromEl);
+    fromEl.classList.add('screen-leaving', dir === 'back' ? 'screen-leave-back' : 'screen-leave-forward');
+    fromEl.style.pointerEvents = 'none';
+    setTimeout(()=>{
+      const currentEl = document.getElementById('screen-'+currentScreen);
+      if(token === _screenTransitionToken && fromEl !== currentEl){
+        fromEl.classList.remove('active');
+        clearScreenMotionClasses(fromEl);
+        fromEl.style.transform = '';
+        fromEl.style.opacity = '';
+        fromEl.style.pointerEvents = '';
+        fromEl.style.visibility = '';
+      }
+    }, 250);
+  }
+
+  clearScreenMotionClasses(toEl);
+  toEl.classList.add('active','screen-entering', dir === 'back' ? 'screen-enter-back' : 'screen-enter-forward');
   toEl.style.transform = '';
   toEl.style.opacity = '';
   toEl.style.pointerEvents = '';
   toEl.style.visibility = '';
-  toEl.classList.add('screen-entering');
-  setTimeout(()=>toEl.classList.remove('screen-entering'), 360);
+  setTimeout(()=>{
+    if(token === _screenTransitionToken){
+      toEl.classList.remove('screen-entering','screen-enter-forward','screen-enter-back');
+    }
+  }, 280);
   return toEl;
 }
 
@@ -9124,25 +9210,31 @@ function moveNeonSlider(nav, shouldBurst=false){
 
 function updateBottomNav(screen){
   ensureNeonSlashNavs();
+  let changed = false;
   document.querySelectorAll('.bottom-nav .nav-item').forEach(item=>{
     const isActive = item.dataset.screen === screen || (!item.dataset.screen && screen === 'training');
     if(isActive && !item.classList.contains('active')){
+      changed = true;
       item.classList.add('morphing');
-      setTimeout(()=>item.classList.remove('morphing'), 460);
+      setTimeout(()=>item.classList.remove('morphing'), 320);
     }
     item.classList.toggle('active', isActive);
   });
-  document.querySelectorAll('.bottom-nav').forEach(nav=>moveNeonSlider(nav, true));
+  document.querySelectorAll('.bottom-nav').forEach(nav=>moveNeonSlider(nav, changed));
 }
 
 function navigate(screen, data){
   const fromEl = document.getElementById('screen-'+currentScreen);
   const toEl   = document.getElementById('screen-'+screen);
   if(!toEl) return;
+  if(screen === currentScreen && screen !== 'exercise'){
+    updateBottomNav(screen);
+    return;
+  }
   if(currentScreen==='exercise' && screen!=='exercise') stopRest();
 
-  activateScreen(screen);
-  if(screen === 'exercise') fromEl?.classList.add('slide-left');
+  const direction = screenTransitionDirection(currentScreen, screen);
+  activateScreen(screen, direction);
 
   prevScreen = currentScreen;
   currentScreen = screen;
